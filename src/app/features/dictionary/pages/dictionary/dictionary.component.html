@@ -1,3 +1,11 @@
-<mat-accordion>
-   <app-word *ngFor = "let word of words" [word] = "word"></app-word>
-</mat-accordion>
+<mat-card class = "dictionary">
+   <header></header>
+   <main class = "dictionary__main">
+      <mat-accordion>
+         <app-word 
+            *ngFor = "let word of words" 
+            [word] = "word"
+            class = "dictionary__word"></app-word>
+      </mat-accordion>
+   </main>
+</mat-card>
