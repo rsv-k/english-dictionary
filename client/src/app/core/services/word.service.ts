@@ -16,7 +16,7 @@ export class WordService {
    words$ = new BehaviorSubject<Word[]>([]);
    words: Word[] = [
       { id: '1', english: 'obese', russian: ['ожирение', 'страдающий ожирением'] },
-      { id: '2', english: 'cat', russian: ['кот'], text: 'a big grey cat was sitting nearby porch of my house' },
+      { id: '2', pic_url: 'https://cdn.royalcanin-weshare-online.io/jSJCPmYBaxEApS7LVwZ7/v1/ec50h-the-symptoms-of-urinary-problems-for-cats-hero-cat', english: 'cat', russian: ['кот'], text: 'a big grey cat was sitting nearby porch of my house' },
       { id: '3', english: 'window', russian: ['окно'] },
    ];
 
