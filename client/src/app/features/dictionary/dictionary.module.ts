@@ -6,10 +6,11 @@ import { DictionaryComponent } from './pages/dictionary/dictionary.component';
 import { WordComponent } from './components/word/word.component';
 import { SharedModule } from '@shared/shared.module';
 import { WordCreateComponent } from './components/word-create/word-create.component';
+import { WordEditComponent } from './components/word-edit/word-edit.component';
 
 
 @NgModule({
-  declarations: [DictionaryComponent, WordComponent, WordCreateComponent],
+  declarations: [DictionaryComponent, WordComponent, WordCreateComponent, WordEditComponent],
   imports: [
     CommonModule,
     DictionaryRoutingModule,
