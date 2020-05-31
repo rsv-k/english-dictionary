@@ -14,11 +14,7 @@ const BACKEND_URL = environment.apiUrl + 'word';
 })
 export class WordService {
    words$ = new BehaviorSubject<Word[]>([]);
-   words: Word[] = [
-      { id: '1', english: 'obese', russian: ['ожирение', 'страдающий ожирением'] },
-      { id: '2', pic_url: 'https://cdn.royalcanin-weshare-online.io/jSJCPmYBaxEApS7LVwZ7/v1/ec50h-the-symptoms-of-urinary-problems-for-cats-hero-cat', english: 'cat', russian: ['кот'], text: 'a big grey cat was sitting nearby porch of my house' },
-      { id: '3', english: 'window', russian: ['окно'] },
-   ];
+   words: Word[];
 
    constructor(private http: HttpClient) { }
 
@@ -27,22 +23,48 @@ export class WordService {
    }
 
    getWords() {
-      this.words$.next([...this.words]);
+      this.http.get<{msg: string, words: any}>(BACKEND_URL)
+         .pipe(
+            map(data => {
+               return data.words.map(word => {
+                  word.id = word._id;
+                  delete word._id;
+                  return word;
+               });
+            })
+         )
+         .subscribe((words: Word[]) => {
+            this.words = words;
+            this.words$.next([...this.words]);
+         });
    }
 
    addWord(word: Word) {
-      this.words = [word, ...this.words];
-      this.words$.next([...this.words]);
+      this.http.post<{msg: string, word: any}>(BACKEND_URL, { word })
+         .pipe(
+            map(data => {
+               data.word.id = data.word._id;
+               delete data.word._id;
+               return data.word;
+            })
+         )
+         .subscribe((w: Word) => {
+            this.words = [w, ...this.words];
+            this.words$.next([...this.words]);
+         });
    }
 
    deleteWord(id: string) {
-      this.words = this.words.filter(word => word.id !== id);
-      this.words$.next([...this.words]);
+      this.http.delete<{msg: string}>(BACKEND_URL + '/' + id)
+         .subscribe(() => {
+            this.words = this.words.filter(word => word.id !== id);
+            this.words$.next([...this.words]);
+         });
    }
 
    showTranslations(word: Observable<string>) {
       return word.pipe(
-         debounceTime(2000),
+         debounceTime(1000),
          distinctUntilChanged(),
          switchMap(w => this.getTranslations(w))
       );
