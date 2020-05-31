@@ -9,9 +9,13 @@ exports.getTranslations = async (req, res) => {
 
    try {
       const url = 'http://api.lingualeo.com/gettranslates?word=' + word;
-      const translations = (await axios.get(url)).data.translate;
+      const data = (await axios.get(url)).data;
+      const result = {
+         translate: data.translate,
+         word: data.word_value
+      };
 
-      res.status(200).json({ msg: 'translations fetched successfully', translations });
+      res.status(200).json({ msg: 'translations fetched successfully', result });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }

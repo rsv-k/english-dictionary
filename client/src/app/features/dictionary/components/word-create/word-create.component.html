@@ -3,6 +3,7 @@
    <input 
       matInput 
       type = "text" 
+      #word
       (input) = "wordText$.next($event.target.value)"
       [matAutocomplete]="auto">
 
@@ -11,7 +12,7 @@
       #auto="matAutocomplete">
       <mat-option 
          *ngFor="let translation of translations$ | async" 
-         (click) = "chooseTranslation(translation)"
+         (click) = "chooseTranslation(translation); word.value = ''"
          [value]="translation.value">
          {{ translation.value }}
       </mat-option>

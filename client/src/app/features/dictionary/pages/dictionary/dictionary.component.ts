@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
+import { Observable } from 'rxjs';
 
 @Component({
    selector: 'app-dictionary',
@@ -8,13 +9,14 @@ import { WordService } from '@core/services/word.service';
    styleUrls: ['./dictionary.component.scss']
 })
 export class DictionaryComponent implements OnInit {
-   words: Word[];
+   words$: Observable<Word[]>;
    showCreation = false;
 
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
-      this.words = this.wordService.getWords();
+      this.words$ = this.wordService.getWordsUpdateListener();
+      this.wordService.getWords();
    }
 
    hideCreation() {

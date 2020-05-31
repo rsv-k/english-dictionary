@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { WordService } from '@core/services/word.service';
 import { Observable, Subject } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
+import { Word } from '@core/models/word.model';
 
 @Component({
    selector: 'app-word-create',
@@ -20,7 +21,13 @@ export class WordCreateComponent implements OnInit {
    }
 
    chooseTranslation(translation: Translation) {
+      const word: Word = {
+         english: translation.origin,
+         russian: [translation.value],
+         pic_url: translation.pic_url
+      };
 
+      this.wordService.addWord(word);
    }
 
    onHide(e: Event) {
