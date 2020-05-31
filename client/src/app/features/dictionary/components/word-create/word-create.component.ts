@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { WordService } from '@core/services/word.service';
+import { Observable, Subject } from 'rxjs';
+import { Translation } from '@core/models/translation.model';
 
 @Component({
    selector: 'app-word-create',
@@ -7,13 +9,23 @@ import { WordService } from '@core/services/word.service';
    styleUrls: ['./word-create.component.scss']
 })
 export class WordCreateComponent implements OnInit {
+   wordText$ = new Subject<string>();
+   translations$: Observable<Translation[]>;
+   @Output() hideCreation = new EventEmitter();
 
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
+      this.translations$ = this.wordService.showTranslations(this.wordText$);
    }
 
-   showTranslations(word: string) {
-      this.wordService.showTranslations(word);
+   chooseTranslation(translation: Translation) {
+
+   }
+
+   onHide(e: Event) {
+      if (e.target === e.currentTarget) {
+         this.hideCreation.emit();
+      }
    }
 }

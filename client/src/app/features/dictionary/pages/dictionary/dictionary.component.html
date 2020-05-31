@@ -1,13 +1,14 @@
-<mat-card class = "dictionary">
-   <header>
-      <app-word-create></app-word-create>
-   </header>
-   <main class = "dictionary__main">
+<section class = "dictionary">
+   <header class = "dictionary__header">
+      <h1>Dictionary</h1>
+      <app-word-create (hideCreation) = "hideCreation()"></app-word-create>
+      </header>
+      <mat-card >
+
       <mat-accordion>
-         <app-word 
-            *ngFor = "let word of words" 
-            [word] = "word"
-            class = "dictionary__word"></app-word>
+         <div class="dictionary__word" *ngFor = "let word of words" >
+            <app-word [word] = "word"></app-word>
+         </div>
       </mat-accordion>
-   </main>
-</mat-card>
+   </mat-card>
+</section>

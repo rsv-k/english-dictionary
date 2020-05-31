@@ -1,12 +1,19 @@
-<div class="create">
-   <mat-form-field class="create__group">
-      <mat-label>Word</mat-label>
-      <input matInput type = "text" #word>
-   </mat-form-field>
-   
-   <button 
-      mat-raised-button 
-      class = "create__button" 
-      color = "primary"
-      (click) = "showTranslations(word.value)">show translations</button>
-</div>
+<mat-form-field class="create__group">
+   <mat-label>Word</mat-label>
+   <input 
+      matInput 
+      type = "text" 
+      (input) = "wordText$.next($event.target.value)"
+      [matAutocomplete]="auto">
+
+   <mat-autocomplete 
+      autoActiveFirstOption 
+      #auto="matAutocomplete">
+      <mat-option 
+         *ngFor="let translation of translations$ | async" 
+         (click) = "chooseTranslation(translation)"
+         [value]="translation.value">
+         {{ translation.value }}
+      </mat-option>
+   </mat-autocomplete>
+</mat-form-field>

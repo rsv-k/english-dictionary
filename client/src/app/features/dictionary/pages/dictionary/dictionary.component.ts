@@ -9,6 +9,7 @@ import { WordService } from '@core/services/word.service';
 })
 export class DictionaryComponent implements OnInit {
    words: Word[];
+   showCreation = false;
 
    constructor(private wordService: WordService) { }
 
@@ -16,4 +17,7 @@ export class DictionaryComponent implements OnInit {
       this.words = this.wordService.getWords();
    }
 
+   hideCreation() {
+      this.showCreation = false;
+   }
 }

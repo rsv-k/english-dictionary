@@ -2,7 +2,11 @@
    margin: 0 auto;
    width: 60%;
 
-   &__word {
-      margin-top: 20px;
+   &__word:nth-child(n + 2) {
+      margin-top: 5px;
+   }
+
+   &__button {
+      align-self: center;
    }
 }
