@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
 @NgModule({
-  exports: [
-
-  ]
+   exports: [
+      MatExpansionModule
+   ]
 })
 export class MaterialModule { }

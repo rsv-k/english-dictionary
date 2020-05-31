@@ -1,0 +1,12 @@
+<mat-expansion-panel>
+   <mat-expansion-panel-header>
+     <mat-panel-title>
+      {{ word.english }}
+     </mat-panel-title>
+     <mat-panel-description>
+      {{ word.russian.join(', ') }}
+     </mat-panel-description>
+   </mat-expansion-panel-header>
+
+   {{ word.text }}
+</mat-expansion-panel>
