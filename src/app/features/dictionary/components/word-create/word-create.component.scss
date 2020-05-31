@@ -1,0 +1,12 @@
+.create {
+   display: flex;
+
+   &__group {
+      flex-grow: 10;
+   }
+
+   &__button {
+      flex-grow: 1;
+      align-self: center;
+   }
+}
