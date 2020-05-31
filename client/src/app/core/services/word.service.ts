@@ -15,9 +15,9 @@ const BACKEND_URL = environment.apiUrl + 'word';
 export class WordService {
    words$ = new BehaviorSubject<Word[]>([]);
    words: Word[] = [
-      { english: 'obese', russian: ['ожирение', 'страдающий ожирением'] },
-      { english: 'cat', russian: ['кот'], text: 'a big grey cat was sitting nearby porch of my house' },
-      { english: 'window', russian: ['окно'] },
+      { id: '1', english: 'obese', russian: ['ожирение', 'страдающий ожирением'] },
+      { id: '2', english: 'cat', russian: ['кот'], text: 'a big grey cat was sitting nearby porch of my house' },
+      { id: '3', english: 'window', russian: ['окно'] },
    ];
 
    constructor(private http: HttpClient) { }
@@ -32,6 +32,11 @@ export class WordService {
 
    addWord(word: Word) {
       this.words = [word, ...this.words];
+      this.words$.next([...this.words]);
+   }
+
+   deleteWord(id: string) {
+      this.words = this.words.filter(word => word.id !== id);
       this.words$.next([...this.words]);
    }
 

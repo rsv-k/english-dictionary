@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Word } from '@core/models/word.model';
+import { WordService } from '@core/services/word.service';
 
 @Component({
    selector: 'app-word',
@@ -9,9 +10,12 @@ import { Word } from '@core/models/word.model';
 export class WordComponent implements OnInit {
    @Input() word: Word;
 
-   constructor() { }
+   constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
    }
 
+   onDelete() {
+      this.wordService.deleteWord(this.word.id);
+   }
 }
