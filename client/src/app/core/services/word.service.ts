@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { HttpClient } from '@angular/common/http';
-import { map, distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
+import { map, distinctUntilChanged, debounceTime, switchMap, takeWhile } from 'rxjs/operators';
 import { of, BehaviorSubject } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -36,7 +36,14 @@ export class WordService {
       let operation = '';
       this.getSpecificWord(word.english)
          .pipe(
-            switchMap((words: Word) => {
+            takeWhile((words: Word[]) => {
+               if (words.length !== 0) {
+                  return !words[0].russian.includes(word.russian[0]);
+               } else {
+                  return true;
+               }
+            }),
+            switchMap((words: Word[]) => {
                if (words[0] && words[0].english) {
                   operation = 'EDIT';
                   words[0].russian.push(word.russian.pop());
