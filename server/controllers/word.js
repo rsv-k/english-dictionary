@@ -31,7 +31,7 @@ exports.addWord = async (req, res) => {
       let word = new Word(req.body.word);
       word = await word.save();
 
-      res.status(201).json({ msg: 'word added successfully', word });
+      res.status(201).json({ msg: 'word added successfully', word: [word] });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
