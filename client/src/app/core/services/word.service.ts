@@ -14,7 +14,7 @@ const BACKEND_URL = environment.apiUrl + 'word';
 })
 export class WordService {
    words$ = new BehaviorSubject<Word[]>([]);
-   words: Word[];
+   private words: Word[];
 
    constructor(private http: HttpClient) { }
 
@@ -25,40 +25,30 @@ export class WordService {
    getWords() {
       this.http.get<{msg: string, words: any}>(BACKEND_URL)
          .pipe(
-            map(data => {
-               return data.words.map(word => {
-                  word.id = word._id;
-                  delete word._id;
-                  return word;
-               });
-            })
+            map(this.replaceWordIdField)
          )
          .subscribe((words: Word[]) => {
-            this.words = words;
-            this.words$.next([...this.words]);
+            this.updateWords('GET', words);
          });
    }
 
    addWord(word: Word) {
-      this.http.post<{msg: string, word: any}>(BACKEND_URL, { word })
+      this.http.post<{msg: string, words: any}>(BACKEND_URL, { word })
          .pipe(
-            map(data => {
-               data.word.id = data.word._id;
-               delete data.word._id;
-               return data.word;
-            })
+            map(this.replaceWordIdField)
          )
-         .subscribe((w: Word) => {
-            this.words = [w, ...this.words];
-            this.words$.next([...this.words]);
+         .subscribe((words: Word[]) => {
+            this.updateWords('ADD', words);
          });
    }
 
    deleteWord(id: string) {
-      this.http.delete<{msg: string}>(BACKEND_URL + '/' + id)
-         .subscribe(() => {
-            this.words = this.words.filter(word => word.id !== id);
-            this.words$.next([...this.words]);
+      this.http.delete<{msg: string, words: any}>(BACKEND_URL + '/' + id)
+         .pipe(
+            map(this.replaceWordIdField)
+         )
+         .subscribe((words: Word[]) => {
+            this.updateWords('DELETE', words);
          });
    }
 
@@ -88,5 +78,29 @@ export class WordService {
             });
          }),
       );
+   }
+
+   private replaceWordIdField(data) {
+      return data.words.map(obj => {
+         obj.id = obj._id;
+         delete obj._id;
+         return obj;
+      });
+   }
+
+   private updateWords(operations: string, words: Word[]) {
+      switch (operations) {
+         case 'ADD':
+            this.words = [words[0], ...this.words];
+            break;
+         case 'GET':
+            this.words = words;
+            break;
+         case 'DELETE':
+            this.words = this.words.filter(word => word.id !== words[0].id);
+            break;
+      }
+
+      this.words$.next([...this.words]);
    }
 }

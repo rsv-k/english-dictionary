@@ -31,7 +31,7 @@ exports.addWord = async (req, res) => {
       let word = new Word(req.body.word);
       word = await word.save();
 
-      res.status(201).json({ msg: 'word added successfully', word: [word] });
+      res.status(201).json({ msg: 'word added successfully', words: [word] });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -53,8 +53,8 @@ exports.deleteWord = async (req, res) => {
    }
 
    try {
-      await Word.findByIdAndDelete(req.params.id);
-      res.status(200).json({ msg: 'word deleted successfully' });
+      const word = await Word.findByIdAndDelete(req.params.id);
+      res.status(200).json({ msg: 'word deleted successfully', words: [word] });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
