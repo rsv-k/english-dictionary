@@ -33,13 +33,37 @@ export class WordService {
    }
 
    addWord(word: Word) {
-      this.http.post<{msg: string, words: any}>(BACKEND_URL, { word })
+      let operation = '';
+      this.getSpecificWord(word.english)
          .pipe(
-            map(this.replaceWordIdField)
+            switchMap((words: Word) => {
+               if (words[0] && words[0].english) {
+                  operation = 'EDIT';
+                  words[0].russian.push(word.russian.pop());
+                  return this.editWord(words[0]);
+               } else {
+                  operation = 'ADD';
+                  return this.createWord(word);
+               }
+            })
          )
          .subscribe((words: Word[]) => {
-            this.updateWords('ADD', words);
+            this.updateWords(operation, words);
          });
+   }
+
+   editWord(word: Word) {
+      return this.http.put<{msg: string, words: any}>(BACKEND_URL, { word })
+         .pipe(
+            map(this.replaceWordIdField)
+         );
+   }
+
+   createWord(word: Word) {
+      return this.http.post<{msg: string, words: any}>(BACKEND_URL, { word })
+         .pipe(
+            map(this.replaceWordIdField)
+         );
    }
 
    deleteWord(id: string) {
@@ -58,6 +82,13 @@ export class WordService {
          distinctUntilChanged(),
          switchMap(w => this.getTranslations(w))
       );
+   }
+
+   private getSpecificWord(word: string) {
+      return this.http.get<{msg: string, word: any}>(BACKEND_URL + '/' + word)
+         .pipe(
+            map(this.replaceWordIdField)
+         );
    }
 
    private getTranslations(word) {
@@ -81,6 +112,10 @@ export class WordService {
    }
 
    private replaceWordIdField(data) {
+      if (data.words[0] === null) {
+         return [];
+      }
+
       return data.words.map(obj => {
          obj.id = obj._id;
          delete obj._id;
@@ -88,8 +123,8 @@ export class WordService {
       });
    }
 
-   private updateWords(operations: string, words: Word[]) {
-      switch (operations) {
+   private updateWords(operation: string, words: Word[]) {
+      switch (operation) {
          case 'ADD':
             this.words = [words[0], ...this.words];
             break;
@@ -99,8 +134,16 @@ export class WordService {
          case 'DELETE':
             this.words = this.words.filter(word => word.id !== words[0].id);
             break;
-      }
+         case 'EDIT':
+            this.words = this.words.map(word => {
+               if (word.id === words[0].id) {
+                  return words[0];
+               }
 
+               return word;
+            });
+            break;
+      }
       this.words$.next([...this.words]);
    }
 }

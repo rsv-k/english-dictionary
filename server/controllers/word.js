@@ -59,3 +59,29 @@ exports.deleteWord = async (req, res) => {
       res.status(500).json({ msg: 'server error' });
    }
 };
+
+exports.getSpecificWord = async (req, res) => {
+   if (!req.params.word) {
+      return res.status(400).json({ msg: 'no data provided' });
+   }
+
+   try {
+      const word = await Word.findOne({ english: req.params.word });
+      res.status(200).json({ msg: 'word fetched successfully', words: [word] });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error' });
+   }
+};
+
+exports.updateWord = async (req, res) => {
+   if (!req.body.word) {
+      return res.status(400).json({ msg: 'no data provided' });
+   }
+
+   try {
+      const word = await Word.findOneAndUpdate({ _id: req.body.word.id }, req.body.word, { new: true });
+      res.status(200).json({ msg: 'word fetched successfully', words: [word] });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error' });
+   }
+};

@@ -6,5 +6,7 @@ router.get('/translations/:word', wordController.getTranslations);
 router.get('', wordController.getWords);
 router.post('', wordController.addWord);
 router.delete('/:id', wordController.deleteWord);
+router.get('/:word', wordController.getSpecificWord);
+router.put('', wordController.updateWord);
 
 module.exports = router;
