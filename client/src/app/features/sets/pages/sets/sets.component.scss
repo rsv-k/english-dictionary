@@ -1,0 +1,12 @@
+.sets__main {
+   display: flex;
+   justify-content: space-between;
+   flex-wrap: wrap;
+}
+.sets__create-set {
+   width: 200px;
+   height: 200px;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}

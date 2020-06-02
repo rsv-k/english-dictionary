@@ -1,1 +1,26 @@
-<app-set></app-set>
+<div class="sets">
+   <header class = "sets__header">
+      <h1 class = "sets__title">Sets</h1>
+   </header>
+
+   <section class = "sets__main">
+      <mat-card class = "sets__create-set">
+         <mat-card-header>
+            <mat-card-title>Create set</mat-card-title>
+         </mat-card-header>
+         <mat-card-content>
+               <mat-form-field>
+                  <mat-label>Set name</mat-label>
+                  <input matInput>
+               </mat-form-field>
+         </mat-card-content>
+            <mat-card-actions>
+            <button mat-raised-button color = "primary">Create</button>
+         </mat-card-actions>
+      </mat-card>
+
+      <app-set 
+         *ngFor = "let set of sets"
+         [set] = "set"></app-set>
+   </section>
+</div>

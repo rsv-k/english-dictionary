@@ -1,15 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { Set } from '@core/models/set.model';
 
 @Component({
-  selector: 'app-sets',
-  templateUrl: './sets.component.html',
-  styleUrls: ['./sets.component.scss']
+   selector: 'app-sets',
+   templateUrl: './sets.component.html',
+   styleUrls: ['./sets.component.scss']
 })
 export class SetsComponent implements OnInit {
+   sets: Set[] = [
+      { title: 'Animals' },
+      { title: 'Family' },
+      { title: 'Environment' }
+   ];
 
-  constructor() { }
+   constructor() { }
 
-  ngOnInit(): void {
-  }
+   ngOnInit(): void {
+   }
 
 }
