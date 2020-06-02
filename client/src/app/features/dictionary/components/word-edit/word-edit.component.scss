@@ -12,7 +12,6 @@
 
 .form {
    width: 300px;
-   height: 400px;
    display: flex;
    flex-direction: column;
 
@@ -36,6 +35,11 @@
 
    &__button {
       align-self: center;
+   }
+
+   &__icon {
+      cursor: pointer;
+      user-select: none;
    }
 }
 

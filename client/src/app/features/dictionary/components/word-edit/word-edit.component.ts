@@ -11,22 +11,31 @@ import { Subscription } from 'rxjs';
 export class WordEditComponent implements OnInit, OnDestroy {
    @Input() word: Word;
    @Output() hide = new EventEmitter();
-   currentImage = '';
+
    subscription: Subscription;
    showPictureInput = false;
+
+   currentImage = '';
+   currentTranslations: string[];
 
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
       this.currentImage = this.word.pic_url;
+      this.currentTranslations = [...this.word.russian];
    }
 
    onUpdateWord() {
       this.word.pic_url = this.currentImage;
+      this.word.russian = this.currentTranslations;
 
       this.subscription = this.wordService.editWord(this.word).subscribe(() => {
          this.hide.emit();
       });
+   }
+
+   onDeleteTranslation(translation: string) {
+      this.currentTranslations = this.currentTranslations.filter(t => t !== translation);
    }
 
    onHide(e: Event) {
