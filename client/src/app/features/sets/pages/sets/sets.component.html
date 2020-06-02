@@ -11,16 +11,19 @@
          <mat-card-content>
                <mat-form-field>
                   <mat-label>Set name</mat-label>
-                  <input matInput>
+                  <input matInput #title>
                </mat-form-field>
          </mat-card-content>
             <mat-card-actions>
-            <button mat-raised-button color = "primary">Create</button>
+            <button 
+               (click) = "onCreateSet(title.value); title.value = ''"
+               mat-raised-button 
+               color = "primary">Create</button>
          </mat-card-actions>
       </mat-card>
 
       <app-set 
-         *ngFor = "let set of sets"
+         *ngFor = "let set of sets$ | async"
          [set] = "set"></app-set>
    </section>
 </div>
