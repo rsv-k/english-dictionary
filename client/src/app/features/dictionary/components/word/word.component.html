@@ -1,16 +1,19 @@
-<mat-expansion-panel>
+<mat-expansion-panel (opened) = "isPanelOpened = true" (closed) = "isPanelOpened = false">
    <mat-expansion-panel-header>
      <mat-panel-title>
       {{ word.english }}
      </mat-panel-title>
-     <mat-panel-description>
-      {{ word.russian.join(', ') }}
+     <mat-panel-description *ngIf = "!isPanelOpened">
+      {{ word.russian.join(', ') | cutLength:30 }}
      </mat-panel-description>
    </mat-expansion-panel-header>
 
    <div class="content">
       <div class="picture__container" *ngIf = "word.pic_url">
          <img [src] = "word.pic_url" [alt]="word.english" class = "picture">
+      </div>
+      <div class="content__translation" *ngIf = "isPanelOpened">
+         {{ word.russian.join(', ') }}
       </div>
       <p class = "text--plain">
          {{ word.text }}

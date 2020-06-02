@@ -9,6 +9,7 @@ import { WordService } from '@core/services/word.service';
 })
 export class WordComponent implements OnInit {
    @Input() word: Word;
+   isPanelOpened = false;
 
    constructor(private wordService: WordService) { }
 
