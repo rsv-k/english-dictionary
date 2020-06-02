@@ -7,6 +7,7 @@ import { WordComponent } from './components/word/word.component';
 import { SharedModule } from '@shared/shared.module';
 import { WordCreateComponent } from './components/word-create/word-create.component';
 import { WordEditComponent } from './components/word-edit/word-edit.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { WordEditComponent } from './components/word-edit/word-edit.component';
   imports: [
     CommonModule,
     DictionaryRoutingModule,
+    FormsModule,
     SharedModule
   ]
 })

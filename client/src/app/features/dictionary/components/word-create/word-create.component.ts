@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WordService } from '@core/services/word.service';
 import { Observable, Subject } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
@@ -12,7 +12,6 @@ import { Word } from '@core/models/word.model';
 export class WordCreateComponent implements OnInit {
    wordText$ = new Subject<string>();
    translations$: Observable<Translation[]>;
-   @Output() hideCreation = new EventEmitter();
 
    constructor(private wordService: WordService) { }
 
@@ -29,11 +28,5 @@ export class WordCreateComponent implements OnInit {
 
       this.wordService.addWord(word);
       this.wordText$.next('');
-   }
-
-   onHide(e: Event) {
-      if (e.target === e.currentTarget) {
-         this.hideCreation.emit();
-      }
    }
 }

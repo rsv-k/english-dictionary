@@ -9,7 +9,7 @@
    </mat-expansion-panel-header>
 
    <div class="content">
-      <div class="picture__container" *ngIf = "word.pic_url">
+      <div class="picture__container">
          <img [src] = "word.pic_url" [alt]="word.english" class = "picture">
       </div>
       <div class="content__translation" *ngIf = "isPanelOpened">
@@ -22,6 +22,6 @@
 
    <mat-action-row>
       <button (click) = "onDelete()" mat-raised-button color = "accent">Delete</button>
-      <button mat-raised-button color = "primary">Edit</button>
+      <button (click) = "onEdit()" mat-raised-button color = "primary">Edit</button>
    </mat-action-row>
 </mat-expansion-panel>

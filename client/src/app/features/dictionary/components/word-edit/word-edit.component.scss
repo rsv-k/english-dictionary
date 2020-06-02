@@ -1,10 +1,41 @@
-:host {
+.container {
    position: fixed;
    top: 0;
    right: 0;
    bottom: 0;
    left: 0;
+   background: rgba(0, 0, 0, 0.7);
    display: flex;
    justify-content: center;
    align-items: center;
 }
+
+.form {
+   width: 300px;
+   height: 400px;
+   display: flex;
+   flex-direction: column;
+
+   &__image-container {
+      width: 300px;
+      text-align: center;
+   }
+
+   &__change {
+      display: block;
+   }
+
+   &__picture {
+      max-width: 100%;
+      height: auto;
+   }
+
+   &__group {
+      width: 100%;
+   }
+
+   &__button {
+      align-self: center;
+   }
+}
+

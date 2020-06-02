@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
 
@@ -9,6 +9,7 @@ import { WordService } from '@core/services/word.service';
 })
 export class WordComponent implements OnInit {
    @Input() word: Word;
+   @Output() showEditing = new EventEmitter<Word>();
    isPanelOpened = false;
 
    constructor(private wordService: WordService) { }
@@ -18,5 +19,9 @@ export class WordComponent implements OnInit {
 
    onDelete() {
       this.wordService.deleteWord(this.word.id);
+   }
+
+   onEdit() {
+      this.showEditing.emit(this.word);
    }
 }

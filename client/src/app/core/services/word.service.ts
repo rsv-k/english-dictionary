@@ -15,6 +15,7 @@ const BACKEND_URL = environment.apiUrl + 'word';
 export class WordService {
    words$ = new BehaviorSubject<Word[]>([]);
    private words: Word[];
+   private defaultPic = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
 
    constructor(private http: HttpClient) { }
 
@@ -25,7 +26,8 @@ export class WordService {
    getWords() {
       this.http.get<{msg: string, words: any}>(BACKEND_URL)
          .pipe(
-            map(this.replaceWordIdField)
+            map(this.replaceWordIdField.bind(this)),
+            map(this.setDefaultPic.bind(this))
          )
          .subscribe((words: Word[]) => {
             this.updateWords('GET', words);
@@ -62,21 +64,24 @@ export class WordService {
    editWord(word: Word) {
       return this.http.put<{msg: string, words: any}>(BACKEND_URL, { word })
          .pipe(
-            map(this.replaceWordIdField)
+            map(this.replaceWordIdField.bind(this)),
+            map(this.setDefaultPic.bind(this))
          );
    }
 
    createWord(word: Word) {
       return this.http.post<{msg: string, words: any}>(BACKEND_URL, { word })
          .pipe(
-            map(this.replaceWordIdField)
+            map(this.replaceWordIdField.bind(this)),
+            map(this.setDefaultPic.bind(this))
          );
    }
 
    deleteWord(id: string) {
       this.http.delete<{msg: string, words: any}>(BACKEND_URL + '/' + id)
          .pipe(
-            map(this.replaceWordIdField)
+            map(this.replaceWordIdField.bind(this)),
+            map(this.setDefaultPic.bind(this))
          )
          .subscribe((words: Word[]) => {
             this.updateWords('DELETE', words);
@@ -126,6 +131,15 @@ export class WordService {
       return data.words.map(obj => {
          obj.id = obj._id;
          delete obj._id;
+         return obj;
+      });
+   }
+
+   private setDefaultPic(words: Word[]) {
+      return words.map(obj => {
+         if (!obj.pic_url) {
+            obj.pic_url = this.defaultPic;
+         }
          return obj;
       });
    }

@@ -1,14 +1,16 @@
 <section class = "dictionary">
    <header class = "dictionary__header">
       <h1>Dictionary</h1>
-      <app-word-create (hideCreation) = "hideCreation()"></app-word-create>
+      <app-word-create ></app-word-create>
       </header>
       <mat-card >
 
       <mat-accordion>
          <div class="dictionary__word" *ngFor = "let word of words$ | async" >
-            <app-word [word] = "word"></app-word>
+            <app-word [word] = "word" (showEditing) = "showEditing($event)"></app-word>
          </div>
       </mat-accordion>
    </mat-card>
 </section>
+
+<app-word-edit *ngIf = "showEdit" (hide) = "hideEditing()" [word] = "word"></app-word-edit>

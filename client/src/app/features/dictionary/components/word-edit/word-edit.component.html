@@ -1,3 +1,41 @@
-<mat-card>
-   
-</mat-card>
+<div class="container" (click) = "onHide($event)">
+   <mat-card class = "form">
+         <mat-card-header>
+            <mat-card-title>{{ word.english }}</mat-card-title>
+         </mat-card-header>
+      
+         <mat-card-content>
+            <div class="form__image-container">
+               <img 
+                  [src] = "currentImage" 
+                  [alt]="word.english" 
+                  class = "form__picture"
+                  >
+               
+               <button 
+                  class="form__change" 
+                  mat-button 
+                  (click) = "showPictureInput = !showPictureInput" 
+                  color = "warn">{{ showPictureInput ? 'Save' : 'Change picture'}}</button>
+         
+               <mat-form-field *ngIf = "showPictureInput" class = "form__group">
+                  <mat-label>Picture url</mat-label>
+                  <input matInput [(ngModel)] = "currentImage" type = "text">
+               </mat-form-field>
+            </div>
+      
+            <div class="form__word-translations">
+               <h3>Translations</h3>
+               <p *ngFor = "let translation of word.russian">{{ translation }}</p>
+            </div>
+         </mat-card-content>
+      
+         <mat-card-actions>
+            <button 
+               (click) = "onUpdateWord()"
+               mat-raised-button 
+               color = "primary" 
+               class = "form__button">Update word</button>
+         </mat-card-actions>
+      </mat-card>
+</div>

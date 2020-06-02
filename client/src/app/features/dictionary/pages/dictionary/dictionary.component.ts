@@ -10,7 +10,8 @@ import { Observable } from 'rxjs';
 })
 export class DictionaryComponent implements OnInit {
    words$: Observable<Word[]>;
-   showCreation = false;
+   word: Word;
+   showEdit = false;
 
    constructor(private wordService: WordService) { }
 
@@ -19,7 +20,13 @@ export class DictionaryComponent implements OnInit {
       this.wordService.getWords();
    }
 
-   hideCreation() {
-      this.showCreation = false;
+   showEditing(word: Word) {
+      this.showEdit = true;
+      this.word = word;
+   }
+
+   hideEditing() {
+      this.word = null;
+      this.showEdit = false;
    }
 }
