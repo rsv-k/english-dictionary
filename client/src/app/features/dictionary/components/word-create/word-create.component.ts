@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WordService } from '@core/services/word.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
 import { Word } from '@core/models/word.model';
 
@@ -27,6 +27,6 @@ export class WordCreateComponent implements OnInit {
       };
 
       this.wordService.addWord(word);
-      this.wordText$.next('');
+      this.translations$ = of([]);
    }
 }

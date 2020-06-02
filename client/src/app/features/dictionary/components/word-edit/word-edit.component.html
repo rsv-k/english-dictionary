@@ -20,7 +20,7 @@
          
                <mat-form-field *ngIf = "showPictureInput" class = "form__group">
                   <mat-label>Picture url</mat-label>
-                  <input matInput [(ngModel)] = "currentImage" type = "text">
+                  <input matInput [(ngModel)] = "currentImage">
                </mat-form-field>
             </div>
       
@@ -35,6 +35,11 @@
                      color = "accent">delete</mat-icon>
                </p>
             </div>
+
+            <mat-form-field class="form__group">
+               <mat-label>Context of word</mat-label>
+               <textarea matInput [(ngModel)] = "currentText"></textarea>
+            </mat-form-field>
          </mat-card-content>
       
          <mat-card-actions>

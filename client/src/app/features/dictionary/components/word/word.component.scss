@@ -4,7 +4,13 @@
 
 .content {
    display: flex;
+   flex-direction: column;
    justify-content: space-between;
+   
+   &__top {
+      display: flex;
+      justify-content: space-between;
+   }
 }
 
 .picture__container {

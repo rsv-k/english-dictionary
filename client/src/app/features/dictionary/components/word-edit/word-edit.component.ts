@@ -17,17 +17,27 @@ export class WordEditComponent implements OnInit, OnDestroy {
 
    currentImage = '';
    currentTranslations: string[];
+   currentText = '';
 
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
       this.currentImage = this.word.pic_url;
       this.currentTranslations = [...this.word.russian];
+      this.currentText = this.word.text;
    }
 
    onUpdateWord() {
+      if (this.word.pic_url === this.currentImage && 
+         this.word.russian.join('') === this.currentTranslations.join('') &&
+         this.currentText.trim() === this.word.text
+         ) {
+         return;
+      }
+
       this.word.pic_url = this.currentImage;
       this.word.russian = this.currentTranslations;
+      this.word.text = this.currentText;
 
       this.subscription = this.wordService.editWord(this.word).subscribe(() => {
          this.hide.emit();

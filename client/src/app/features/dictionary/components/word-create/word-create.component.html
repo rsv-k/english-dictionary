@@ -2,18 +2,14 @@
    <mat-label>Word</mat-label>
    <input 
       matInput 
-      type = "text" 
-      #word
       (input) = "wordText$.next($event.target.value)"
       [matAutocomplete]="auto">
 
    <mat-autocomplete 
-      autoActiveFirstOption 
       #auto="matAutocomplete">
       <mat-option 
          *ngFor="let translation of translations$ | async" 
-         (click) = "chooseTranslation(translation); word.value = ''"
-         [value]="translation.value">
+         (click) = "chooseTranslation(translation)">
          {{ translation.value }}
       </mat-option>
    </mat-autocomplete>
