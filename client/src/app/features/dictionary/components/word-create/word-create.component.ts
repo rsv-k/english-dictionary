@@ -27,6 +27,5 @@ export class WordCreateComponent implements OnInit {
       };
 
       this.wordService.addWord(word);
-      this.translations$ = of([]);
    }
 }

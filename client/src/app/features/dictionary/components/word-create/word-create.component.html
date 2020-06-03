@@ -1,16 +1,19 @@
 <mat-form-field class="create__group">
    <mat-label>Word</mat-label>
-   <input 
-      matInput 
-      (input) = "wordText$.next($event.target.value)"
+   <input
+      matInput
+      #word
+      (input) = "wordText$.next(word.value)"
       [matAutocomplete]="auto">
 
-   <mat-autocomplete 
+   <mat-autocomplete
       #auto="matAutocomplete">
-      <mat-option 
-         *ngFor="let translation of translations$ | async" 
-         (click) = "chooseTranslation(translation)">
-         {{ translation.value }}
-      </mat-option>
+      <ng-container *ngIf = "word.value.length > 1">
+         <mat-option
+            *ngFor="let translation of translations$ | async"
+            (click) = "chooseTranslation(translation)">
+            {{ translation.value }}
+         </mat-option>
+      </ng-container>
    </mat-autocomplete>
 </mat-form-field>

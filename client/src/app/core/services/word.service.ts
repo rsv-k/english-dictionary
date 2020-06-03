@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { HttpClient } from '@angular/common/http';
-import { map, distinctUntilChanged, debounceTime, switchMap, takeWhile, filter } from 'rxjs/operators';
+import { map, distinctUntilChanged, debounceTime, switchMap, filter, tap } from 'rxjs/operators';
 import { of, BehaviorSubject, iif } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 
 const BACKEND_URL = environment.apiUrl + 'word';
+const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
 
 @Injectable({
    providedIn: 'root'
@@ -15,7 +16,6 @@ const BACKEND_URL = environment.apiUrl + 'word';
 export class WordService {
    words$ = new BehaviorSubject<Word[]>([]);
    private words: Word[];
-   private defaultPic = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
 
    constructor(private http: HttpClient) { }
 
@@ -26,80 +26,75 @@ export class WordService {
    getWords() {
       this.http.get<{msg: string, words: any}>(BACKEND_URL)
          .pipe(
-            map(this.replaceWordIdField.bind(this)),
-            map(this.setDefaultPic.bind(this))
+            filter(data => data.words[0] !== null),
+            map(this.mutateIdAndPic),
+            tap((words: Word[]) => this.updateWords('GET', words))
          )
-         .subscribe((words: Word[]) => {
-            this.updateWords('GET', words);
+         .subscribe(() => {
          });
    }
 
    addWord(word: Word) {
-      let operation = '';
       this.getSpecificWord(word.english)
          .pipe(
-            takeWhile((words: Word[]) => {
-               if (words.length !== 0) {
-                  return !words[0].russian.includes(word.russian[0]);
-               } else {
-                  return true;
-               }
-            }),
             switchMap((words: Word[]) => {
-               if (words[0] && words[0].english) {
-                  operation = 'EDIT';
+               if (words.length) {
                   words[0].russian.push(word.russian.pop());
                   return this.editWord(words[0]);
                } else {
-                  operation = 'ADD';
                   return this.createWord(word);
                }
             })
          )
-         .subscribe((words: Word[]) => {
-            this.updateWords(operation, words);
+         .subscribe(() => {
          });
    }
 
    editWord(word: Word) {
       return this.http.put<{msg: string, words: any}>(BACKEND_URL, { word })
          .pipe(
-            map(this.replaceWordIdField.bind(this)),
-            map(this.setDefaultPic.bind(this))
+            map(this.mutateIdAndPic),
+            tap((words: Word[]) => this.updateWords('EDIT', words))
          );
    }
 
    createWord(word: Word) {
       return this.http.post<{msg: string, words: any}>(BACKEND_URL, { word })
          .pipe(
-            map(this.replaceWordIdField.bind(this)),
-            map(this.setDefaultPic.bind(this))
+            map(this.mutateIdAndPic),
+            tap((words: Word[]) => this.updateWords('ADD', words))
          );
    }
 
    deleteWord(id: string) {
       this.http.delete<{msg: string, words: any}>(BACKEND_URL + '/' + id)
          .pipe(
-            map(this.replaceWordIdField.bind(this)),
-            map(this.setDefaultPic.bind(this))
+            map(this.mutateIdAndPic),
+            tap((words: Word[]) => this.updateWords('DELETE', words))
          )
-         .subscribe((words: Word[]) => {
-            this.updateWords('DELETE', words);
+         .subscribe(() => {
          });
    }
 
    showTranslations(word: Observable<string>) {
       return word.pipe(
-         debounceTime(500),
+         debounceTime(1000),
          distinctUntilChanged(),
          switchMap(w => iif(() => w.trim().length === 0, of([]), this.getTranslations(w)))
       );
    }
 
    private getSpecificWord(word: string) {
-      return this.http.get<{msg: string, word: any}>(BACKEND_URL + '/' + word)
+      return this.http.get<{msg: string, words: any}>(BACKEND_URL + '/' + word)
          .pipe(
-            map(this.replaceWordIdField)
+            map(data => {
+               if (data.words[0] === null) {
+                  data.words = [];
+               }
+
+               return data;
+            }),
+            map(this.mutateIdAndPic),
          );
    }
 
@@ -119,23 +114,11 @@ export class WordService {
       );
    }
 
-   private replaceWordIdField(data) {
-      if (data.words[0] === null) {
-         return [];
-      }
-
+   private mutateIdAndPic(data) {
       return data.words.map(obj => {
          obj.id = obj._id;
          delete obj._id;
-         return obj;
-      });
-   }
-
-   private setDefaultPic(words: Word[]) {
-      return words.map(obj => {
-         if (!obj.pic_url) {
-            obj.pic_url = this.defaultPic;
-         }
+         obj.pic_url = obj.pic_url ? obj.pic_url : DEFAULT_PIC;
          return obj;
       });
    }
