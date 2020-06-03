@@ -4,4 +4,5 @@ export interface Word {
    russian: string[];
    text?: string;
    pic_url?: string;
+   createdAt?: number;
 }

@@ -39,7 +39,7 @@ exports.addWord = async (req, res) => {
 
 exports.getWords = async (req, res) => {
    try {
-      const words = await Word.find();
+      const words = await Word.find().sort({ createdAt: -1 });
 
       res.status(201).json({ msg: 'word added successfully', words });
    } catch (err) {
