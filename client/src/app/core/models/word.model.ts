@@ -5,4 +5,5 @@ export interface Word {
    text?: string;
    pic_url?: string;
    createdAt?: number;
+   setId?: string;
 }

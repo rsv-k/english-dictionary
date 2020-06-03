@@ -11,7 +11,9 @@ import { SetService } from '@core/services/set.service';
 export class SetsComponent implements OnInit {
    sets$: Observable<Set[]>;
 
-   constructor(private setService: SetService) { }
+   constructor(
+      private setService: SetService,
+      ) { }
 
    ngOnInit(): void {
       this.sets$ = this.setService.getSetsUpdateListener();
@@ -20,7 +22,7 @@ export class SetsComponent implements OnInit {
 
    onCreateSet(title: string) {
       const set: Set = {
-         title
+         title: title[0].toUpperCase() + title.slice(1).toLowerCase()
       };
 
       this.setService.addSet(set);

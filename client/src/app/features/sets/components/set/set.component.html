@@ -1,4 +1,4 @@
-<mat-card class = "set">
+<mat-card class = "set" (click) = "moveToDictionary($event)">
    <mat-card-header class = "set__header">
       <mat-card-title *ngIf = "!isEditing">{{ set.title }}</mat-card-title>
       <mat-form-field *ngIf = "isEditing" class = "set__form-field">

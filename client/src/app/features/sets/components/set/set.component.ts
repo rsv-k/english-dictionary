@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Set } from '@core/models/set.model';
 import { SetService } from '@core/services/set.service';
+import { Router } from '@angular/router';
 
 @Component({
    selector: 'app-set',
@@ -12,7 +13,10 @@ export class SetComponent implements OnInit {
    isEditing = false;
    title: string;
 
-   constructor(private setService: SetService) { }
+   constructor(
+      private setService: SetService,
+      private router: Router
+      ) { }
 
    ngOnInit(): void {
    }
@@ -37,4 +41,9 @@ export class SetComponent implements OnInit {
       this.title = title;
    }
 
+   moveToDictionary(e: Event) {
+      if (e.target === e.currentTarget) {
+         this.router.navigate(['set', this.set.id], { state: { title: this.set.title }});
+      }
+   }
 }

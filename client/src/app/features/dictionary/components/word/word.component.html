@@ -8,23 +8,25 @@
      </mat-panel-description>
    </mat-expansion-panel-header>
 
-   <div class="content">
-      <div class="content__top">
-         <div class="picture__container">
-            <img [src] = "word.pic_url" [alt]="word.english" class = "picture">
+   <ng-template matExpansionPanelContent>
+      <div class="content">
+         <div class="content__top">
+            <div class="picture__container">
+               <img [src] = "word.pic_url" [alt]="word.english" class = "picture">
+            </div>
+            <div class="content__translation" *ngIf = "isPanelOpened">
+               {{ word.russian.join(', ') }}
+            </div>
          </div>
-         <div class="content__translation" *ngIf = "isPanelOpened">
-            {{ word.russian.join(', ') }}
-         </div>
+         
+         <p class = "text--plain">
+            {{ word.text }}
+         </p>
       </div>
-      
-      <p class = "text--plain">
-         {{ word.text }}
-      </p>
-   </div>
-
-   <mat-action-row>
-      <button (click) = "onDelete()" mat-raised-button color = "accent">Delete</button>
-      <button (click) = "onEdit()" mat-raised-button color = "primary">Edit</button>
-   </mat-action-row>
+   
+      <mat-action-row>
+         <button (click) = "onDelete()" mat-raised-button color = "accent">Delete</button>
+         <button (click) = "onEdit()" mat-raised-button color = "primary">Edit</button>
+      </mat-action-row>
+   </ng-template>
 </mat-expansion-panel>

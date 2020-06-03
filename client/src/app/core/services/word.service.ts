@@ -27,8 +27,13 @@ export class WordService {
       return this.words$.asObservable();
    }
 
-   getWords() {
-      this.http.get<{msg: string, words: any}>(BACKEND_URL)
+   getWords(setId: string = '') {
+      let query = '';
+      if (setId) {
+         query = '?setId=' + setId;
+      }
+
+      this.http.get<{msg: string, words: any}>(BACKEND_URL + query)
          .pipe(
             filter(data => data.words[0] !== null),
             map(this.mutateIdAndPic),

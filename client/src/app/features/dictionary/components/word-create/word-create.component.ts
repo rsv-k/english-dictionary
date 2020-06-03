@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { WordService } from '@core/services/word.service';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
 import { Word } from '@core/models/word.model';
 
@@ -10,6 +10,7 @@ import { Word } from '@core/models/word.model';
    styleUrls: ['./word-create.component.scss']
 })
 export class WordCreateComponent implements OnInit {
+   @Input() setId: string;
    wordText$ = new Subject<string>();
    translations$: Observable<Translation[]>;
 
@@ -21,9 +22,10 @@ export class WordCreateComponent implements OnInit {
 
    chooseTranslation(translation: Translation) {
       const word: Word = {
-         english: translation.origin,
+         english: translation.origin[0].toUpperCase() + translation.origin.slice(1).toLowerCase(),
          russian: [translation.value],
-         pic_url: translation.pic_url
+         pic_url: translation.pic_url,
+         setId: this.setId
       };
 
       this.wordService.addWord(word);
