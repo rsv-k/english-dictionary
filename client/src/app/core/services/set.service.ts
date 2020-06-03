@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { UtilsService } from './utils.service';
 
 const BACKEND_URL = environment.apiUrl + 'set';
 
@@ -14,7 +15,10 @@ export class SetService {
    private sets$ = new BehaviorSubject<Set[]>([]);
    sets: Set[] = [];
 
-   constructor(private http: HttpClient) { }
+   constructor(
+      private http: HttpClient,
+      private utilsService: UtilsService
+      ) { }
 
 
    getSetsUpdateListener() {
@@ -92,6 +96,12 @@ export class SetService {
             break;
       }
 
+      if (operation !== 'GET') {
+         let action = operation.toLowerCase();
+         action += action[action.length - 1] === 'e' ? 'd' : 'ed';
+
+         this.utilsService.showSnackBar('Set ' + action);
+      }
       this.sets$.next([...this.sets]);
    }
 }

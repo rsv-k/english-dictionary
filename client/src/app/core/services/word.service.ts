@@ -6,6 +6,7 @@ import { of, BehaviorSubject, iif } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { UtilsService } from './utils.service';
 
 const BACKEND_URL = environment.apiUrl + 'word';
 const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
@@ -17,7 +18,10 @@ export class WordService {
    words$ = new BehaviorSubject<Word[]>([]);
    private words: Word[];
 
-   constructor(private http: HttpClient) { }
+   constructor(
+      private http: HttpClient,
+      private utilsService: UtilsService
+      ) { }
 
    getWordsUpdateListener() {
       return this.words$.asObservable();
@@ -143,6 +147,13 @@ export class WordService {
                return word;
             });
             break;
+      }
+
+      if (operation !== 'GET') {
+         let action = operation.toLowerCase();
+         action += action[action.length - 1] === 'e' ? 'd' : 'ed';
+
+         this.utilsService.showSnackBar('Word ' + action);
       }
       this.words$.next([...this.words]);
    }
