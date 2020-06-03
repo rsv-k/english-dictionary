@@ -52,6 +52,16 @@ export class SetService {
          });
    }
 
+   editSet(set: Set) {
+      this.http.put<{msg: string, sets: any}>(BACKEND_URL, { set })
+         .pipe(
+            map(this.replaceSetIdField)
+         )
+         .subscribe((sets: Set[]) => {
+            this.updateSets('EDIT', sets);
+         });
+   }
+
    private replaceSetIdField(data) {
       return data.sets.map(set => {
          set.id = set._id;
@@ -70,6 +80,15 @@ export class SetService {
             break;
          case 'DELETE':
             this.sets = this.sets.filter(set => set.id !== sets[0].id);
+            break;
+         case 'EDIT':
+            this.sets = this.sets.map(set => {
+               if (set.id === sets[0].id) {
+                  return sets[0];
+               }
+
+               return set;
+            });
             break;
       }
 

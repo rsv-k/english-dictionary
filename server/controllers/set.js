@@ -37,3 +37,19 @@ exports.deleteSet = async (req, res) => {
       res.status(500).json({ msg: 'server error' });
    }
 };
+
+exports.editSet = async (req, res) => {
+   if (!req.body.set) {
+      return res.status(400).json({ msg: 'no data provided' });
+   }
+
+   try {
+      let set = await Set.findOne({ _id: req.body.set.id });
+      set.title = req.body.set.title;
+      set = await set.save();
+
+      res.status(200).json({ msg: 'set edited successfully', sets: [set] });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error' });
+   }
+};
