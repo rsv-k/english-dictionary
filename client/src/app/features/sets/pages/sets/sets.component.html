@@ -4,7 +4,7 @@
    </header>
 
    <section class = "sets__main">
-      <mat-card class = "sets__create-set">
+      <mat-card class = "sets__create-set sets__set">
          <mat-card-header>
             <mat-card-title>Create set</mat-card-title>
          </mat-card-header>
@@ -23,6 +23,7 @@
       </mat-card>
 
       <app-set 
+         class = "sets__set"
          *ngFor = "let set of sets$ | async"
          [set] = "set"></app-set>
    </section>

@@ -1,5 +1,5 @@
 export interface Word {
-   id?: string;
+   id: string;
    english: string;
    russian: string[];
    text?: string;
