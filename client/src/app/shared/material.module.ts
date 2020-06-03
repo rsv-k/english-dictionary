@@ -7,6 +7,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
       MatAutocompleteModule,
       MatIconModule,
       MatToolbarModule,
-      MatSnackBarModule
+      MatSnackBarModule,
+      MatTooltipModule
    ]
 })
 export class MaterialModule { }
