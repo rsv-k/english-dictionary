@@ -1,4 +1,4 @@
 export interface Set {
-   id: string;
+   id?: string;
    title: string;
 }
