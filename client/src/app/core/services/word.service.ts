@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { HttpClient } from '@angular/common/http';
-import { map, distinctUntilChanged, debounceTime, switchMap, takeWhile } from 'rxjs/operators';
-import { of, BehaviorSubject } from 'rxjs';
+import { map, distinctUntilChanged, debounceTime, switchMap, takeWhile, filter } from 'rxjs/operators';
+import { of, BehaviorSubject, iif } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
@@ -90,9 +90,9 @@ export class WordService {
 
    showTranslations(word: Observable<string>) {
       return word.pipe(
-         debounceTime(1000),
+         debounceTime(500),
          distinctUntilChanged(),
-         switchMap(w => this.getTranslations(w))
+         switchMap(w => iif(() => w.trim().length === 0, of([]), this.getTranslations(w)))
       );
    }
 
@@ -104,10 +104,6 @@ export class WordService {
    }
 
    private getTranslations(word) {
-      if (word.trim().length === 0) {
-         return of([]);
-      }
-
       const url = BACKEND_URL + '/translations/' + word;
       return this.http.get<{msg: string, result: any}>(url)
       .pipe(
