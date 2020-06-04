@@ -15,17 +15,15 @@ const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793
    providedIn: 'root'
 })
 export class WordService {
-   words$ = new BehaviorSubject<Word[]>([]);
+   private wordsUpdateListener = new BehaviorSubject<Word[]>([]);
    private words: Word[];
+
+   wordsUpdateListener$ = this.wordsUpdateListener.asObservable();
 
    constructor(
       private http: HttpClient,
       private utilsService: UtilsService
       ) { }
-
-   getWordsUpdateListener() {
-      return this.words$.asObservable();
-   }
 
    getWords(setId: string = null) {
       const options = {
@@ -98,7 +96,7 @@ export class WordService {
             });
 
             this.words = this.words.filter(word => !deletedWords[word.id]);
-            this.words$.next([...this.words]);
+            this.wordsUpdateListener.next([...this.words]);
             this.utilsService.showSnackBar('Words deleted');
          });
    }
@@ -178,6 +176,6 @@ export class WordService {
 
          this.utilsService.showSnackBar('Word ' + action);
       }
-      this.words$.next([...this.words]);
+      this.wordsUpdateListener.next([...this.words]);
    }
 }

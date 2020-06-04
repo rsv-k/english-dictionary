@@ -28,7 +28,7 @@ export class DictionaryComponent implements OnInit {
 
       this.title =  title ? title.split('_').join(' ') : 'dictionary';
 
-      this.words$ = this.wordService.getWordsUpdateListener();
+      this.words$ = this.wordService.wordsUpdateListener$;
       this.wordService.getWords(this.id);
    }
 
