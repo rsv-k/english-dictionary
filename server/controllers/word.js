@@ -44,6 +44,10 @@ exports.getWords = async (req, res) => {
       if (setId) {
          options.setId = setId;
       }
+      if (req.query.startsWith) {
+         const regex = new RegExp('^' + req.query.startsWith);
+         options.english = regex;
+      }
 
       const words = await Word.find(options).sort({ createdAt: -1 });
 

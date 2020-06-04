@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, distinctUntilChanged, debounceTime, switchMap, filter, tap } from 'rxjs/operators';
-import { of, BehaviorSubject, iif } from 'rxjs';
+import { of, Subject, iif } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
@@ -15,7 +15,7 @@ const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793
    providedIn: 'root'
 })
 export class WordService {
-   private wordsUpdateListener = new BehaviorSubject<Word[]>([]);
+   private wordsUpdateListener = new Subject<Word[]>();
    private words: Word[];
 
    wordsUpdateListener$ = this.wordsUpdateListener.asObservable();
