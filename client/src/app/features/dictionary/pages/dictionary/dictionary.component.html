@@ -3,7 +3,7 @@
       <h1>{{ title | uppercase }}</h1>
       <app-word-create [setId] = "id"></app-word-create>
       <div class="dictionary__manage-word" *ngIf = "checkedWords.length">
-         <button mat-icon-button color = "warn">
+         <button mat-icon-button color = "warn" (click) = "deleteSelected()">
             <mat-icon>delete</mat-icon>
          </button>
       </div>

@@ -85,6 +85,21 @@ export class WordService {
          });
    }
 
+   deleteManyWords(ids: string[]) {
+      this.http.post(BACKEND_URL + '/deleteMany', { ids })
+         .subscribe(() => {
+            const deletedWords = {};
+
+            ids.forEach(id => {
+               deletedWords[id] = true;
+            });
+
+            this.words = this.words.filter(word => !deletedWords[word.id]);
+            this.words$.next([...this.words]);
+            this.utilsService.showSnackBar('Words deleted');
+         });
+   }
+
    showTranslations(word: Observable<string>) {
       return word.pipe(
          debounceTime(1000),

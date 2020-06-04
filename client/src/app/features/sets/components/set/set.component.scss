@@ -14,7 +14,7 @@
    }
 
    &__actions {
-     align-self: flex-end;
+     align-self: flex-start;
      opacity: 0;
      transition: .5s;
    }
@@ -26,4 +26,6 @@
    &__form-field {
       width: 100%;
    }
+
+
 }

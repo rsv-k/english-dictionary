@@ -8,5 +8,6 @@ router.post('', wordController.addWord);
 router.delete('/:id', wordController.deleteWord);
 router.get('/:word', wordController.getSpecificWord);
 router.put('', wordController.updateWord);
+router.post('/deleteMany', wordController.deleteMany);
 
 module.exports = router;

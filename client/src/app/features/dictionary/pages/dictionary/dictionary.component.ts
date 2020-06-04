@@ -49,4 +49,9 @@ export class DictionaryComponent implements OnInit {
          this.checkedWords.push(id);
       }
    }
+
+   deleteSelected() {
+      this.wordService.deleteManyWords(this.checkedWords);
+      this.checkedWords = [];
+   }
 }

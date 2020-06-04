@@ -91,3 +91,16 @@ exports.updateWord = async (req, res) => {
       res.status(500).json({ msg: 'server error' });
    }
 };
+
+exports.deleteMany = async (req, res) => {
+   if (!req.body.ids) {
+      return res.status(400).json({ msg: 'no data provided' });
+   }
+
+   try {
+      await Word.deleteMany({ _id: req.body.ids });
+      res.status(200).json({ msg: 'words deleted successfully' });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error' });
+   }
+};

@@ -1,14 +1,20 @@
 <mat-card class = "set" (click) = "moveToDictionary($event)">
-   <mat-card-header class = "set__header">
-      <mat-card-title *ngIf = "!isEditing">{{ set.title }}</mat-card-title>
+   <div class="set__header">
+      <mat-card-header>
+         <mat-card-title *ngIf = "!isEditing">{{ set.title }}</mat-card-title>
+      </mat-card-header>
       <mat-form-field *ngIf = "isEditing" class = "set__form-field">
          <mat-label>Set title</mat-label>
          <input matInput [value] = "title" (input) = "onInput($event.target.value)">
       </mat-form-field>
-   </mat-card-header>
+   </div>
     
    <mat-card-actions class = "set__actions">
-      <button mat-raised-button color = "warn" (click) = "onDeleteSet()">DELETE</button>
-      <button mat-raised-button color = "primary" (click) = "onEdit()">{{ isEditing ? 'SAVE' : 'EDIT' }}</button>
+      <button 
+         mat-icon-button 
+         color = "primary" 
+         (click) = "onEdit()" 
+         [matTooltip] = "isEditing ? 'done' : 'edit'"><mat-icon>{{ isEditing ? 'done' : 'edit' }}</mat-icon></button>
+      <button mat-icon-button color = "warn" (click) = "onDeleteSet()" matTooltip = "delete"><mat-icon>delete</mat-icon></button>
    </mat-card-actions>
 </mat-card>
