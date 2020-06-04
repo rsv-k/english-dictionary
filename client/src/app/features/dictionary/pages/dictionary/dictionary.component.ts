@@ -15,6 +15,7 @@ export class DictionaryComponent implements OnInit {
    showEdit = false;
    id: string;
    title: string;
+   checkedWords: string[] = [];
 
    constructor(
       private wordService: WordService,
@@ -39,5 +40,13 @@ export class DictionaryComponent implements OnInit {
    hideEditing() {
       this.word = null;
       this.showEdit = false;
+   }
+
+   checkWord(id: string) {
+      if (this.checkedWords.includes(id)) {
+         this.checkedWords = this.checkedWords.filter(wordId => wordId !== id);
+      } else {
+         this.checkedWords.push(id);
+      }
    }
 }
