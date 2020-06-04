@@ -23,7 +23,9 @@ export class DictionaryComponent implements OnInit {
 
    ngOnInit(): void {
       this.id = this.route.snapshot.params.id;
-      this.title = history.state.title || 'Dictionary';
+      const title = this.route.snapshot.params.setName;
+
+      this.title =  title ? title.split('_').join(' ') : 'dictionary';
 
       this.words$ = this.wordService.getWordsUpdateListener();
       this.wordService.getWords(this.id);

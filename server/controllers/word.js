@@ -47,7 +47,7 @@ exports.getWords = async (req, res) => {
 
       const words = await Word.find(options).sort({ createdAt: -1 });
 
-      res.status(201).json({ msg: 'word added successfully', words });
+      res.status(200).json({ msg: 'word added successfully', words });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }

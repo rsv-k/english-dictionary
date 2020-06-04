@@ -43,7 +43,7 @@ export class SetComponent implements OnInit {
 
    moveToDictionary(e: Event) {
       if (e.target === e.currentTarget) {
-         this.router.navigate(['set', this.set.id], { state: { title: this.set.title }});
+         this.router.navigate(['set', this.set.title.toLowerCase().split(' ').join('_'), this.set.id]);
       }
    }
 }
