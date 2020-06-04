@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Word } from '@core/models/word.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, distinctUntilChanged, debounceTime, switchMap, filter, tap } from 'rxjs/operators';
 import { of, BehaviorSubject, iif } from 'rxjs';
 
@@ -27,13 +27,16 @@ export class WordService {
       return this.words$.asObservable();
    }
 
-   getWords(setId: string = '') {
-      let query = '';
+   getWords(setId: string = null) {
+      const options = {
+         params: new HttpParams()
+      };
+
       if (setId) {
-         query = '?setId=' + setId;
+         options.params = options.params.set('setId', setId);
       }
 
-      this.http.get<{msg: string, words: any}>(BACKEND_URL + query)
+      this.http.get<{msg: string, words: any}>(BACKEND_URL, options)
          .pipe(
             filter(data => data.words[0] !== null),
             map(this.mutateIdAndPic),
