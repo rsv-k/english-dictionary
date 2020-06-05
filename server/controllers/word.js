@@ -45,7 +45,7 @@ exports.getWords = async (req, res) => {
          options.setId = setId;
       }
       if (req.query.startsWith) {
-         const regex = new RegExp('^' + req.query.startsWith);
+         const regex = new RegExp('^' + req.query.startsWith, 'i');
          options.english = regex;
       }
 

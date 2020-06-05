@@ -3,12 +3,10 @@
    <input
       matInput
       #word
-      (input) = "wordText$.next(word.value)"
+      (input) = "onInput(word.value)"
       [matAutocomplete]="auto">
-
    <mat-autocomplete
       #auto="matAutocomplete">
-      <ng-container *ngIf = "word.value.length > 1">
          <mat-option
             [matTooltip] = "translation.value.length > 50 ? translation.value : null"
             class = "create__option"
@@ -16,6 +14,5 @@
             (click) = "chooseTranslation(translation)">
             {{ translation.value }}
          </mat-option>
-      </ng-container>
    </mat-autocomplete>
 </mat-form-field>

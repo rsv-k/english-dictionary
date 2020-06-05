@@ -28,6 +28,16 @@ export class WordCreateComponent implements OnInit {
          setId: this.setId
       };
 
+      this.wordService.getWords(this.setId);
       this.wordService.addWord(word);
+   }
+
+   onInput(str: string) {
+      let setId = '';
+      if (this.setId) {
+         setId += this.setId + ' ';
+      }
+
+      this.wordText$.next(setId + str);
    }
 }

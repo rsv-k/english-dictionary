@@ -25,13 +25,17 @@ export class WordService {
       private utilsService: UtilsService
       ) { }
 
-   getWords(setId: string = null) {
+   getWords(setId?: string, startsWith?: string) {
       const options = {
          params: new HttpParams()
       };
 
       if (setId) {
          options.params = options.params.set('setId', setId);
+      }
+
+      if (startsWith) {
+         options.params = options.params.set('startsWith', startsWith);
       }
 
       this.http.get<{msg: string, words: any}>(BACKEND_URL, options)
@@ -102,9 +106,20 @@ export class WordService {
    }
 
    showTranslations(word: Observable<string>) {
+      let setId = '';
       return word.pipe(
          debounceTime(1000),
          distinctUntilChanged(),
+         map(w => {
+            const text = w.split(' ');
+            if (text.length > 1) {
+               setId = text[0];
+               return text[1];
+            }
+
+            return w;
+         }),
+         tap((w) => this.getWords(setId, w)),
          switchMap(w => iif(() => w.trim().length === 0, of([]), this.getTranslations(w)))
       );
    }
