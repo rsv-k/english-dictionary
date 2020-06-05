@@ -5,7 +5,7 @@
       </mat-card-header>
       <mat-form-field *ngIf = "isEditing" class = "set__form-field">
          <mat-label>Set title</mat-label>
-         <input matInput [value] = "title" (input) = "onInput($event.target.value)">
+         <input matInput [value] = "title" (input) = "title = $event.target.value">
       </mat-form-field>
    </div>
     

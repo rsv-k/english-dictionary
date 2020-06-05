@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class SetComponent implements OnInit {
    @Input() set: Set;
    isEditing = false;
-   title: string;
+   title = '';
 
    constructor(
       private setService: SetService,
@@ -35,10 +35,6 @@ export class SetComponent implements OnInit {
 
       this.isEditing = !this.isEditing;
 
-   }
-
-   onInput(title: string) {
-      this.title = title;
    }
 
    moveToDictionary(e: Event) {

@@ -1,0 +1,11 @@
+.games {
+   display: flex;
+}
+
+mat-card {
+   margin-right: 30px;
+   width: 100px;
+   cursor: pointer;
+   user-select: none;
+   text-align: center;
+}
