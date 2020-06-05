@@ -105,7 +105,14 @@ exports.deleteMany = async (req, res) => {
    }
 
    try {
-      await Word.deleteMany({ _id: req.body.ids });
+      const options = { _id: req.body.ids };
+      if (req.body.reverse) {
+         options._id = {
+            $nin: req.body.ids
+         };
+      }
+
+      await Word.deleteMany(options);
       res.status(200).json({ msg: 'words deleted successfully' });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });

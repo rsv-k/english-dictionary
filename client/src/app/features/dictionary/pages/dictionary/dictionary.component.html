@@ -2,8 +2,17 @@
    <header class = "dictionary__header">
       <h1>{{ title | uppercase }}</h1>
       <app-word-create [setId] = "id"></app-word-create>
-      <div class="dictionary__manage-word" *ngIf = "checkedWords.length">
-         <button mat-icon-button color = "warn" (click) = "deleteSelected()">
+      <div class="dictionary__manage-word" >
+         <mat-checkbox
+         matTooltip = "select all"
+         (click) = "checkAllWords()"
+         color = "primary"
+         class="dictionary__selectAll"></mat-checkbox>
+         <button 
+            [disabled] = "!checkAll && !checkedWords.length" 
+            mat-icon-button 
+            color = "warn" 
+            (click) = "deleteSelected()">
             <mat-icon>delete</mat-icon>
          </button>
       </div>
@@ -12,7 +21,11 @@
 
       <mat-accordion>
          <div class="dictionary__wordholder" *ngFor = "let word of words$ | async" >
-            <mat-checkbox color = "primary" class = "dictionary__checkbox" (click) = "checkWord(word.id)"></mat-checkbox>
+            <mat-checkbox 
+               [checked] = "checkAll"
+               color = "primary" 
+               class = "dictionary__checkbox" 
+               (click) = "checkWord(word.id)"></mat-checkbox>
             <app-word
                class = "dictionary__word"
                [word] = "word"

@@ -90,8 +90,8 @@ export class WordService {
          });
    }
 
-   deleteManyWords(ids: string[]) {
-      this.http.post(BACKEND_URL + '/deleteMany', { ids })
+   deleteManyWords(ids: string[], reverse?: boolean) {
+      this.http.post(BACKEND_URL + '/deleteMany', { ids, reverse })
          .subscribe(() => {
             const deletedWords = {};
 
@@ -99,7 +99,13 @@ export class WordService {
                deletedWords[id] = true;
             });
 
-            this.words = this.words.filter(word => !deletedWords[word.id]);
+            this.words = this.words.filter(word => {
+               if (reverse) {
+                  return deletedWords[word.id];
+               }
+               return !deletedWords[word.id];
+            });
+
             this.wordsUpdateListener.next([...this.words]);
             this.utilsService.showSnackBar('Words deleted');
          });

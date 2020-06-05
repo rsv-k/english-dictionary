@@ -16,6 +16,7 @@ export class DictionaryComponent implements OnInit {
    id: string;
    title: string;
    checkedWords: string[] = [];
+   checkAll = false;
 
    constructor(
       private wordService: WordService,
@@ -51,7 +52,16 @@ export class DictionaryComponent implements OnInit {
    }
 
    deleteSelected() {
-      this.wordService.deleteManyWords(this.checkedWords);
+      if (!this.checkAll && !this.checkedWords.length) {
+         return;
+      }
+
+      this.wordService.deleteManyWords(this.checkedWords, this.checkAll);
       this.checkedWords = [];
+      this.checkAll = false;
+   }
+
+   checkAllWords() {
+      this.checkAll = !this.checkAll;
    }
 }
