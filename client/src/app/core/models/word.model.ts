@@ -6,4 +6,6 @@ export interface Word {
    pic_url?: string;
    createdAt?: number;
    setId?: string;
+   sound_url?: string;
+   transcription?: string;
 }

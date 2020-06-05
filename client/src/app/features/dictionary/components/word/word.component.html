@@ -10,6 +10,12 @@
 
    <ng-template matExpansionPanelContent>
       <div class="content">
+         <button 
+            mat-button 
+            *ngIf = "word.transcription" 
+            class="content__transcription"
+            (click) = "pronounce()">{{ word.transcription }}</button>
+
          <div class="content__top">
             <div class="picture__container">
                <img [src] = "word.pic_url" [alt]="word.english" class = "picture">

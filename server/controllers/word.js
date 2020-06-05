@@ -1,5 +1,6 @@
 const axios = require('axios');
 const Word = require('../models/word');
+const wordHelper = require('../helpers/wordHelper');
 
 exports.getTranslations = async (req, res) => {
    const word = req.params.word;
@@ -13,7 +14,9 @@ exports.getTranslations = async (req, res) => {
       const data = (await axios.get(url)).data;
       const result = {
          translate: data.translate,
-         word: data.word_value
+         word: data.word_value,
+         sound_url: wordHelper.changeVoice(data.sound_url, 3),
+         transcription: data.transcription
       };
 
       res.status(200).json({ msg: 'translations fetched successfully', result });

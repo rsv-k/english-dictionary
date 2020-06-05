@@ -24,4 +24,13 @@ export class WordComponent implements OnInit {
    onEdit() {
       this.showEditing.emit(this.word);
    }
+
+   pronounce() {
+      if (!this.word.sound_url) {
+         return;
+      }
+      const audio = new Audio(this.word.sound_url);
+      audio.load();
+      audio.play();
+   }
 }

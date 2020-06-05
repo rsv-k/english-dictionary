@@ -111,13 +111,14 @@ export class WordService {
          debounceTime(1000),
          distinctUntilChanged(),
          map(w => {
-            const text = w.split(' ');
+            const text = w.split('---');
+            const str = text[text.length > 1 ? 1 : 0].split(' ').filter(s => s.trim().length !== 0).join(' ');
             if (text.length > 1) {
                setId = text[0];
-               return text[1];
+               return str;
             }
 
-            return w;
+            return str;
          }),
          tap((w) => this.getWords(setId, w)),
          switchMap(w => iif(() => w.trim().length === 0, of([]), this.getTranslations(w)))
@@ -147,7 +148,9 @@ export class WordService {
                return {
                   pic_url: translation.pic_url,
                   value: translation.value,
-                  origin: data.result.word
+                  origin: data.result.word,
+                  sound_url: data.result.sound_url,
+                  transcription: data.result.transcription
                };
             });
          }),

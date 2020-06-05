@@ -11,6 +11,10 @@
       display: flex;
       justify-content: space-between;
    }
+
+   &__transcription {
+      align-self: flex-start;
+   }
 }
 
 .picture__container {

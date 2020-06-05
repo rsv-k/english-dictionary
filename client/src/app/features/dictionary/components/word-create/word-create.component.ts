@@ -25,7 +25,9 @@ export class WordCreateComponent implements OnInit {
          english: translation.origin[0].toUpperCase() + translation.origin.slice(1).toLowerCase(),
          russian: [translation.value],
          pic_url: translation.pic_url,
-         setId: this.setId
+         setId: this.setId,
+         sound_url: translation.sound_url,
+         transcription: translation.transcription
       };
 
       this.wordService.getWords(this.setId);
@@ -36,7 +38,7 @@ export class WordCreateComponent implements OnInit {
    onInput(str: string) {
       let setId = '';
       if (this.setId) {
-         setId += this.setId + ' ';
+         setId += this.setId + '---';
       }
 
       this.wordText$.next(setId + str);
