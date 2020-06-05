@@ -30,9 +30,14 @@
          </p>
       </div>
    
-      <mat-action-row>
-         <button (click) = "onDelete()" mat-raised-button color = "accent">Delete</button>
-         <button (click) = "onEdit()" mat-raised-button color = "primary">Edit</button>
+      <mat-action-row class = "action">
+         <p class="date">
+            Added {{ date | date:'d MMMM y' }}
+         </p>
+         <div class="buttons">
+            <button (click) = "onDelete()" mat-raised-button color = "accent">Delete</button>
+            <button (click) = "onEdit()" mat-raised-button color = "primary">Edit</button>
+         </div>
       </mat-action-row>
    </ng-template>
 </mat-expansion-panel>

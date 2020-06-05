@@ -9,12 +9,14 @@ import { WordService } from '@core/services/word.service';
 })
 export class WordComponent implements OnInit {
    @Input() word: Word;
+   date: Date;
    @Output() showEditing = new EventEmitter<Word>();
    isPanelOpened = false;
 
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
+      this.date = new Date(this.word.createdAt);
    }
 
    onDelete() {
