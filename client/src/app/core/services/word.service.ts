@@ -11,6 +11,11 @@ import { UtilsService } from './utils.service';
 const BACKEND_URL = environment.apiUrl + 'word';
 const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
 
+interface Config {
+   msg: string;
+   words: any;
+}
+
 @Injectable({
    providedIn: 'root'
 })
@@ -38,14 +43,13 @@ export class WordService {
          options.params = options.params.set('startsWith', startsWith);
       }
 
-      this.http.get<{msg: string, words: any}>(BACKEND_URL, options)
+      this.http.get<Config>(BACKEND_URL, options)
          .pipe(
             filter(data => data.words[0] !== null),
             map(this.mutateIdAndPic),
             tap((words: Word[]) => this.updateWords('GET', words))
          )
-         .subscribe(() => {
-         });
+         .subscribe();
    }
 
    addWord(word: Word) {
@@ -60,8 +64,7 @@ export class WordService {
                }
             })
          )
-         .subscribe(() => {
-         });
+         .subscribe();
    }
 
    editWord(word: Word) {
@@ -69,7 +72,7 @@ export class WordService {
          word.pic_url = null;
       }
 
-      return this.http.put<{msg: string, words: any}>(BACKEND_URL, { word })
+      return this.http.put<Config>(BACKEND_URL, { word })
          .pipe(
             map(this.mutateIdAndPic),
             tap((words: Word[]) => this.updateWords('EDIT', words))
@@ -81,7 +84,7 @@ export class WordService {
          word.pic_url = null;
       }
 
-      return this.http.post<{msg: string, words: any}>(BACKEND_URL, { word })
+      return this.http.post<Config>(BACKEND_URL, { word })
          .pipe(
             map(this.mutateIdAndPic),
             tap((words: Word[]) => this.updateWords('ADD', words))
@@ -89,13 +92,12 @@ export class WordService {
    }
 
    deleteWord(id: string) {
-      this.http.delete<{msg: string, words: any}>(BACKEND_URL + '/' + id)
+      this.http.delete<Config>(BACKEND_URL + '/' + id)
          .pipe(
             map(this.mutateIdAndPic),
             tap((words: Word[]) => this.updateWords('DELETE', words))
          )
-         .subscribe(() => {
-         });
+         .subscribe();
    }
 
    deleteManyWords(ids: string[], reverse?: boolean) {
@@ -199,13 +201,7 @@ export class WordService {
             this.words = this.words.filter(word => word.id !== words[0].id);
             break;
          case 'EDIT':
-            this.words = this.words.map(word => {
-               if (word.id === words[0].id) {
-                  return words[0];
-               }
-
-               return word;
-            });
+            this.words = this.words.map(word => word.id === words[0].id ? words[0] : word);
             break;
       }
 

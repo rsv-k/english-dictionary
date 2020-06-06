@@ -18,7 +18,9 @@ export class DictionaryComponent implements OnInit {
    checkedWords: string[] = [];
    checkAll = false;
    sendToOptions = [
-      'Send to all'
+      'Send to all',
+      'Send to translation-word',
+      'Send to word-translation'
    ];
 
    constructor(
@@ -65,7 +67,7 @@ export class DictionaryComponent implements OnInit {
       this.manageSelected('EDIT');
    }
 
-   manageSelected(action: string) {
+   private manageSelected(action: string) {
       if (!this.checkAll && !this.checkedWords.length) {
          return;
       }
