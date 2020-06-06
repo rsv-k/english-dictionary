@@ -65,6 +65,10 @@ export class WordService {
    }
 
    editWord(word: Word) {
+      if (word.pic_url === DEFAULT_PIC) {
+         word.pic_url = null;
+      }
+
       return this.http.put<{msg: string, words: any}>(BACKEND_URL, { word })
          .pipe(
             map(this.mutateIdAndPic),
@@ -73,6 +77,10 @@ export class WordService {
    }
 
    createWord(word: Word) {
+      if (word.pic_url === DEFAULT_PIC) {
+         word.pic_url = null;
+      }
+
       return this.http.post<{msg: string, words: any}>(BACKEND_URL, { word })
          .pipe(
             map(this.mutateIdAndPic),
@@ -108,6 +116,13 @@ export class WordService {
 
             this.wordsUpdateListener.next([...this.words]);
             this.utilsService.showSnackBar('Words deleted');
+         });
+   }
+
+   setToLearn(ids: string[], reverse?: boolean) {
+      this.http.post(BACKEND_URL + '/setToLearn', { ids, reverse })
+         .subscribe(() => {
+            this.utilsService.showSnackBar('Words sent to learn');
          });
    }
 
@@ -152,7 +167,7 @@ export class WordService {
          map(data => {
             return data.result.translate.map(translation => {
                return {
-                  pic_url: translation.pic_url,
+                  pic_url: translation.pic_url || null,
                   value: translation.value,
                   origin: data.result.word,
                   sound_url: data.result.sound_url,

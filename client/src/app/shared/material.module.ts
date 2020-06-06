@@ -9,6 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
       MatToolbarModule,
       MatSnackBarModule,
       MatTooltipModule,
-      MatCheckboxModule
+      MatCheckboxModule,
+      MatSelectModule
    ]
 })
 export class MaterialModule { }

@@ -118,3 +118,24 @@ exports.deleteMany = async (req, res) => {
       res.status(500).json({ msg: 'server error' });
    }
 };
+
+exports.setToLearn = async (req, res) => {
+   if (!req.body.ids) {
+      return res.status(400).json({ msg: 'no data provided' });
+   }
+
+   try {
+      const options = { _id: req.body.ids };
+      if (req.body.reverse) {
+         options._id = {
+            $nin: req.body.ids
+         };
+      }
+
+      await Word.update(options, { $set: { toLearn: true } }, { multi: true });
+
+      res.status(200).json({ msg: 'words updated successfully' });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error' });
+   }
+};

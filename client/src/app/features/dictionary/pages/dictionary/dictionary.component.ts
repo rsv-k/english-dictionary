@@ -17,6 +17,9 @@ export class DictionaryComponent implements OnInit {
    title: string;
    checkedWords: string[] = [];
    checkAll = false;
+   sendToOptions = [
+      'Send to all'
+   ];
 
    constructor(
       private wordService: WordService,
@@ -39,7 +42,6 @@ export class DictionaryComponent implements OnInit {
    }
 
    hideEditing() {
-      this.word = null;
       this.showEdit = false;
    }
 
@@ -52,16 +54,32 @@ export class DictionaryComponent implements OnInit {
    }
 
    deleteSelected() {
-      if (!this.checkAll && !this.checkedWords.length) {
-         return;
-      }
-
-      this.wordService.deleteManyWords(this.checkedWords, this.checkAll);
-      this.checkedWords = [];
-      this.checkAll = false;
+      this.manageSelected('DELETE');
    }
 
    checkAllWords() {
       this.checkAll = !this.checkAll;
+   }
+
+   sentTo() {
+      this.manageSelected('EDIT');
+   }
+
+   manageSelected(action: string) {
+      if (!this.checkAll && !this.checkedWords.length) {
+         return;
+      }
+
+      switch (action) {
+         case 'DELETE':
+         this.wordService.deleteManyWords(this.checkedWords, this.checkAll);
+         break;
+         case 'EDIT':
+         this.wordService.setToLearn(this.checkedWords, this.checkAll);
+         break;
+      }
+
+      this.checkedWords = [];
+      this.checkAll = false;
    }
 }

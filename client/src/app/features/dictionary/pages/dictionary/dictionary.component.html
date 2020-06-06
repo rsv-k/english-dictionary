@@ -7,14 +7,29 @@
          matTooltip = "select all"
          (click) = "checkAllWords()"
          color = "primary"
-         class="dictionary__selectAll"></mat-checkbox>
+         #selectAll
+         class="dictionary__selectAll"
+         ></mat-checkbox>
+         
          <button 
+            matTooltip = "delete selected"
             [disabled] = "!checkAll && !checkedWords.length" 
             mat-icon-button 
             color = "warn" 
-            (click) = "deleteSelected()">
+            (click) = "deleteSelected(); selectAll.checked = false">
             <mat-icon>delete</mat-icon>
          </button>
+
+         <mat-form-field>
+            <mat-label>Send to...</mat-label>
+            <mat-select>
+              <mat-option 
+              (click) = "sentTo(); selectAll.checked = false"
+              *ngFor="let option of sendToOptions">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+         </mat-form-field>
       </div>
    </header>
       <mat-card >

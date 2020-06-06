@@ -1,5 +1,5 @@
 export interface Translation {
-   pic_url: string;
+   pic_url?: string;
    value: string;
    origin: string;
    sound_url?: string;

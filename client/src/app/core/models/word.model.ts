@@ -8,4 +8,5 @@ export interface Word {
    setId?: string;
    sound_url?: string;
    transcription?: string;
+   toLearn: boolean;
 }
