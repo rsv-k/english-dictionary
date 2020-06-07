@@ -4,6 +4,7 @@ const wordController = require('../controllers/word');
 
 router.get('/translations/:word', wordController.getTranslations);
 router.get('/wordsToLearn', wordController.getWordsToLearn);
+router.post('/randomTranslations', wordController.getRandomTranslations);
 router.get('', wordController.getWords);
 router.post('', wordController.addWord);
 router.delete('/:id', wordController.deleteWord);

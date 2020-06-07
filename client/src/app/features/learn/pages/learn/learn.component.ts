@@ -4,9 +4,9 @@ import { WordService } from '@core/services/word.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-learn',
-  templateUrl: './learn.component.html',
-  styleUrls: ['./learn.component.scss']
+   selector: 'app-learn',
+   templateUrl: './learn.component.html',
+   styleUrls: ['./learn.component.scss']
 })
 export class LearnComponent implements OnInit, OnDestroy {
    titles: string[] = [
@@ -30,42 +30,42 @@ export class LearnComponent implements OnInit, OnDestroy {
    words: Word[];
    subscription: Subscription;
 
-  constructor(private wordService: WordService) { }
+   constructor(private wordService: WordService) { }
 
-  ngOnInit() {
-     this.subscription = this.wordService.getWordsToLearn()
-      .subscribe(words => {
-         words.forEach(word => {
-            if (word.learn.wordTranslation) {
-               this.wordsToLearn[1] += 1;
-            }
+   ngOnInit() {
+      this.subscription = this.wordService.getWordsToLearn()
+         .subscribe(words => {
+            words.forEach(word => {
+               if (word.learn.wordTranslation) {
+                  this.wordsToLearn[1] += 1;
+               }
 
-            if (word.learn.translationWord) {
-               this.wordsToLearn[2] += 1;
-            }
+               if (word.learn.translationWord) {
+                  this.wordsToLearn[2] += 1;
+               }
 
-            if (word.learn.savannah) {
-               this.wordsToLearn[3] += 1;
-            }
+               if (word.learn.savannah) {
+                  this.wordsToLearn[3] += 1;
+               }
 
-            if (word.learn.wordConstructor) {
-               this.wordsToLearn[4] += 1;
-            }
+               if (word.learn.wordConstructor) {
+                  this.wordsToLearn[4] += 1;
+               }
 
-            if (word.learn.listening) {
-               this.wordsToLearn[5] += 1;
-            }
+               if (word.learn.listening) {
+                  this.wordsToLearn[5] += 1;
+               }
 
-            if (word.learn.wordCards) {
-               this.wordsToLearn[6] += 1;
-            }
+               if (word.learn.wordCards) {
+                  this.wordsToLearn[6] += 1;
+               }
+            });
+
+            this.words = words;
          });
+   }
 
-         this.words = words;
-      });
-  }
-
-  ngOnDestroy() {
-     this.subscription.unsubscribe();
-  }
+   ngOnDestroy() {
+      this.subscription.unsubscribe();
+   }
 }

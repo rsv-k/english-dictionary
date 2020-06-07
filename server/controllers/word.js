@@ -159,3 +159,21 @@ exports.getWordsToLearn = async (req, res) => {
       res.status(500).json({ msg: 'server error', error: err });
    }
 };
+
+exports.getRandomTranslations = async (req, res) => {
+   if (!req.body.translations || req.body.translations.length === 0) {
+      res.status(400).json({ msg: 'no data provided' });
+   }
+
+   try {
+      const words = await Word.aggregate([
+         { $match: { russian: { $ne: req.body.translations } } },
+         { $sample: { size: 4 } }
+      ]);
+      const translations = words.map(word => word.russian);
+
+      res.status(200).json({ msg: 'translations fetched successfully', translations });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error', error: err });
+   }
+};

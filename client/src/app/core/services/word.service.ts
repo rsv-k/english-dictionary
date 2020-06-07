@@ -136,6 +136,13 @@ export class WordService {
          );
    }
 
+   getRandomTranslations(translations: string[]): Observable<string[]> {
+      return this.http.post<{ msg: string, translations: any}>(BACKEND_URL + '/randomTranslations', { translations })
+         .pipe(
+            map(data => data.translations)
+         );
+   }
+
    showTranslations(word: Observable<string>) {
       let setId = '';
       return word.pipe(
