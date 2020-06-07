@@ -8,5 +8,12 @@ export interface Word {
    setId?: string;
    sound_url?: string;
    transcription?: string;
-   toLearn: boolean;
+   learn: {
+      wordTranslation?: boolean,
+      translationWord?: boolean,
+      savannah?: boolean;
+      wordConstructor?: boolean;
+      listening?: boolean;
+      wordCards?: boolean;
+   };
 }

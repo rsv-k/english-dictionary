@@ -126,13 +126,21 @@ exports.setToLearn = async (req, res) => {
 
    try {
       const options = { _id: req.body.ids };
-      if (req.body.reverse) {
-         options._id = {
-            $nin: req.body.ids
-         };
-      }
+      const gameOptions = {
+         1: 'wordTranslation',
+         2: 'translationWord',
+         3: 'savannah',
+         4: 'wordConstructor',
+         5: 'listening',
+         6: 'wordCards'
+      };
 
-      await Word.update(options, { $set: { toLearn: true } }, { multi: true });
+      const game = gameOptions[req.body.gameNumber];
+      const opt = {
+         ['learn.' + game]: true
+      };
+
+      await Word.update(options, { $set: opt }, { multi: true });
 
       res.status(200).json({ msg: 'words updated successfully' });
    } catch (err) {

@@ -9,5 +9,12 @@ module.exports = mongoose.model('Word', new mongoose.Schema({
    setId: { type: mongoose.Schema.Types.ObjectId, ref: 'Set', required: false },
    transcription: { type: String, required: false },
    sound_url: { type: String, required: false },
-   toLearn: { type: Boolean, required: true }
+   learn: {
+      wordTranslation: Boolean,
+      translationWord: Boolean,
+      savannah: Boolean,
+      wordConstructor: Boolean,
+      listening: Boolean,
+      wordCards: Boolean
+   }
 }, { retainKeyOrder: true }));

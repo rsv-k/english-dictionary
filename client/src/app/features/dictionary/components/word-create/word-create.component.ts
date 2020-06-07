@@ -28,7 +28,14 @@ export class WordCreateComponent implements OnInit {
          setId: this.setId,
          sound_url: translation.sound_url,
          transcription: translation.transcription,
-         toLearn: true
+         learn: {
+            wordTranslation: true,
+            translationWord: true,
+            savannah: true,
+            wordConstructor: true,
+            listening: true,
+            wordCards: true
+         }
       };
 
       this.wordService.getWords(this.setId);

@@ -121,8 +121,8 @@ export class WordService {
          });
    }
 
-   setToLearn(ids: string[], reverse?: boolean) {
-      this.http.post(BACKEND_URL + '/setToLearn', { ids, reverse })
+   setToLearn(ids: string[], reverse: boolean, gameNumber: number) {
+      this.http.post(BACKEND_URL + '/setToLearn', { ids, reverse, gameNumber })
          .subscribe(() => {
             this.utilsService.showSnackBar('Words sent to learn');
          });

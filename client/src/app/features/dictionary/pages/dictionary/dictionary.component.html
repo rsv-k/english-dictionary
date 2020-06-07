@@ -10,12 +10,12 @@
          #selectAll
          class="dictionary__selectAll"
          ></mat-checkbox>
-         
-         <button 
+
+         <button
             matTooltip = "delete selected"
-            [disabled] = "!checkAll && !checkedWords.length" 
-            mat-icon-button 
-            color = "warn" 
+            [disabled] = "!checkAll && !checkedWords.length"
+            mat-icon-button
+            color = "warn"
             (click) = "deleteSelected(); selectAll.checked = false">
             <mat-icon>delete</mat-icon>
          </button>
@@ -23,9 +23,9 @@
          <mat-form-field>
             <mat-label>Send to...</mat-label>
             <mat-select>
-              <mat-option 
-              (click) = "sentTo(); selectAll.checked = false"
-              *ngFor="let option of sendToOptions">
+              <mat-option
+              *ngFor="let option of sendToOptions; let i = index"
+              (click) = "sendToLearn(i); selectAll.checked = false">
                 {{ option }}
               </mat-option>
             </mat-select>
@@ -35,10 +35,10 @@
    <mat-card>
       <mat-accordion>
          <div class="dictionary__wordholder" *ngFor = "let word of words$ | async" >
-            <mat-checkbox 
+            <mat-checkbox
                [checked] = "checkAll"
-               color = "primary" 
-               class = "dictionary__checkbox" 
+               color = "primary"
+               class = "dictionary__checkbox"
                (click) = "checkWord(word.id)"></mat-checkbox>
             <app-word
                class = "dictionary__word"
