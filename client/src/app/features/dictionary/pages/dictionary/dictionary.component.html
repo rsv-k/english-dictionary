@@ -5,8 +5,8 @@
       <div class="dictionary__manage-word" >
          <mat-checkbox
          matTooltip = "select all"
-         (click) = "checkAllWords()"
          color = "primary"
+         (change) = "checkAll = !checkAll"
          #selectAll
          class="dictionary__selectAll"
          ></mat-checkbox>
@@ -36,7 +36,7 @@
       <mat-accordion>
          <div class="dictionary__wordholder" *ngFor = "let word of words$ | async" >
             <mat-checkbox
-               [checked] = "checkAll"
+               [checked] = "selectAll.checked"
                color = "primary"
                class = "dictionary__checkbox"
                (click) = "checkWord(word.id)"></mat-checkbox>

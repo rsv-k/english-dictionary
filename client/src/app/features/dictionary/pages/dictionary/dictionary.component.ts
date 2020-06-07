@@ -60,26 +60,22 @@ export class DictionaryComponent implements OnInit {
    }
 
    deleteSelected() {
-      this.checkAll = false;
       if (!this.checkAll && !this.checkedWords.length) {
          return;
       }
 
       this.wordService.deleteManyWords(this.checkedWords, this.checkAll);
       this.checkedWords = [];
-   }
-
-   checkAllWords() {
-      this.checkAll = !this.checkAll;
+      this.checkAll = false;
    }
 
    sendToLearn(index: number) {
-      this.checkAll = false;
       if (!this.checkAll && !this.checkedWords.length) {
          return;
       }
 
       this.wordService.setToLearn(this.checkedWords, this.checkAll, index);
       this.checkedWords = [];
+      this.checkAll = false;
    }
 }
