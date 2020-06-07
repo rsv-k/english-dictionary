@@ -128,6 +128,14 @@ export class WordService {
          });
    }
 
+   getWordsToLearn() {
+      return this.http.get<Config>(BACKEND_URL + '/wordsToLearn')
+         .pipe(
+            filter(data => data.words[0] !== null),
+            map(this.mutateIdAndPic)
+         );
+   }
+
    showTranslations(word: Observable<string>) {
       let setId = '';
       return word.pipe(

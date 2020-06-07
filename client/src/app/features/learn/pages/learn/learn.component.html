@@ -5,7 +5,8 @@
 
    <main class = "games">
       <app-learn-game-card
-         *ngFor = "let title of titles"
-         [title] = "title"></app-learn-game-card>
+         *ngFor = "let title of titles; let i = index"
+         [title] = "title"
+         [wordsAmount] = "wordsToLearn[i + 1]"></app-learn-game-card>
    </main>
 </section>

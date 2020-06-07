@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class LearnGameCardComponent {
    @Input() title: string;
+   @Input() wordsAmount: number;
 
    constructor() { }
 }

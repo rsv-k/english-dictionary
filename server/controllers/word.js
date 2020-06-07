@@ -140,3 +140,22 @@ exports.setToLearn = async (req, res) => {
       res.status(500).json({ msg: 'server error' });
    }
 };
+
+exports.getWordsToLearn = async (req, res) => {
+   try {
+      const words = await Word.find({
+         $or: [
+            { 'learn.wordTranslation': true },
+            { 'learn.translationWord': true },
+            { 'learn.savannah': true },
+            { 'learn.wordConstructor': true },
+            { 'learn.listening': true },
+            { 'learn.wordCards': true }
+         ]
+      });
+
+      res.status(200).json({ msg: 'words fetched successfully', words });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error', error: err });
+   }
+};
