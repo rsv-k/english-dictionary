@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-learn',
   templateUrl: './learn.component.html',
   styleUrls: ['./learn.component.scss']
 })
-export class LearnComponent implements OnInit {
+export class LearnComponent {
+   titles: string[] = [
+      'Word-translation',
+      'Translation-word',
+      'Savannah',
+      'Word constructor',
+      'Listening',
+      'Word cards'
+   ];
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

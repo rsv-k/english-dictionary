@@ -1,16 +1,11 @@
-<header>
-   <h1>Training</h1>
+<section class="learn">
+   <header>
+      <h1>Training</h1>
+   </header>
 
-   <div class="games">
-      <button mat-raised-button routerLink = "first">
-         first
-      </button>
-      <button mat-raised-button routerLink = "second">
-         Second
-      </button>
-   </div>
-</header>
-
-<main>
-   <router-outlet></router-outlet>
-</main>
+   <main class = "games">
+      <app-learn-game-card
+         *ngFor = "let title of titles"
+         [title] = "title"></app-learn-game-card>
+   </main>
+</section>

@@ -1,7 +1,6 @@
 .sets__main {
    display: grid;
    grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
-   justify-items: center;
    gap: 20px;
 }
 .sets__create-set {
