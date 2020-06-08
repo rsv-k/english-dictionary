@@ -2,8 +2,7 @@
    <mat-label>Word</mat-label>
    <input
       matInput
-      #word
-      (input) = "onInput(word.value)"
+      (input) = "wordText$.next($event.target.value)"
       [matAutocomplete]="auto">
    <mat-autocomplete
       #auto="matAutocomplete">

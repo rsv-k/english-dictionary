@@ -29,7 +29,7 @@ export class SetService {
       this.sets$.next([...this.sets]);
       this.http.get<{msg: string, sets: any}>(BACKEND_URL)
          .pipe(
-            map(this.replaceSetIdField)
+            map(this.utilsService.changeIdField)
          )
          .subscribe((sets: Set[]) => {
             this.updateSets('GET', sets);
@@ -39,7 +39,7 @@ export class SetService {
    addSet(set: Set) {
       this.http.post<{msg: string, sets: any}>(BACKEND_URL, { set })
          .pipe(
-            map(this.replaceSetIdField)
+            map(this.utilsService.changeIdField)
          )
          .subscribe((sets: Set[]) => {
             this.updateSets('ADD', sets);
@@ -49,7 +49,7 @@ export class SetService {
    deleteSet(id: string) {
       this.http.delete<{msg: string, sets: any}>(BACKEND_URL + '/' + id)
          .pipe(
-            map(this.replaceSetIdField)
+            map(this.utilsService.changeIdField)
          )
          .subscribe((sets: Set[]) => {
             this.updateSets('DELETE', sets);
@@ -59,19 +59,11 @@ export class SetService {
    editSet(set: Set) {
       this.http.put<{msg: string, sets: any}>(BACKEND_URL, { set })
          .pipe(
-            map(this.replaceSetIdField)
+            map(this.utilsService.changeIdField)
          )
          .subscribe((sets: Set[]) => {
             this.updateSets('EDIT', sets);
          });
-   }
-
-   private replaceSetIdField(data) {
-      return data.sets.map(set => {
-         set.id = set._id;
-         delete set._id;
-         return set;
-      });
    }
 
    private updateSets(operation, sets: Set[]) {

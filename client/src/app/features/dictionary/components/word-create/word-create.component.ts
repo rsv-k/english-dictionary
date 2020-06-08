@@ -17,7 +17,7 @@ export class WordCreateComponent implements OnInit {
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
-      this.translations$ = this.wordService.showTranslations(this.wordText$);
+      this.translations$ = this.wordService.showTranslations(this.wordText$, this.setId);
    }
 
    chooseTranslation(translation: Translation) {
@@ -41,14 +41,5 @@ export class WordCreateComponent implements OnInit {
       this.wordService.getWords(this.setId);
       this.wordService.addWord(word);
       this.wordText$.next('');
-   }
-
-   onInput(str: string) {
-      let setId = '';
-      if (this.setId) {
-         setId += this.setId + '---';
-      }
-
-      this.wordText$.next(setId + str);
    }
 }

@@ -34,7 +34,7 @@ exports.addWord = async (req, res) => {
       let word = new Word(req.body.word);
       word = await word.save();
 
-      res.status(201).json({ msg: 'word added successfully', words: [word] });
+      res.status(201).json({ msg: 'word added successfully', result: [word] });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -54,7 +54,7 @@ exports.getWords = async (req, res) => {
 
       const words = await Word.find(options).sort({ createdAt: -1 });
 
-      res.status(200).json({ msg: 'word added successfully', words });
+      res.status(200).json({ msg: 'word added successfully', result: words });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -67,7 +67,7 @@ exports.deleteWord = async (req, res) => {
 
    try {
       const word = await Word.findByIdAndDelete(req.params.id);
-      res.status(200).json({ msg: 'word deleted successfully', words: [word] });
+      res.status(200).json({ msg: 'word deleted successfully', result: [word] });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -80,7 +80,7 @@ exports.getSpecificWord = async (req, res) => {
 
    try {
       const word = await Word.findOne({ english: req.params.word });
-      res.status(200).json({ msg: 'word fetched successfully', words: [word] });
+      res.status(200).json({ msg: 'word fetched successfully', result: [word] });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -93,7 +93,7 @@ exports.updateWord = async (req, res) => {
 
    try {
       const word = await Word.findOneAndUpdate({ _id: req.body.word.id }, req.body.word, { new: true });
-      res.status(200).json({ msg: 'word fetched successfully', words: [word] });
+      res.status(200).json({ msg: 'word fetched successfully', result: [word] });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -154,7 +154,7 @@ exports.getWordsToLearn = async (req, res) => {
          ]
       });
 
-      res.status(200).json({ msg: 'words fetched successfully', words });
+      res.status(200).json({ msg: 'words fetched successfully', result: words });
    } catch (err) {
       res.status(500).json({ msg: 'server error', error: err });
    }

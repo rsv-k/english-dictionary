@@ -13,7 +13,7 @@ const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793
 
 interface Config {
    msg: string;
-   words: any;
+   result: any;
 }
 
 @Injectable({
@@ -45,8 +45,9 @@ export class WordService {
 
       this.http.get<Config>(BACKEND_URL, options)
          .pipe(
-            filter(data => data.words[0] !== null),
-            map(this.mutateIdAndPic),
+            filter(data => data.result[0] !== null),
+            map(this.utilsService.changeIdField),
+            map(this.setDefaultPic),
             tap((words: Word[]) => this.updateWords('GET', words))
          )
          .subscribe();
@@ -74,7 +75,8 @@ export class WordService {
 
       return this.http.put<Config>(BACKEND_URL, { word })
          .pipe(
-            map(this.mutateIdAndPic),
+            map(this.utilsService.changeIdField),
+            map(this.setDefaultPic),
             tap((words: Word[]) => this.updateWords('EDIT', words))
          );
    }
@@ -83,10 +85,10 @@ export class WordService {
       if (word.pic_url === DEFAULT_PIC) {
          word.pic_url = null;
       }
-
       return this.http.post<Config>(BACKEND_URL, { word })
          .pipe(
-            map(this.mutateIdAndPic),
+            map(this.utilsService.changeIdField),
+            map(this.setDefaultPic),
             tap((words: Word[]) => this.updateWords('ADD', words))
          );
    }
@@ -94,7 +96,7 @@ export class WordService {
    deleteWord(id: string) {
       this.http.delete<Config>(BACKEND_URL + '/' + id)
          .pipe(
-            map(this.mutateIdAndPic),
+            map(this.utilsService.changeIdField),
             tap((words: Word[]) => this.updateWords('DELETE', words))
          )
          .subscribe();
@@ -128,11 +130,12 @@ export class WordService {
          });
    }
 
-   getWordsToLearn() {
+   getWordsToLearn(): Observable<Word[]> {
       return this.http.get<Config>(BACKEND_URL + '/wordsToLearn')
          .pipe(
-            filter(data => data.words[0] !== null),
-            map(this.mutateIdAndPic)
+            filter(data => data.result[0] !== null),
+            map(this.utilsService.changeIdField),
+            map(this.setDefaultPic)
          );
    }
 
@@ -143,37 +146,26 @@ export class WordService {
          );
    }
 
-   showTranslations(word: Observable<string>) {
-      let setId = '';
+   showTranslations(word: Observable<string>, setId: string) {
       return word.pipe(
          debounceTime(1000),
          distinctUntilChanged(),
-         map(w => {
-            const text = w.split('---');
-            const str = text[text.length > 1 ? 1 : 0].split(' ').filter(s => s.trim().length !== 0).join(' ');
-            if (text.length > 1) {
-               setId = text[0];
-               return str;
-            }
-
-            return str;
-         }),
          tap((w) => this.getWords(setId, w)),
          switchMap(w => iif(() => w.trim().length === 0, of([]), this.getTranslations(w)))
       );
    }
 
    private getSpecificWord(word: string) {
-      return this.http.get<{msg: string, words: any}>(BACKEND_URL + '/' + word)
+      return this.http.get<{msg: string, result: any}>(BACKEND_URL + '/' + word)
          .pipe(
             map(data => {
-               if (data.words[0] === null) {
-                  data.words = [];
+               if (data.result[0] === null) {
+                  data.result = [];
                }
 
                return data;
             }),
-            map(this.mutateIdAndPic),
+            map(this.utilsService.changeIdField),
          );
    }
 
@@ -195,12 +187,10 @@ export class WordService {
       );
    }
 
-   private mutateIdAndPic(data) {
-      return data.words.map(obj => {
-         obj.id = obj._id;
-         delete obj._id;
-         obj.pic_url = obj.pic_url ? obj.pic_url : DEFAULT_PIC;
-         return obj;
+   private setDefaultPic(words: Word[]) {
+      return words.map(word => {
+         word.pic_url = word.pic_url ? word.pic_url : DEFAULT_PIC;
+         return word;
       });
    }
 

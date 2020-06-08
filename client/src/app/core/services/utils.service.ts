@@ -11,4 +11,12 @@ export class UtilsService {
    showSnackBar(msg: string) {
       this.snackBar.open(msg, null, { duration: 1500 });
    }
+
+   changeIdField(data) {
+      return data.result.map(obj => {
+         obj.id = obj._id;
+         delete obj._id;
+         return obj;
+      });
+   }
 }
