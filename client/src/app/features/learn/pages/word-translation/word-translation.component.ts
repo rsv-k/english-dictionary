@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { WordService } from '@core/services/word.service';
 import { Word } from '@core/models/word.model';
 
 @Component({
@@ -10,13 +9,9 @@ import { Word } from '@core/models/word.model';
 export class WordTranslationComponent implements OnInit {
    words: Word[];
 
-   constructor(private wordService: WordService) { }
+   constructor() { }
 
    ngOnInit(): void {
-      this.wordService.wordsUpdateListener$
-         .subscribe((words: Word[]) => {
-            this.words = words;
-         });
    }
 
 }

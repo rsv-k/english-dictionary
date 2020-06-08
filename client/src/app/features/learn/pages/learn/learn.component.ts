@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Word } from '@core/models/word.model';
-import { WordService } from '@core/services/word.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { LearnService } from '@core/services/learn.service';
 
 @Component({
    selector: 'app-learn',
@@ -25,16 +25,16 @@ export class LearnComponent implements OnInit, OnDestroy {
    subscription: Subscription;
 
    constructor(
-      private wordService: WordService,
+      private learnService: LearnService,
       private router: Router
       ) { }
 
    ngOnInit() {
-      this.subscription = this.wordService.wordsUpdateListener$
+      this.subscription = this.learnService.wordsUpdateListener$
          .subscribe((words: Word[]) => {
             this.wordsToLearn = this.countWordsInEachGame(words);
          });
-      this.wordService.getWordsToLearn();
+      this.learnService.getWordsToLearn();
    }
 
    ngOnDestroy() {

@@ -47,7 +47,7 @@ export class WordService {
          .pipe(
             filter(data => data.result[0] !== null),
             map(this.utilsService.changeIdField),
-            map(this.setDefaultPic),
+            map(this.utilsService.setDefaultPic),
             tap((words: Word[]) => this.updateWords('GET', words))
          )
          .subscribe();
@@ -76,7 +76,7 @@ export class WordService {
       return this.http.put<Config>(BACKEND_URL, { word })
          .pipe(
             map(this.utilsService.changeIdField),
-            map(this.setDefaultPic),
+            map(this.utilsService.setDefaultPic),
             tap((words: Word[]) => this.updateWords('EDIT', words))
          );
    }
@@ -88,7 +88,7 @@ export class WordService {
       return this.http.post<Config>(BACKEND_URL, { word })
          .pipe(
             map(this.utilsService.changeIdField),
-            map(this.setDefaultPic),
+            map(this.utilsService.setDefaultPic),
             tap((words: Word[]) => this.updateWords('ADD', words))
          );
    }
@@ -121,32 +121,6 @@ export class WordService {
             this.wordsUpdateListener.next([...this.words]);
             this.utilsService.showSnackBar('Words deleted');
          });
-   }
-
-   setToLearn(ids: string[], reverse: boolean, gameNumber: number) {
-      this.http.post(BACKEND_URL + '/setToLearn', { ids, reverse, gameNumber })
-         .subscribe(() => {
-            this.utilsService.showSnackBar('Words sent to learn');
-         });
-   }
-
-   getWordsToLearn() {
-      this.http.get<Config>(BACKEND_URL + '/wordsToLearn')
-         .pipe(
-            filter(data => data.result[0] !== null),
-            map(this.utilsService.changeIdField),
-            map(this.setDefaultPic)
-         )
-         .subscribe((words: Word[]) => {
-            this.updateWords('GET', words)
-         });
-   }
-
-   getRandomTranslations(translations: string[]): Observable<string[]> {
-      return this.http.post<{ msg: string, translations: any}>(BACKEND_URL + '/randomTranslations', { translations })
-         .pipe(
-            map(data => data.translations)
-         );
    }
 
    showTranslations(word: Observable<string>, setId: string) {
@@ -188,13 +162,6 @@ export class WordService {
             });
          }),
       );
-   }
-
-   private setDefaultPic(words: Word[]) {
-      return words.map(word => {
-         word.pic_url = word.pic_url ? word.pic_url : DEFAULT_PIC;
-         return word;
-      });
    }
 
    private updateWords(operation: string, words: Word[]) {

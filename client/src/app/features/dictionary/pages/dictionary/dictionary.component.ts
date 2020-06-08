@@ -3,6 +3,7 @@ import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { LearnService } from '@core/services/learn.service';
 
 @Component({
    selector: 'app-dictionary',
@@ -29,6 +30,7 @@ export class DictionaryComponent implements OnInit {
 
    constructor(
       private wordService: WordService,
+      private learnService: LearnService,
       private route: ActivatedRoute
       ) { }
 
@@ -74,7 +76,7 @@ export class DictionaryComponent implements OnInit {
          return;
       }
 
-      this.wordService.setToLearn(this.checkedWords, this.checkAll, index);
+      this.learnService.setToLearn(this.checkedWords, this.checkAll, index);
       this.checkedWords = [];
       this.checkAll = false;
    }
