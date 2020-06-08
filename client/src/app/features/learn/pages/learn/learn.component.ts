@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
    selector: 'app-learn',
@@ -23,7 +24,10 @@ export class LearnComponent implements OnInit, OnDestroy {
    words: Word[];
    subscription: Subscription;
 
-   constructor(private wordService: WordService) { }
+   constructor(
+      private wordService: WordService,
+      private router: Router
+      ) { }
 
    ngOnInit() {
       this.subscription = this.wordService.wordsUpdateListener$
@@ -35,6 +39,12 @@ export class LearnComponent implements OnInit, OnDestroy {
 
    ngOnDestroy() {
       this.subscription.unsubscribe();
+   }
+
+   onNavigate(index: number) {
+      const url = '/learn/' + this.titles[index].toLowerCase();
+
+      this.router.navigate([url]);
    }
 
    private countWordsInEachGame(words: Word[]) {
