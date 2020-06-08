@@ -3,7 +3,7 @@
       <h1>Training</h1>
    </header>
 
-   <main class = "games">
+   <main class = "games" *ngIf = "wordsToLearn">
       <app-learn-game-card
          *ngFor = "let title of titles; let i = index"
          [title] = "title"

@@ -130,13 +130,16 @@ export class WordService {
          });
    }
 
-   getWordsToLearn(): Observable<Word[]> {
-      return this.http.get<Config>(BACKEND_URL + '/wordsToLearn')
+   getWordsToLearn() {
+      this.http.get<Config>(BACKEND_URL + '/wordsToLearn')
          .pipe(
             filter(data => data.result[0] !== null),
             map(this.utilsService.changeIdField),
             map(this.setDefaultPic)
-         );
+         )
+         .subscribe((words: Word[]) => {
+            this.updateWords('GET', words)
+         });
    }
 
    getRandomTranslations(translations: string[]): Observable<string[]> {
