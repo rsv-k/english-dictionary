@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
+import { UtilsService } from '@core/services/utils.service';
 
 @Component({
    selector: 'app-word',
@@ -13,7 +14,10 @@ export class WordComponent implements OnInit {
    @Output() showEditing = new EventEmitter<Word>();
    isPanelOpened = false;
 
-   constructor(private wordService: WordService) { }
+   constructor(
+      private wordService: WordService,
+      private utilsService: UtilsService
+      ) { }
 
    ngOnInit(): void {
       this.date = new Date(this.word.createdAt);
@@ -28,11 +32,6 @@ export class WordComponent implements OnInit {
    }
 
    pronounce() {
-      if (!this.word.sound_url) {
-         return;
-      }
-      const audio = new Audio(this.word.sound_url);
-      audio.load();
-      audio.play();
+      this.utilsService.onPronounce(this.word.sound_url)
    }
 }

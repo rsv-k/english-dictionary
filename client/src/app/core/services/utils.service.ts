@@ -29,4 +29,10 @@ export class UtilsService {
          return word;
       });
    }
+
+   onPronounce(soundUrl: string) {
+      const audio = new Audio(soundUrl);
+      audio.load();
+      audio.play();
+   }
 }

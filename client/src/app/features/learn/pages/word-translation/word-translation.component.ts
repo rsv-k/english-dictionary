@@ -3,6 +3,7 @@ import { Word } from '@core/models/word.model';
 import { LearnService } from '@core/services/learn.service';
 import { Subscription } from 'rxjs';
 import { TranslationOption } from '@core/models/translationOption.model';
+import { UtilsService } from '@core/services/utils.service';
 
 @Component({
    selector: 'app-word-translation',
@@ -18,7 +19,10 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    private subscriptionTranslations: Subscription;
    private subscriptionWords: Subscription;
 
-   constructor(private learnService: LearnService) { }
+   constructor(
+      private learnService: LearnService,
+      private utilsService: UtilsService
+      ) { }
 
    ngOnInit(): void {
       this.subscriptionWords = this.learnService.wordsUpdateListener$
@@ -60,9 +64,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    }
 
    onPronounce() {
-      const audio = new Audio(this.words[this.wordsPassed].sound_url);
-      audio.load();
-      audio.play();
+      this.utilsService.onPronounce(this.currentWord.sound_url);
    }
 
    private requestNewRandomTranslations() {
