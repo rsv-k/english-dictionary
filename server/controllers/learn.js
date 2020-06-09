@@ -25,16 +25,27 @@ exports.setToLearn = async (req, res) => {
 
 exports.getWordsToLearn = async (req, res) => {
    try {
-      const words = await Word.find({
-         $or: [
-            { 'learn.wordTranslation': true },
-            { 'learn.translationWord': true },
-            { 'learn.savannah': true },
-            { 'learn.wordConstructor': true },
-            { 'learn.listening': true },
-            { 'learn.wordCards': true }
-         ]
-      });
+      const options = [{
+         $match: {
+            $or: [
+               { 'learn.wordTranslation': true },
+               { 'learn.translationWord': true },
+               { 'learn.savannah': true },
+               { 'learn.wordConstructor': true },
+               { 'learn.listening': true },
+               { 'learn.wordCards': true }
+            ]
+         }
+      }];
+      if (!req.query.all) {
+         options.push({
+            $sample: {
+               size: 12
+            }
+         });
+      }
+
+      const words = await Word.aggregate(options);
 
       res.status(200).json({ msg: 'words fetched successfully', result: words });
    } catch (err) {
@@ -43,13 +54,13 @@ exports.getWordsToLearn = async (req, res) => {
 };
 
 exports.getRandomTranslations = async (req, res) => {
-   if (!req.body.translations || req.body.translations.length === 0) {
-      res.status(400).json({ msg: 'no data provided' });
+   if (!req.body.except || req.body.except.length === 0) {
+      return res.status(400).json({ msg: 'no data provided' });
    }
 
    try {
       const words = await Word.aggregate([
-         { $match: { russian: { $ne: req.body.translations } } },
+         { $match: { russian: { $ne: req.body.except } } },
          { $sample: { size: 4 } }
       ]);
       const translations = words.map(word => word.russian);

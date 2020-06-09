@@ -1,0 +1,25 @@
+:host {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.game {
+   width: 500px;
+   height: 200px;
+   display: flex;
+   justify-content: space-between;
+
+   &__left {
+      align-self: flex-start;
+   }
+
+   &__wordName {
+      font-weight: 500;
+   }
+
+   &__transcription {
+      color: grey;
+      font-weight: 300;
+   }
+}

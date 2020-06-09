@@ -1,1 +1,15 @@
-<p>word-translation works!</p>
+<mat-card class = "game" *ngIf = "words">
+   <div class="game__left">
+      <button mat-icon-button (click) = "onPronounce()">
+         <mat-icon>volume_up</mat-icon>
+      </button>
+      <h3 class="game__wordName">{{ words[wordsPassed].english }}</h3>
+      <h4 class = "game__transcription">{{ words[wordsPassed].transcription }}</h4>
+   </div>
+
+   <div class="game__right">
+      <p *ngFor = "let option of options">
+         {{ option }}
+      </p>
+   </div>
+</mat-card>

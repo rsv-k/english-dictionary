@@ -20,8 +20,6 @@ export class LearnComponent implements OnInit, OnDestroy {
    ];
 
    wordsToLearn = null;
-
-   words: Word[];
    subscription: Subscription;
 
    constructor(
@@ -34,7 +32,7 @@ export class LearnComponent implements OnInit, OnDestroy {
          .subscribe((words: Word[]) => {
             this.wordsToLearn = this.countWordsInEachGame(words);
          });
-      this.learnService.getWordsToLearn();
+      this.learnService.getWordsToLearn(true);
    }
 
    ngOnDestroy() {
