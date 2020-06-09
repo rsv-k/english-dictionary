@@ -16,7 +16,7 @@ export class DictionaryComponent implements OnInit {
    showEdit = false;
    id: string;
    title: string;
-   checkedWords: string[] = [];
+   checkedWords: Word[] = [];
    checkAll = false;
    sendToOptions = [
       'All',
@@ -53,31 +53,50 @@ export class DictionaryComponent implements OnInit {
       this.showEdit = false;
    }
 
-   checkWord(id: string) {
-      if (this.checkedWords.includes(id)) {
-         this.checkedWords = this.checkedWords.filter(wordId => wordId !== id);
+   onCheckBoxChange(word: Word) {
+      if (this.checkedWords.find(w => w.id === word.id)) {
+         this.checkedWords = this.checkedWords.filter(checkedWord => checkedWord !== word);
       } else {
-         this.checkedWords.push(id);
+         this.checkedWords.push(word);
       }
+
+      word.isChecked = !word.isChecked;
    }
 
-   deleteSelected() {
+
+   manageSelected(gameNumber?: number) {
       if (!this.checkAll && !this.checkedWords.length) {
          return;
       }
 
-      this.wordService.deleteManyWords(this.checkedWords, this.checkAll);
-      this.checkedWords = [];
-      this.checkAll = false;
-   }
-
-   sendToLearn(index: number) {
-      if (!this.checkAll && !this.checkedWords.length) {
-         return;
+      if (!isNaN(gameNumber)) {
+         this.sendToLearn(gameNumber);
+      } else {
+         this.deleteSelected();
       }
 
-      this.learnService.toggleLearnings(this.checkedWords, this.checkAll, index, true);
-      this.checkedWords = [];
+      this.uncheckWords();
+   }
+
+   private deleteSelected() {
+      const ids = this.getOnlyIds();
+      this.wordService.deleteManyWords(ids, this.checkAll);
+   }
+
+   private sendToLearn(gameNumber: number) {
+      const ids = this.getOnlyIds();
+      this.learnService.toggleLearnings(ids, this.checkAll, gameNumber, true);
+   }
+
+   private getOnlyIds(): string[] {
+      return this.checkedWords.map(checkedWord => checkedWord.id);
+   }
+
+   private uncheckWords() {
+      this.checkedWords = this.checkedWords.filter(word => {
+         word.isChecked = false;
+         return false;
+      });
       this.checkAll = false;
    }
 }

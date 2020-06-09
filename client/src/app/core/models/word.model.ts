@@ -16,4 +16,5 @@ export interface Word {
       listening?: boolean;
       wordCards?: boolean;
    };
+   isChecked?: boolean;
 }

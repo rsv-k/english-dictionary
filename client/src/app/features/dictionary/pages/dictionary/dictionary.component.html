@@ -16,7 +16,7 @@
             [disabled] = "!checkAll && !checkedWords.length"
             mat-icon-button
             color = "warn"
-            (click) = "deleteSelected(); selectAll.checked = false">
+            (click) = "manageSelected(); selectAll.checked = false">
             <mat-icon>delete</mat-icon>
          </button>
 
@@ -25,7 +25,7 @@
             <mat-select>
               <mat-option
               *ngFor="let option of sendToOptions; let i = index"
-              (click) = "sendToLearn(i); selectAll.checked = false">
+              (click) = "manageSelected(i); selectAll.checked = false">
                 {{ option }}
               </mat-option>
             </mat-select>
@@ -36,10 +36,11 @@
       <mat-accordion>
          <div class="dictionary__wordholder" *ngFor = "let word of words$ | async" >
             <mat-checkbox
-               [checked] = "selectAll.checked"
+               [checked] = "selectAll.checked || word.isChecked"
+               (change) = "onCheckBoxChange(word)"
                color = "primary"
                class = "dictionary__checkbox"
-               (click) = "checkWord(word.id)"></mat-checkbox>
+               ></mat-checkbox>
             <app-word
                class = "dictionary__word"
                [word] = "word"
