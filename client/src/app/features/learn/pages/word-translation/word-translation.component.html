@@ -1,15 +1,22 @@
-<mat-card class = "game" *ngIf = "words">
-   <div class="game__left">
-      <button mat-icon-button (click) = "onPronounce()">
-         <mat-icon>volume_up</mat-icon>
-      </button>
-      <h3 class="game__wordName">{{ words[wordsPassed].english }}</h3>
-      <h4 class = "game__transcription">{{ words[wordsPassed].transcription }}</h4>
-   </div>
-
-   <div class="game__right">
-      <p *ngFor = "let option of options">
-         {{ option }}
-      </p>
-   </div>
-</mat-card>
+<section class = "word-translation" *ngIf = "currentWord">
+   <p class="wordsCount">{{ (wordsPassed + 1) + ' / ' + words.length}}</p>
+   <mat-card class = "game" >
+      <div class="game__left">
+         <button mat-icon-button (click) = "onPronounce()">
+            <mat-icon>volume_up</mat-icon>
+         </button>
+         <h3 class="game__wordName">{{ currentWord.english }}</h3>
+         <h4 class = "game__transcription">[{{ currentWord.transcription }}]</h4>
+      </div>
+   
+      <div class="game__right">
+         <button 
+            (click) = "onAnswer()"
+            [color] = "isOptionClicked === true ? option.correct ? 'primary' : 'warn' : null"
+            class = "game__option"
+            mat-button *ngFor = "let option of options; let i = index">
+            {{ i + 1}}.   {{ option.value }}
+         </button>
+      </div>
+   </mat-card>
+</section>

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { LearnService } from '@core/services/learn.service';
 import { Subscription } from 'rxjs';
+import { TranslationOption } from '@core/models/translationOption.model';
 
 @Component({
    selector: 'app-word-translation',
@@ -11,7 +12,9 @@ import { Subscription } from 'rxjs';
 export class WordTranslationComponent implements OnInit, OnDestroy {
    wordsPassed = 0;
    words: Word[];
-   options: string[];
+   currentWord: Word;
+   options: TranslationOption[];
+   isOptionClicked = false;
    private subscriptionTranslations: Subscription;
    private subscriptionWords: Subscription;
 
@@ -27,17 +30,33 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
 
       this.subscriptionTranslations = this.learnService.randomTranslationsUpdateListener$
          .subscribe((translations: string[][]) => {
-            this.options = translations.map(translation => translation.join(','));
+            this.currentWord = this.words[this.wordsPassed];
+            this.options = translations.map(translation => {
+               return {
+                  value: translation.join(','),
+                  correct: false
+               };
+            });
+
             const randomIndex = Math.floor(Math.random() * this.options.length);
             this.options.push(this.options[randomIndex]);
-            this.options[randomIndex] = this.words[this.wordsPassed].russian.join(',');
+
+            this.options[randomIndex] = {
+               value: this.currentWord.russian.join(','),
+               correct: true
+            };
+
             this.onPronounce();
          });
    }
 
-   onClick() {
-      this.wordsPassed += 1;
-      this.requestNewRandomTranslations();
+   onAnswer() {
+      if (this.isOptionClicked) {
+         this.wordsPassed += 1;
+         this.requestNewRandomTranslations();
+      }
+
+      this.isOptionClicked = !this.isOptionClicked;
    }
 
    onPronounce() {
