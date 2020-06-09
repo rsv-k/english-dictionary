@@ -16,6 +16,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    currentWord: Word;
    options: TranslationOption[];
    isOptionClicked = false;
+   isFinish = false;
    private subscriptionTranslations: Subscription;
    private subscriptionWords: Subscription;
 
@@ -25,12 +26,12 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
       ) { }
 
    ngOnInit(): void {
+      this.learnService.getWordsToLearn();
       this.subscriptionWords = this.learnService.wordsUpdateListener$
          .subscribe((words: Word[]) => {
             this.words = words;
             this.requestNewRandomTranslations();
          });
-      this.learnService.getWordsToLearn();
 
       this.subscriptionTranslations = this.learnService.randomTranslationsUpdateListener$
          .subscribe((translations: string[][]) => {
@@ -42,19 +43,17 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
                };
             });
 
-            const randomIndex = Math.floor(Math.random() * this.options.length);
-            this.options.push(this.options[randomIndex]);
-
-            this.options[randomIndex] = {
-               value: this.currentWord.russian.join(','),
-               correct: true
-            };
-
+            this.shakeTranslations();
             this.onPronounce();
          });
    }
 
    onAnswer() {
+      if (this.wordsPassed === this.words.length - 1) {
+         this.isFinish = true;
+         return;
+      }
+
       if (this.isOptionClicked) {
          this.wordsPassed += 1;
          this.requestNewRandomTranslations();
@@ -70,6 +69,22 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    private requestNewRandomTranslations() {
       this.learnService.getRandomTranslations(this.words[this.wordsPassed].russian);
    }
+
+   private shakeTranslations() {
+      const originalTranslation =  {
+         value: this.currentWord.russian.join(','),
+         correct: true
+      };
+
+      const randomIndex = Math.floor(Math.random() * this.options.length + 1);
+      if (randomIndex === 5) {
+         this.options.push(originalTranslation);
+      } else {
+         this.options.push(this.options[randomIndex]);
+         this.options[randomIndex] = originalTranslation
+      }
+   }
+
 
    ngOnDestroy() {
       this.subscriptionTranslations.unsubscribe();

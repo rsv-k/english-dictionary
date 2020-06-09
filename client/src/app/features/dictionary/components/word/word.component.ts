@@ -32,6 +32,6 @@ export class WordComponent implements OnInit {
    }
 
    pronounce() {
-      this.utilsService.onPronounce(this.word.sound_url)
+      this.utilsService.onPronounce(this.word.sound_url);
    }
 }

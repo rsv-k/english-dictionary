@@ -1,22 +1,26 @@
-<section class = "word-translation" *ngIf = "currentWord">
-   <p class="wordsCount">{{ (wordsPassed + 1) + ' / ' + words.length}}</p>
-   <mat-card class = "game" >
-      <div class="game__left">
-         <button mat-icon-button (click) = "onPronounce()">
-            <mat-icon>volume_up</mat-icon>
-         </button>
-         <h3 class="game__wordName">{{ currentWord.english }}</h3>
-         <h4 class = "game__transcription">[{{ currentWord.transcription }}]</h4>
-      </div>
-   
-      <div class="game__right">
-         <button 
-            (click) = "onAnswer()"
-            [color] = "isOptionClicked === true ? option.correct ? 'primary' : 'warn' : null"
-            class = "game__option"
-            mat-button *ngFor = "let option of options; let i = index">
-            {{ i + 1}}.   {{ option.value }}
-         </button>
-      </div>
-   </mat-card>
+<section class = "word-translation" >
+   <div class="main-content" *ngIf = "currentWord && !isFinish">
+      <p class="wordsCount">{{ (wordsPassed + 1) + ' / ' + words.length}}</p>
+      <mat-card class = "game" >
+         <div class="game__left">
+            <button mat-icon-button (click) = "onPronounce()">
+               <mat-icon>volume_up</mat-icon>
+            </button>
+            <h3 class="game__wordName">{{ currentWord.english }}</h3>
+            <h4 class = "game__transcription">[{{ currentWord.transcription }}]</h4>
+         </div>
+      
+         <div class="game__right">
+            <button 
+               (click) = "onAnswer()"
+               [color] = "isOptionClicked === true ? option.correct ? 'primary' : 'warn' : null"
+               class = "game__option"
+               mat-button *ngFor = "let option of options; let i = index">
+               {{ i + 1}}.   {{ option.value }}
+            </button>
+         </div>
+      </mat-card>
+   </div>
+
+   <app-results *ngIf = "isFinish" [result] = "(wordsPassed + 1) + ' / ' + words.length"></app-results>
 </section>
