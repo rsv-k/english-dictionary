@@ -11,12 +11,12 @@ import { UtilsService } from '@core/services/utils.service';
    styleUrls: ['./word-translation.component.scss']
 })
 export class WordTranslationComponent implements OnInit, OnDestroy {
-   wordsPassed = 0;
+   results = [];
    words: Word[];
    currentWord: Word;
    options: TranslationOption[];
    isOptionClicked = false;
-   isFinish = false;
+
    private subscriptionTranslations: Subscription;
    private subscriptionWords: Subscription;
 
@@ -35,7 +35,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
 
       this.subscriptionTranslations = this.learnService.randomTranslationsUpdateListener$
          .subscribe((translations: string[][]) => {
-            this.currentWord = this.words[this.wordsPassed];
+            this.currentWord = this.words[this.results.length];
             this.options = translations.map(translation => {
                return {
                   value: translation.join(','),
@@ -48,17 +48,21 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
          });
    }
 
-   onAnswer() {
-      if (this.wordsPassed === this.words.length - 1) {
-         this.isFinish = true;
+   onAnswer(translationOption: TranslationOption) {
+      if (this.results.length + 1 === this.words.length) {
+         const ids = this.words.map(word => word.id);
+         this.learnService.toggleLearnings(ids, false, 1, false);
          return;
       }
 
       if (this.isOptionClicked) {
-         this.wordsPassed += 1;
+         this.results.push(translationOption.correct);
          this.requestNewRandomTranslations();
       }
 
+      translationOption.color = translationOption.correct ? 'primary' : 'warn';
+      const correctTranslation = this.options.find(opt => opt.correct);
+      correctTranslation.color = 'primary';
       this.isOptionClicked = !this.isOptionClicked;
    }
 
@@ -67,7 +71,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    }
 
    private requestNewRandomTranslations() {
-      this.learnService.getRandomTranslations(this.words[this.wordsPassed].russian);
+      this.learnService.getRandomTranslations(this.words[this.results.length].russian);
    }
 
    private shakeTranslations() {
@@ -81,7 +85,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
          this.options.push(originalTranslation);
       } else {
          this.options.push(this.options[randomIndex]);
-         this.options[randomIndex] = originalTranslation
+         this.options[randomIndex] = originalTranslation;
       }
    }
 

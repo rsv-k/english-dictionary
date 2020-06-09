@@ -23,8 +23,8 @@ export class LearnService {
       private utilsService: UtilsService
       ) { }
 
-   setToLearn(ids: string[], reverse: boolean, gameNumber: number) {
-      this.http.post(BACKEND_URL, { ids, reverse, gameNumber })
+   toggleLearnings(ids: string[], reverse: boolean, gameNumber: number, option: boolean) {
+      this.http.post(BACKEND_URL, { ids, reverse, gameNumber, option })
          .subscribe(() => {
             this.utilsService.showSnackBar('Words sent to learn');
          });

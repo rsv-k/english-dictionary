@@ -76,7 +76,7 @@ export class DictionaryComponent implements OnInit {
          return;
       }
 
-      this.learnService.setToLearn(this.checkedWords, this.checkAll, index);
+      this.learnService.toggleLearnings(this.checkedWords, this.checkAll, index, true);
       this.checkedWords = [];
       this.checkAll = false;
    }

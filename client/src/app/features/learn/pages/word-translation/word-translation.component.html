@@ -1,6 +1,6 @@
 <section class = "word-translation" >
-   <div class="main-content" *ngIf = "currentWord && !isFinish">
-      <p class="wordsCount">{{ (wordsPassed + 1) + ' / ' + words.length}}</p>
+   <div class="main-content" *ngIf = "currentWord">
+      <p class="wordsCount">{{ (results.length + 1) + ' / ' + words.length}}</p>
       <mat-card class = "game" >
          <div class="game__left">
             <button mat-icon-button (click) = "onPronounce()">
@@ -12,8 +12,8 @@
       
          <div class="game__right">
             <button 
-               (click) = "onAnswer()"
-               [color] = "isOptionClicked === true ? option.correct ? 'primary' : 'warn' : null"
+               (click) = "onAnswer(option)"
+               [color] = "option.color"
                class = "game__option"
                mat-button *ngFor = "let option of options; let i = index">
                {{ i + 1}}.   {{ option.value }}
@@ -21,6 +21,4 @@
          </div>
       </mat-card>
    </div>
-
-   <app-results *ngIf = "isFinish" [result] = "(wordsPassed + 1) + ' / ' + words.length"></app-results>
 </section>
