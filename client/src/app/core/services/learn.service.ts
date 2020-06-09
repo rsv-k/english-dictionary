@@ -30,8 +30,18 @@ export class LearnService {
          });
    }
 
-   getWordsToLearn(fetchAll?: boolean) {
-      const queries = fetchAll ? { params: new HttpParams().set('all', fetchAll + '') } : {};
+   getWordsToLearn(fetchAllWords?: boolean, fetchWordsForm?: number) {
+      const queries = {
+         params: new HttpParams()
+      };
+      if (fetchAllWords) {
+         queries.params = queries.params.set('all', fetchAllWords + '');
+      }
+
+      if (fetchWordsForm) {
+         queries.params = queries.params.set('fetchFrom', fetchWordsForm + '');
+      }
+
 
       this.http.get<{msg: string, result: any}>(BACKEND_URL, queries)
          .pipe(

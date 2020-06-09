@@ -1,7 +1,7 @@
 const Word = require('../models/word');
 const wordHelper = require('../helpers/wordHelper');
 
-exports.setToLearn = async (req, res) => {
+exports.toggleLearnings = async (req, res) => {
    if (!req.body.ids) {
       return res.status(400).json({ msg: 'no data provided' });
    }
@@ -13,7 +13,7 @@ exports.setToLearn = async (req, res) => {
             $nin: req.body.ids
          };
       }
-      const opt = wordHelper.chooseGameToLearn(req.body.gameNumber);
+      const opt = wordHelper.chooseGameToLearn(req.body.gameNumber, req.body.option);
 
       await Word.update(options, { $set: opt }, { multi: true });
 
@@ -25,18 +25,25 @@ exports.setToLearn = async (req, res) => {
 
 exports.getWordsToLearn = async (req, res) => {
    try {
+      const wordsFrom = [
+         { 'learn.wordTranslation': true },
+         { 'learn.translationWord': true },
+         { 'learn.savannah': true },
+         { 'learn.wordConstructor': true },
+         { 'learn.listening': true },
+         { 'learn.wordCards': true }
+      ];
       const options = [{
          $match: {
-            $or: [
-               { 'learn.wordTranslation': true },
-               { 'learn.translationWord': true },
-               { 'learn.savannah': true },
-               { 'learn.wordConstructor': true },
-               { 'learn.listening': true },
-               { 'learn.wordCards': true }
-            ]
+            $or: wordsFrom
          }
       }];
+      if (req.query.fetchFrom && req.query.fetchFrom !== 0) {
+         options[0].$match = {
+            ...wordsFrom[req.query.fetchFrom - 1]
+         };
+      }
+
       if (!req.query.all) {
          options.push({
             $sample: {
@@ -49,6 +56,7 @@ exports.getWordsToLearn = async (req, res) => {
 
       res.status(200).json({ msg: 'words fetched successfully', result: words });
    } catch (err) {
+      console.log(err);
       res.status(500).json({ msg: 'server error', error: err });
    }
 };

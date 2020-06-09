@@ -14,7 +14,7 @@ exports.changeVoice = (str, voiceNumber) => {
    return str.slice(0, before) + between + str.slice(after);
 };
 
-exports.chooseGameToLearn = (gameNumber) => {
+exports.chooseGameToLearn = (gameNumber, option) => {
    const gameOptions = {
       1: 'wordTranslation',
       2: 'translationWord',
@@ -27,11 +27,11 @@ exports.chooseGameToLearn = (gameNumber) => {
 
    if (gameNumber === 0) {
       Object.values(gameOptions).forEach(gameName => {
-         opt['learn.' + gameName] = true;
+         opt['learn.' + gameName] = option;
       });
    } else {
       const game = gameOptions[gameNumber];
-      opt['learn.' + game] = true;
+      opt['learn.' + game] = option;
    }
 
    return opt;

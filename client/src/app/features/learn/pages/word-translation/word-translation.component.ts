@@ -16,6 +16,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    currentWord: Word;
    options: TranslationOption[];
    isOptionClicked = false;
+   isFinished = false;
 
    private subscriptionTranslations: Subscription;
    private subscriptionWords: Subscription;
@@ -26,7 +27,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
       ) { }
 
    ngOnInit(): void {
-      this.learnService.getWordsToLearn();
+      this.learnService.getWordsToLearn(null, 1);
       this.subscriptionWords = this.learnService.wordsUpdateListener$
          .subscribe((words: Word[]) => {
             this.words = words;
@@ -49,25 +50,41 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    }
 
    onAnswer(translationOption: TranslationOption) {
-      if (this.results.length + 1 === this.words.length) {
-         const ids = this.words.map(word => word.id);
+      if (this.isOptionClicked) {
+         this.results.push({
+            id: this.currentWord.id,
+            isCorrect: translationOption.correct
+         });
+      } else {
+         translationOption.color = 'warn';
+         const correctTranslation = this.options.find(opt => opt.correct);
+         correctTranslation.color = 'primary';
+      }
+
+      if (this.results.length === this.words.length) {
+         const ids = this.results.filter(option => option.isCorrect ? option.id : null).map(option => option.id);
          this.learnService.toggleLearnings(ids, false, 1, false);
+         this.isFinished = true;
          return;
       }
 
       if (this.isOptionClicked) {
-         this.results.push(translationOption.correct);
          this.requestNewRandomTranslations();
       }
-
-      translationOption.color = translationOption.correct ? 'primary' : 'warn';
-      const correctTranslation = this.options.find(opt => opt.correct);
-      correctTranslation.color = 'primary';
       this.isOptionClicked = !this.isOptionClicked;
+
    }
 
    onPronounce() {
       this.utilsService.onPronounce(this.currentWord.sound_url);
+   }
+
+   learnAgain() {
+      this.isFinished = false;
+      this.isOptionClicked = false;
+      this.results = [];
+      this.currentWord = null;
+      this.learnService.getWordsToLearn(null, 1);
    }
 
    private requestNewRandomTranslations() {

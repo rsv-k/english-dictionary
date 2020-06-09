@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
    selector: 'app-results',
@@ -6,11 +6,18 @@ import { Component, OnInit, Input } from '@angular/core';
    styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
-   @Input() result: string;
+   @Input() result: { id: string, isCorrect: boolean }[];
+   @Output() learnAgain = new EventEmitter();
+   isAllCorrect: boolean;
 
    constructor() { }
 
    ngOnInit(): void {
+      this.isAllCorrect = this.result.every(res => res.isCorrect);
+   }
+
+   onClick() {
+      this.learnAgain.emit();
    }
 
 }

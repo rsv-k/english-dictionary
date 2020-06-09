@@ -1,5 +1,5 @@
 <section class = "word-translation" >
-   <div class="main-content" *ngIf = "currentWord">
+   <div class="main-content" *ngIf = "currentWord && !isFinished">
       <p class="wordsCount">{{ (results.length + 1) + ' / ' + words.length}}</p>
       <mat-card class = "game" >
          <div class="game__left">
@@ -21,4 +21,9 @@
          </div>
       </mat-card>
    </div>
+
+   <app-results 
+      *ngIf = "isFinished" 
+      [result] = "results"
+      (learnAgain) = "learnAgain()"></app-results>
 </section>
