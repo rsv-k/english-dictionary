@@ -52,7 +52,12 @@ exports.getWords = async (req, res) => {
          options.english = regex;
       }
 
-      const words = await Word.find(options).sort({ createdAt: -1 });
+      let startsFrom = 0;
+      if (req.query.startsFrom) {
+         startsFrom = req.query.startsFrom * 20;
+      }
+
+      const words = await Word.find(options).sort({ createdAt: -1 }).skip(startsFrom).limit(20);
 
       res.status(200).json({ msg: 'word added successfully', result: words });
    } catch (err) {

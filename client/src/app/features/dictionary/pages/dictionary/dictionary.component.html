@@ -1,4 +1,4 @@
-<section class = "dictionary">
+<section class = "dictionary" infinite-scroll (scrolled) = "onScroll()">
    <header class = "dictionary__header">
       <h1>{{ title | uppercase }}</h1>
       <app-word-create [setId] = "id"></app-word-create>
@@ -34,7 +34,7 @@
    </header>
    <mat-card>
       <mat-accordion>
-         <div class="dictionary__wordholder" *ngFor = "let word of words$ | async" >
+         <div class="dictionary__wordholder" *ngFor = "let word of words" >
             <mat-checkbox
                [checked] = "selectAll.checked || word.isChecked"
                (change) = "onCheckBoxChange(word)"
@@ -48,7 +48,7 @@
          </div>
       </mat-accordion>
 
-      <p *ngIf = "(words$ | async)?.length === 0" class="dictionary__empty">Nothing added yet</p>
+      <p *ngIf = "!words" class="dictionary__empty">Nothing added yet</p>
    </mat-card>
 </section>
 

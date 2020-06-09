@@ -30,7 +30,7 @@ export class WordService {
       private utilsService: UtilsService
       ) { }
 
-   getWords(setId?: string, startsWith?: string) {
+   getWords(setId?: string, startsWith?: string, startsFrom?: number) {
       const options = {
          params: new HttpParams()
       };
@@ -41,6 +41,10 @@ export class WordService {
 
       if (startsWith) {
          options.params = options.params.set('startsWith', startsWith);
+      }
+
+      if (startsFrom) {
+         options.params = options.params.set('startsFrom', startsFrom + '');
       }
 
       this.http.get<Config>(BACKEND_URL, options)

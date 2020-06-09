@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { LearnService } from '@core/services/learn.service';
 
@@ -10,14 +10,15 @@ import { LearnService } from '@core/services/learn.service';
    templateUrl: './dictionary.component.html',
    styleUrls: ['./dictionary.component.scss']
 })
-export class DictionaryComponent implements OnInit {
-   words$: Observable<Word[]>;
+export class DictionaryComponent implements OnInit, OnDestroy {
+   words: Word[];
    word: Word;
    showEdit = false;
    id: string;
    title: string;
    checkedWords: Word[] = [];
    checkAll = false;
+   subscription: Subscription;
    sendToOptions = [
       'All',
       'Word-translation',
@@ -27,6 +28,7 @@ export class DictionaryComponent implements OnInit {
       'Listening',
       'Word cards'
    ];
+   currentPage = 0;
 
    constructor(
       private wordService: WordService,
@@ -40,7 +42,19 @@ export class DictionaryComponent implements OnInit {
 
       this.title =  title ? title.split('_').join(' ') : 'dictionary';
 
-      this.words$ = this.wordService.wordsUpdateListener$;
+      this.subscription = this.wordService.wordsUpdateListener$
+         .subscribe((words: Word[]) => {
+            if (!words[0]) {
+               return;
+            }
+
+            if (this.words && !this.words.some(word => word.id === words[0].id)) {
+               this.words = [...this.words, ...words];
+            } else {
+               this.words = words;
+               this.currentPage = 0;
+            }
+         });
       this.wordService.getWords(this.id);
    }
 
@@ -61,6 +75,11 @@ export class DictionaryComponent implements OnInit {
       }
 
       word.isChecked = !word.isChecked;
+   }
+
+   onScroll() {
+      this.currentPage++;
+      this.wordService.getWords(this.id, null, this.currentPage);
    }
 
 
@@ -98,5 +117,9 @@ export class DictionaryComponent implements OnInit {
          return false;
       });
       this.checkAll = false;
+   }
+
+   ngOnDestroy() {
+      this.subscription.unsubscribe();
    }
 }
