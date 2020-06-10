@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angu
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
 import { Subscription } from 'rxjs';
+import { UtilsService } from '@core/services/utils.service';
 
 @Component({
    selector: 'app-word-edit',
@@ -19,7 +20,10 @@ export class WordEditComponent implements OnInit, OnDestroy {
    currentTranslations: string[];
    currentText = '';
 
-   constructor(private wordService: WordService) { }
+   constructor(
+      private wordService: WordService,
+      private utilsService: UtilsService
+      ) { }
 
    ngOnInit(): void {
       this.currentImage = this.word.pic_url;
@@ -28,7 +32,7 @@ export class WordEditComponent implements OnInit, OnDestroy {
    }
 
    onUpdateWord() {
-      if (this.word.pic_url === this.currentImage && 
+      if (this.word.pic_url === this.currentImage &&
          this.word.russian.join('') === this.currentTranslations.join('') &&
          this.currentText.trim() === this.word.text
          ) {
@@ -54,9 +58,14 @@ export class WordEditComponent implements OnInit, OnDestroy {
       }
    }
 
+   onPronounce() {
+      this.utilsService.onPronounce(this.word.sound_url);
+   }
+
    ngOnDestroy() {
       if (this.subscription) {
          this.subscription.unsubscribe();
       }
    }
+
 }

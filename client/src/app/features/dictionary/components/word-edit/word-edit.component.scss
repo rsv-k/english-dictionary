@@ -11,13 +11,17 @@
 }
 
 .form {
-   width: 300px;
-   display: flex;
-   flex-direction: column;
+   width: 600px;
 
    &__image-container {
-      width: 300px;
-      text-align: center;
+      width: 200px;
+      position: relative;
+   }
+
+   &__buttonChangePicture {
+      position: absolute;
+      top: 0;
+      left: 0;
    }
 
    &__change {
@@ -33,13 +37,14 @@
       width: 100%;
    }
 
-   &__button {
-      align-self: center;
-   }
-
    &__icon {
       cursor: pointer;
       user-select: none;
    }
+}
+
+mat-card-content {
+   display: flex;
+   justify-content: space-between;
 }
 

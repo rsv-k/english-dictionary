@@ -127,11 +127,10 @@ export class WordService {
          });
    }
 
-   showTranslations(word: Observable<string>, setId: string) {
+   showTranslations(word: Observable<string>) {
       return word.pipe(
          debounceTime(1000),
          distinctUntilChanged(),
-         tap((w) => this.getWords(setId, w)),
          switchMap(w => iif(() => w.trim().length === 0, of([]), this.getTranslations(w)))
       );
    }

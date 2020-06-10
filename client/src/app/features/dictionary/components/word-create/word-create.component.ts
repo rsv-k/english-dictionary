@@ -3,6 +3,7 @@ import { WordService } from '@core/services/word.service';
 import { Observable, Subject } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
 import { Word } from '@core/models/word.model';
+import { tap } from 'rxjs/operators';
 
 @Component({
    selector: 'app-word-create',
@@ -11,13 +12,24 @@ import { Word } from '@core/models/word.model';
 })
 export class WordCreateComponent implements OnInit {
    @Input() setId: string;
+   inputValue: string;
    wordText$ = new Subject<string>();
    translations$: Observable<Translation[]>;
 
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
-      this.translations$ = this.wordService.showTranslations(this.wordText$, this.setId);
+      this.translations$ = this.wordService.showTranslations(this.wordText$)
+         .pipe(
+            tap(() => {
+               this.wordService.getWords(this.setId, this.inputValue);
+            })
+         );
+   }
+
+   onInput(str: string) {
+      this.inputValue = str.trim();
+      this.wordText$.next(this.inputValue);
    }
 
    chooseTranslation(translation: Translation) {
@@ -40,6 +52,7 @@ export class WordCreateComponent implements OnInit {
 
       this.wordService.getWords(this.setId);
       this.wordService.addWord(word);
+      this.inputValue = '';
       this.wordText$.next('');
    }
 }

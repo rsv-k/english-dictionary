@@ -11,7 +11,7 @@ import { LearnService } from '@core/services/learn.service';
    styleUrls: ['./dictionary.component.scss']
 })
 export class DictionaryComponent implements OnInit, OnDestroy {
-   words: Word[];
+   words: Word[] = [];
    word: Word;
    showEdit = false;
    id: string;
@@ -44,11 +44,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
       this.subscription = this.wordService.wordsUpdateListener$
          .subscribe((words: Word[]) => {
-            if (!words[0]) {
-               return;
-            }
-
-            if (this.words && !this.words.some(word => word.id === words[0].id)) {
+            if (this.currentPage > 0) {
                this.words = [...this.words, ...words];
             } else {
                this.words = words;
@@ -78,6 +74,10 @@ export class DictionaryComponent implements OnInit, OnDestroy {
    }
 
    onScroll() {
+      if (this.words.length < 20) {
+         return;
+      }
+
       this.currentPage++;
       this.wordService.getWords(this.id, null, this.currentPage);
    }
