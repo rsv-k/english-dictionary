@@ -5,7 +5,7 @@ export interface Word {
    text?: string;
    pic_url?: string;
    createdAt?: number;
-   setId?: string;
+   setId?: string[];
    sound_url?: string;
    transcription?: string;
    learn: {

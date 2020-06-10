@@ -1,4 +1,5 @@
 const Set = require('../models/set');
+const Word = require('../models/word');
 
 exports.addSet = async (req, res) => {
    if (!req.body.set) {
@@ -30,6 +31,18 @@ exports.deleteSet = async (req, res) => {
    }
 
    try {
+      await Word.updateMany({
+         setId: {
+            $in: [
+               req.params.id
+            ]
+         }
+      },
+      {
+         $pullAll: {
+            setId: [req.params.id]
+         }
+      });
       const set = await Set.findByIdAndDelete(req.params.id);
 
       res.status(200).json({ msg: 'set deleted successfully', result: [set] });

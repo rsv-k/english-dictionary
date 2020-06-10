@@ -37,7 +37,7 @@ export class WordCreateComponent implements OnInit {
          english: translation.origin[0].toUpperCase() + translation.origin.slice(1).toLowerCase(),
          russian: [translation.value],
          pic_url: translation.pic_url,
-         setId: this.setId,
+         setId: this.setId ? [this.setId] : [],
          sound_url: translation.sound_url,
          transcription: translation.transcription,
          learn: {

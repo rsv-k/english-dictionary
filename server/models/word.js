@@ -6,7 +6,7 @@ module.exports = mongoose.model('Word', new mongoose.Schema({
    text: { type: String, required: false },
    pic_url: { type: String, required: false },
    createdAt: { type: Date, default: Date.now },
-   setId: { type: mongoose.Schema.Types.ObjectId, ref: 'Set', required: false },
+   setId: { type: [mongoose.Schema.Types.ObjectId], ref: 'Set', required: false },
    transcription: { type: String, required: false },
    sound_url: { type: String, required: false },
    learn: {

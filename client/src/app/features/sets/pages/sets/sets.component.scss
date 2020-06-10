@@ -1,6 +1,7 @@
 .sets__main {
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+   grid-template-columns: repeat(5, 1fr);
+   justify-items: center;
    gap: 20px;
 }
 .sets__create-set {
@@ -13,4 +14,29 @@
 
 .sets__form-field {
    width: 100%;
+}
+
+
+@media only screen and (max-width: 1300px) {
+   .sets__main {
+      grid-template-columns: repeat(4, 1fr);
+   }
+}
+
+@media only screen and (max-width: 1050px) {
+   .sets__main {
+      grid-template-columns: repeat(3, 1fr);
+   }
+}
+
+@media only screen and (max-width: 800px) {
+   .sets__main {
+      grid-template-columns: repeat(2, 1fr);
+   }
+}
+
+@media only screen and (max-width: 540px) {
+   .sets__main {
+      grid-template-columns: repeat(1, 1fr);
+   }
 }

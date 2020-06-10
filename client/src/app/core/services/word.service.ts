@@ -76,6 +76,7 @@ export class WordService {
             switchMap((words: Word[]) => {
                if (words.length) {
                   words[0].russian.push(word.russian.pop());
+                  words[0].setId.push(word.setId.pop());
                   return this.editWord(words[0]);
                } else {
                   return this.createWord(word);
