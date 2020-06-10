@@ -64,4 +64,8 @@ export class LearnService {
             this.randomTranslations.next(translations);
          });
    }
+
+   getQuantities() {
+      return this.http.get<{ msg: string, result: any[]}>(BACKEND_URL + '/quantity');
+   }
 }

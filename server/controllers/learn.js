@@ -78,3 +78,20 @@ exports.getRandomTranslations = async (req, res) => {
       res.status(500).json({ msg: 'server error', error: err });
    }
 };
+
+exports.countWordsInEachGame = async (req, res) => {
+   try {
+      const wordsQuantity = {
+         wordTranslation: await Word.countDocuments({ 'learn.wordTranslation': true }),
+         translationWord: await Word.countDocuments({ 'learn.translationWord': true }),
+         savannah: await Word.countDocuments({ 'learn.savannah': true }),
+         wordConstructor: await Word.countDocuments({ 'learn.wordConstructor': true }),
+         listening: await Word.countDocuments({ 'learn.listening': true }),
+         wordCards: await Word.countDocuments({ 'learn.wordCards': true })
+      };
+
+      res.status(200).json({ msg: 'quantity fetched successfully', result: wordsQuantity });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error', error: err });
+   }
+};

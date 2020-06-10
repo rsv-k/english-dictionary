@@ -19,7 +19,7 @@ export class LearnComponent implements OnInit, OnDestroy {
       'Word cards'
    ];
 
-   wordsToLearn = null;
+   wordsToLearn = {};
    subscription: Subscription;
 
    constructor(
@@ -28,11 +28,13 @@ export class LearnComponent implements OnInit, OnDestroy {
       ) { }
 
    ngOnInit() {
-      this.subscription = this.learnService.wordsUpdateListener$
-         .subscribe((words: Word[]) => {
-            this.wordsToLearn = this.countWordsInEachGame(words);
+      this.subscription = this.learnService.getQuantities()
+         .subscribe(data => {
+            const values = Object.values(data.result);
+            for (let i = 0; i < values.length; i++) {
+               this.wordsToLearn[i + 1] = values[i];
+            }
          });
-      this.learnService.getWordsToLearn(true);
    }
 
    ngOnDestroy() {
@@ -43,43 +45,5 @@ export class LearnComponent implements OnInit, OnDestroy {
       const url = '/learn/' + this.titles[index].toLowerCase();
 
       this.router.navigate([url]);
-   }
-
-   private countWordsInEachGame(words: Word[]) {
-      const  wordsToLearn = {
-         1: 0,
-         2: 0,
-         3: 0,
-         4: 0,
-         5: 0,
-         6: 0
-      };
-      words.forEach(word => {
-         if (word.learn.wordTranslation) {
-            wordsToLearn[1] += 1;
-         }
-
-         if (word.learn.translationWord) {
-            wordsToLearn[2] += 1;
-         }
-
-         if (word.learn.savannah) {
-            wordsToLearn[3] += 1;
-         }
-
-         if (word.learn.wordConstructor) {
-            wordsToLearn[4] += 1;
-         }
-
-         if (word.learn.listening) {
-            wordsToLearn[5] += 1;
-         }
-
-         if (word.learn.wordCards) {
-            wordsToLearn[6] += 1;
-         }
-      });
-
-      return wordsToLearn;
    }
 }
