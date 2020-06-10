@@ -12,6 +12,7 @@ import { Set } from '@core/models/set.model';
    styleUrls: ['./manage-words.component.scss']
 })
 export class ManageWordsComponent implements OnInit {
+   @Input() setId: string;
    @Input() checkAll: boolean;
    @Input() checkedWords: Word[];
    @Output() setCheckAll = new EventEmitter<boolean>();
@@ -60,7 +61,7 @@ export class ManageWordsComponent implements OnInit {
 
    private deleteSelected() {
       const ids = this.getOnlyIds();
-      this.wordService.deleteManyWords(ids, this.checkAll);
+      this.wordService.deleteManyWords(this.setId, ids, this.checkAll);
    }
 
    private sendToLearn(gameNumber: number) {

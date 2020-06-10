@@ -124,8 +124,8 @@ export class WordService {
          .subscribe();
    }
 
-   deleteManyWords(ids: string[], reverse?: boolean) {
-      this.http.post(BACKEND_URL + '/deleteMany', { ids, reverse })
+   deleteManyWords(setId: string, ids: string[], reverse?: boolean) {
+      this.http.post(BACKEND_URL + '/deleteMany', { setId, ids, reverse })
          .subscribe(() => {
             const deletedWords = {};
 

@@ -1,8 +1,9 @@
 <section class = "dictionary" infinite-scroll (scrolled) = "onScroll()">
    <header class = "dictionary__header">
       <h1>{{ title | uppercase }}</h1>
-      <app-word-create [setId] = "id"></app-word-create>
+      <app-word-create [setId] = "setId"></app-word-create>
       <app-manage-words
+         [setId] = "setId"
          [checkedWords] = "checkedWords"
          [checkAll] = "checkAll"
          (uncheckWords) = "uncheckWords()"
