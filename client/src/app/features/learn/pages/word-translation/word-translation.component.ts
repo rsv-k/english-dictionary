@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { LearnService } from '@core/services/learn.service';
 import { Subscription } from 'rxjs';
@@ -17,9 +17,17 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    options: TranslationOption[];
    isOptionClicked = false;
    isFinished = false;
-
    private subscriptionTranslations: Subscription;
    private subscriptionWords: Subscription;
+   @HostListener('window:keyup', ['$event']) onkeyup(e: KeyboardEvent) {
+      if (![1, 2, 3, 4, 5].includes(+e.key)) {
+         return;
+      }
+
+      const option = this.options[+e.key - 1];
+      this.onAnswer(option);
+   }
+
 
    constructor(
       private learnService: LearnService,
@@ -56,15 +64,11 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
             isCorrect: translationOption.correct
          });
       } else {
-         translationOption.color = 'warn';
-         const correctTranslation = this.options.find(opt => opt.correct);
-         correctTranslation.color = 'primary';
+         this.highlightCorrectAndChosenOption(translationOption);
       }
 
       if (this.results.length === this.words.length) {
-         const ids = this.results.filter(option => option.isCorrect ? option.id : null).map(option => option.id);
-         this.learnService.toggleLearnings(ids, false, 1, false);
-         this.isFinished = true;
+         this.finishGame();
          return;
       }
 
@@ -72,7 +76,6 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
          this.requestNewRandomTranslations();
       }
       this.isOptionClicked = !this.isOptionClicked;
-
    }
 
    onPronounce() {
@@ -106,6 +109,17 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
       }
    }
 
+   private highlightCorrectAndChosenOption(translationOption: TranslationOption) {
+      translationOption.color = 'warn';
+      const correctTranslation = this.options.find(opt => opt.correct);
+      correctTranslation.color = 'primary';
+   }
+
+   private finishGame() {
+      const ids = this.results.filter(option => option.isCorrect).map(option => option.id);
+      this.learnService.toggleLearnings(ids, false, 1, false);
+      this.isFinished = true;
+   }
 
    ngOnDestroy() {
       this.subscriptionTranslations.unsubscribe();

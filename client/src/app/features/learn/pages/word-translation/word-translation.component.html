@@ -11,13 +11,15 @@
          </div>
       
          <div class="game__right">
-            <button 
-               (click) = "onAnswer(option)"
-               [color] = "option.color"
-               class = "game__option"
-               mat-button *ngFor = "let option of options; let i = index">
-               {{ i + 1}}.   {{ option.value }}
-            </button>
+            <ng-container *ngFor = "let option of options; let i = index">
+                  <button 
+                     (click) = "onAnswer(option)"
+                     [color] = "option.color"
+                     class = "game__option"
+                     mat-stroked-button >
+                     {{ option.value }}
+                  </button>
+            </ng-container>
          </div>
       </mat-card>
    </div>
