@@ -121,7 +121,12 @@ exports.deleteMany = async (req, res) => {
          };
       }
 
-      await Word.deleteMany(options);
+      if (req.body.setId) {
+         await Word.updateMany(options, { $pullAll: { setId: [req.body.setId] } });
+      } else {
+         await Word.deleteMany(options);
+      }
+
       res.status(200).json({ msg: 'words deleted successfully' });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });

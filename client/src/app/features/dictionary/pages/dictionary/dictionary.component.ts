@@ -13,7 +13,7 @@ export class DictionaryComponent implements OnInit {
    words$: Observable<Word[]>;
    word: Word;
    showEdit = false;
-   id: string;
+   setId: string;
    title: string;
    checkedWords: Word[] = [];
    checkAll = false;
@@ -27,13 +27,13 @@ export class DictionaryComponent implements OnInit {
    ngOnInit(): void {
       this.wordService.emptyWords();
 
-      this.id = this.route.snapshot.params.id;
+      this.setId = this.route.snapshot.params.id;
       const title = this.route.snapshot.params.setName;
 
       this.title =  title ? title.split('_').join(' ') : 'dictionary';
 
       this.words$ = this.wordService.wordsUpdateListener$;
-      this.wordService.getWords(this.id);
+      this.wordService.getWords(this.setId);
    }
 
    showEditing(word: Word) {
@@ -57,7 +57,7 @@ export class DictionaryComponent implements OnInit {
 
    onScroll() {
       this.currentPage++;
-      this.wordService.getWords(this.id, null, this.currentPage);
+      this.wordService.getWords(this.setId, null, this.currentPage);
    }
 
    setCheckAll(isChecked: boolean) {
