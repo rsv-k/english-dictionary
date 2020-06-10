@@ -18,15 +18,7 @@ export class DictionaryComponent implements OnInit {
    title: string;
    checkedWords: Word[] = [];
    checkAll = false;
-   sendToOptions = [
-      'All',
-      'Word-translation',
-      'Translation-word',
-      'Savannah',
-      'Word constructor',
-      'Listening',
-      'Word cards'
-   ];
+   availableGames: string[];
    currentPage = 0;
 
    constructor(
@@ -36,6 +28,7 @@ export class DictionaryComponent implements OnInit {
       ) { }
 
    ngOnInit(): void {
+      this.availableGames = ['All', ...this.learnService.getAvailableGames()];
       this.id = this.route.snapshot.params.id;
       const title = this.route.snapshot.params.setName;
 
@@ -68,7 +61,6 @@ export class DictionaryComponent implements OnInit {
       this.currentPage++;
       this.wordService.getWords(this.id, null, this.currentPage);
    }
-
 
    manageSelected(gameNumber?: number) {
       if (!this.checkAll && !this.checkedWords.length) {

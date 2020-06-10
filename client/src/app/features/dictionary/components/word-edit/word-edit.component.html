@@ -22,7 +22,7 @@
                </div>
             </div>
       
-            <div class="right">
+            <div class="middle">
                <div class="form__word-translations">
                   <h3>Translations</h3>
                   <p *ngFor = "let translation of currentTranslations">
@@ -34,6 +34,9 @@
                         color = "accent">delete</mat-icon>
                   </p>
                </div>
+            </div>
+            
+            <div class="right">
                <mat-form-field class="form__group">
                   <mat-label>Context of word</mat-label>
                   <textarea matInput [(ngModel)] = "currentText"></textarea>

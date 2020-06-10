@@ -24,7 +24,7 @@
             <mat-label>Send to...</mat-label>
             <mat-select>
               <mat-option
-              *ngFor="let option of sendToOptions; let i = index"
+              *ngFor="let option of availableGames; let i = index"
               (click) = "manageSelected(i); selectAll.checked = false">
                 {{ option }}
               </mat-option>

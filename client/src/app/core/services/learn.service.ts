@@ -23,6 +23,17 @@ export class LearnService {
       private utilsService: UtilsService
       ) { }
 
+   getAvailableGames(): string[] {
+      return [
+         'Word-translation',
+         'Translation-word',
+         'Savannah',
+         'Word constructor',
+         'Listening',
+         'Word cards'
+      ];
+   }
+
    toggleLearnings(ids: string[], reverse: boolean, gameNumber: number, option: boolean) {
       this.http.post(BACKEND_URL, { ids, reverse, gameNumber, option })
          .subscribe(() => {
@@ -66,6 +77,9 @@ export class LearnService {
    }
 
    getQuantities() {
-      return this.http.get<{ msg: string, result: any[]}>(BACKEND_URL + '/quantity');
+      return this.http.get<{ msg: string, result: any[]}>(BACKEND_URL + '/quantity')
+         .pipe(
+            map(data => Object.values(data.result)),
+         );
    }
 }

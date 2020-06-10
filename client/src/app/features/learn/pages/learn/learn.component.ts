@@ -1,7 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Word } from '@core/models/word.model';
-import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { LearnService } from '@core/services/learn.service';
 
 @Component({
@@ -9,41 +7,17 @@ import { LearnService } from '@core/services/learn.service';
    templateUrl: './learn.component.html',
    styleUrls: ['./learn.component.scss']
 })
-export class LearnComponent implements OnInit, OnDestroy {
-   titles: string[] = [
-      'Word-translation',
-      'Translation-word',
-      'Savannah',
-      'Word constructor',
-      'Listening',
-      'Word cards'
-   ];
+export class LearnComponent implements OnInit {
+   titles: string[];
 
-   wordsToLearn = {};
-   subscription: Subscription;
+   wordsQuantities$: Observable<string[]>;
 
    constructor(
       private learnService: LearnService,
-      private router: Router
       ) { }
 
    ngOnInit() {
-      this.subscription = this.learnService.getQuantities()
-         .subscribe(data => {
-            const values = Object.values(data.result);
-            for (let i = 0; i < values.length; i++) {
-               this.wordsToLearn[i + 1] = values[i];
-            }
-         });
-   }
-
-   ngOnDestroy() {
-      this.subscription.unsubscribe();
-   }
-
-   onNavigate(index: number) {
-      const url = '/learn/' + this.titles[index].toLowerCase();
-
-      this.router.navigate([url]);
+      this.titles = this.learnService.getAvailableGames();
+      this.wordsQuantities$ = this.learnService.getQuantities();
    }
 }
