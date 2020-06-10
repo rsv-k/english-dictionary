@@ -2,52 +2,18 @@
    <header class = "dictionary__header">
       <h1>{{ title | uppercase }}</h1>
       <app-word-create [setId] = "id"></app-word-create>
-      <div class="dictionary__manage-word" *ngIf = "(words$ | async)?.length > 0">
-         <mat-checkbox
-         matTooltip = "select all"
-         color = "primary"
-         (change) = "checkAll = !checkAll"
-         #selectAll
-         class="dictionary__selectAll"
-         ></mat-checkbox>
-
-         <button
-            matTooltip = "delete selected"
-            [disabled] = "!checkAll && !checkedWords.length"
-            mat-icon-button
-            color = "warn"
-            (click) = "manageSelected(); selectAll.checked = false">
-            <mat-icon>delete</mat-icon>
-         </button>
-
-         <mat-form-field class = "dictionary__sendToGames">
-            <mat-label>Send to...</mat-label>
-            <mat-select>
-              <mat-option
-              *ngFor="let option of availableGames; let i = index"
-              (click) = "manageSelected(i); selectAll.checked = false">
-                {{ option }}
-              </mat-option>
-            </mat-select>
-         </mat-form-field>
-
-         <mat-form-field>
-            <mat-label>Add to set</mat-label>
-            <mat-select>
-              <mat-option 
-                  (click) = "addToSet(set.id)"
-                  *ngFor="let set of sets$ | async">
-                 {{ set.title }}
-              </mat-option>
-            </mat-select>
-         </mat-form-field>
-      </div>
+      <app-manage-words
+         [checkedWords] = "checkedWords"
+         [checkAll] = "checkAll"
+         (uncheckWords) = "uncheckWords()"
+         (setCheckAll) = "setCheckAll($event)"
+         *ngIf = "(words$ | async)?.length"></app-manage-words>
    </header>
    <mat-card>
       <mat-accordion>
          <div class="dictionary__wordholder" *ngFor = "let word of words$ | async" >
             <mat-checkbox
-               [checked] = "selectAll?.checked || word.isChecked"
+               [checked] = "checkAll || word.isChecked"
                (change) = "onCheckBoxChange(word)"
                color = "primary"
                class = "dictionary__checkbox"

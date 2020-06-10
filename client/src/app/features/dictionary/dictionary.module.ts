@@ -9,9 +9,10 @@ import { WordCreateComponent } from './components/word-create/word-create.compon
 import { WordEditComponent } from './components/word-edit/word-edit.component';
 import { FormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ManageWordsComponent } from './components/manage-words/manage-words.component';
 
 @NgModule({
-  declarations: [DictionaryComponent, WordComponent, WordCreateComponent, WordEditComponent],
+  declarations: [DictionaryComponent, WordComponent, WordCreateComponent, WordEditComponent, ManageWordsComponent],
   imports: [
       CommonModule,
       DictionaryRoutingModule,
