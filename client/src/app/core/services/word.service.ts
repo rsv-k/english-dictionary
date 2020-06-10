@@ -70,6 +70,10 @@ export class WordService {
          .subscribe();
    }
 
+   emptyWords() {
+      this.words = [];
+   }
+
    addWord(word: Word) {
       this.getSpecificWord(word.english)
          .pipe(

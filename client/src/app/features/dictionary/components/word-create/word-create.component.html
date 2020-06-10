@@ -4,8 +4,7 @@
       matInput
       (input) = "onInput($event.target.value)"
       [matAutocomplete]="auto">
-   <mat-autocomplete
-      #auto="matAutocomplete">
+   <mat-autocomplete #auto="matAutocomplete">
          <mat-option
             [matTooltip] = "translation.value.length > 50 ? translation.value : null"
             class = "create__option"

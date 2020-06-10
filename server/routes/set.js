@@ -6,5 +6,6 @@ router.get('', setController.getSets);
 router.post('', setController.addSet);
 router.delete('/:id', setController.deleteSet);
 router.put('', setController.editSet);
+router.put('/addToSet', setController.addWords);
 
 module.exports = router;

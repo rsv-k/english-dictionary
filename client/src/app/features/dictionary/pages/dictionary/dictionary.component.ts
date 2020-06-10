@@ -4,6 +4,8 @@ import { WordService } from '@core/services/word.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { LearnService } from '@core/services/learn.service';
+import { Set } from '@core/models/set.model';
+import { SetService } from '@core/services/set.service';
 
 @Component({
    selector: 'app-dictionary',
@@ -12,6 +14,7 @@ import { LearnService } from '@core/services/learn.service';
 })
 export class DictionaryComponent implements OnInit {
    words$: Observable<Word[]>;
+   sets$: Observable<Set[]>;
    word: Word;
    showEdit = false;
    id: string;
@@ -24,10 +27,13 @@ export class DictionaryComponent implements OnInit {
    constructor(
       private wordService: WordService,
       private learnService: LearnService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private setService: SetService
       ) { }
 
    ngOnInit(): void {
+      this.wordService.emptyWords();
+
       this.availableGames = ['All', ...this.learnService.getAvailableGames()];
       this.id = this.route.snapshot.params.id;
       const title = this.route.snapshot.params.setName;
@@ -36,6 +42,9 @@ export class DictionaryComponent implements OnInit {
 
       this.words$ = this.wordService.wordsUpdateListener$;
       this.wordService.getWords(this.id);
+
+      this.sets$ = this.setService.setsUpdateListener$;
+      this.setService.getSets();
    }
 
    showEditing(word: Word) {
@@ -60,6 +69,18 @@ export class DictionaryComponent implements OnInit {
    onScroll() {
       this.currentPage++;
       this.wordService.getWords(this.id, null, this.currentPage);
+   }
+
+   addToSet(setId: string) {
+      if (!this.checkAll && !this.checkedWords.length) {
+         return;
+      }
+
+      const ids = this.getOnlyIds();
+
+      this.setService.addWordsToSet(setId, ids, this.checkAll);
+
+      this.uncheckWords();
    }
 
    manageSelected(gameNumber?: number) {

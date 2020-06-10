@@ -66,3 +66,27 @@ exports.editSet = async (req, res) => {
       res.status(500).json({ msg: 'server error' });
    }
 };
+
+exports.addWords = async (req, res) => {
+   if (!req.body.ids || !req.body.setId) {
+      return res.status(400).json({ msg: 'no data provided' });
+   }
+
+   try {
+      const options = { _id: req.body.ids };
+      if (req.body.reverse) {
+         options._id = {
+            $nin: req.body.ids
+         };
+      }
+      options.setId = {
+         $nin: [req.body.setId]
+      };
+
+      await Word.updateMany(options, { $push: { setId: req.body.setId } });
+
+      res.status(202).json({ msg: 'words added successfully' });
+   } catch (err) {
+      res.status(500).json({ msg: 'server error' });
+   }
+};

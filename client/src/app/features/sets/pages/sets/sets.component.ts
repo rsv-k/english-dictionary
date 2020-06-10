@@ -16,7 +16,7 @@ export class SetsComponent implements OnInit {
       ) { }
 
    ngOnInit(): void {
-      this.sets$ = this.setService.getSetsUpdateListener();
+      this.sets$ = this.setService.setsUpdateListener$;
       this.setService.getSets();
    }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Set } from '@core/models/set.model';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
@@ -12,18 +12,14 @@ const BACKEND_URL = environment.apiUrl + 'set';
    providedIn: 'root'
 })
 export class SetService {
-   private sets$ = new BehaviorSubject<Set[]>([]);
+   private sets$ = new Subject<Set[]>();
+   setsUpdateListener$ = this.sets$.asObservable();
    sets: Set[] = [];
 
    constructor(
       private http: HttpClient,
       private utilsService: UtilsService
       ) { }
-
-
-   getSetsUpdateListener() {
-      return this.sets$.asObservable();
-   }
 
    getSets() {
       this.sets$.next([...this.sets]);
@@ -66,6 +62,11 @@ export class SetService {
          });
    }
 
+   addWordsToSet(setId: string, ids: string[], reverse: boolean) {
+      this.http.put(BACKEND_URL + '/addToSet', { setId, ids, reverse })
+         .subscribe();
+   }
+
    private updateSets(operation, sets: Set[]) {
       switch (operation) {
          case 'ADD':
@@ -78,13 +79,7 @@ export class SetService {
             this.sets = this.sets.filter(set => set.id !== sets[0].id);
             break;
          case 'EDIT':
-            this.sets = this.sets.map(set => {
-               if (set.id === sets[0].id) {
-                  return sets[0];
-               }
-
-               return set;
-            });
+            this.sets = this.sets.map(set => set.id === sets[0].id ? sets[0] : set);
             break;
       }
 
