@@ -21,7 +21,7 @@ interface Config {
 })
 export class WordService {
    private wordsUpdateListener = new Subject<Word[]>();
-   private words: Word[];
+   private words: Word[] = [];
 
    wordsUpdateListener$ = this.wordsUpdateListener.asObservable();
 
@@ -49,10 +49,23 @@ export class WordService {
 
       this.http.get<Config>(BACKEND_URL, options)
          .pipe(
-            filter(data => data.result[0] !== null),
+            filter(data => !!data.result[0]),
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic),
-            tap((words: Word[]) => this.updateWords('GET', words))
+            tap((words: Word[]) => {
+               if (startsWith) {
+                  this.wordsUpdateListener.next([...words]);
+                  return;
+               }
+
+               if (this.words[0] && this.words[0].id === words[0].id) {
+                  this.updateWords('GET', this.words);
+                  return;
+               }
+
+               this.words = [...this.words, ...words];
+               this.updateWords('GET', this.words);
+            })
          )
          .subscribe();
    }

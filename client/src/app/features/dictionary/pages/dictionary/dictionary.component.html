@@ -34,7 +34,7 @@
    </header>
    <mat-card>
       <mat-accordion>
-         <div class="dictionary__wordholder" *ngFor = "let word of words" >
+         <div class="dictionary__wordholder" *ngFor = "let word of words$ | async" >
             <mat-checkbox
                [checked] = "selectAll.checked || word.isChecked"
                (change) = "onCheckBoxChange(word)"
@@ -48,7 +48,7 @@
          </div>
       </mat-accordion>
 
-      <p *ngIf = "!words.length" class="dictionary__empty">Nothing added yet</p>
+      <p *ngIf = "!(words$ | async)?.length" class="dictionary__empty">Nothing added yet</p>
    </mat-card>
 </section>
 
