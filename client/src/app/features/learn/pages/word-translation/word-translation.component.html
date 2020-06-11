@@ -14,7 +14,7 @@
             <ng-container *ngFor = "let option of options; let i = index">
                   <button 
                      (click) = "onAnswer(option)"
-                     [color] = "option.color"
+                     [color] = "option?.color"
                      class = "game__option"
                      mat-stroked-button >
                      {{ option.value }}

@@ -32,5 +32,9 @@
    &__option {
       display: block;
       width: 100%;
+
+      &:nth-child(n+ 2) {
+         margin-top: 5px;
+      }
    }
 }

@@ -15,8 +15,8 @@ export class LearnService {
    private wordsToLearn: Word[];
    private words = new Subject<Word[]>();
    wordsUpdateListener$ = this.words.asObservable();
-   private randomTranslations = new Subject<string[][]>();
-   randomTranslationsUpdateListener$ = this.randomTranslations.asObservable();
+   private randomOptions = new Subject<string[][]>();
+   randomOptionsUpdateListener$ = this.randomOptions.asObservable();
 
    constructor(
       private http: HttpClient,
@@ -66,13 +66,13 @@ export class LearnService {
          });
    }
 
-   getRandomTranslations(except: string[]) {
-      this.http.post<{ msg: string, translations: any}>(BACKEND_URL + '/randomTranslations', { except })
+   getRandomOptions(except: string[] | string, property: string) {
+      this.http.post<{ msg: string, options: any}>(BACKEND_URL + '/randomOptions', { except, property })
          .pipe(
-            map(data => data.translations)
+            map(data => data.options)
          )
-         .subscribe((translations: string[][]) => {
-            this.randomTranslations.next(translations);
+         .subscribe((options: string[][]) => {
+            this.randomOptions.next(options);
          });
    }
 

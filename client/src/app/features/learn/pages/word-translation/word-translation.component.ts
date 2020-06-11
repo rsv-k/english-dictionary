@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { LearnService } from '@core/services/learn.service';
 import { Subscription } from 'rxjs';
-import { TranslationOption } from '@core/models/translationOption.model';
+import { GameOption } from '@core/models/GameOption.model';
 import { UtilsService } from '@core/services/utils.service';
 
 @Component({
@@ -14,10 +14,10 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    results = [];
    words: Word[];
    currentWord: Word;
-   options: TranslationOption[];
+   options: GameOption[];
    isOptionClicked = false;
    isFinished = false;
-   private subscriptionTranslations: Subscription;
+   private subscriptionOptions: Subscription;
    private subscriptionWords: Subscription;
    @HostListener('window:keyup', ['$event']) onkeyup(e: KeyboardEvent) {
       if (![1, 2, 3, 4, 5].includes(+e.key)) {
@@ -27,7 +27,6 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
       const option = this.options[+e.key - 1];
       this.onAnswer(option);
    }
-
 
    constructor(
       private learnService: LearnService,
@@ -39,32 +38,33 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
       this.subscriptionWords = this.learnService.wordsUpdateListener$
          .subscribe((words: Word[]) => {
             this.words = words;
-            this.requestNewRandomTranslations();
+            this.requestNewRandomOptions();
          });
 
-      this.subscriptionTranslations = this.learnService.randomTranslationsUpdateListener$
-         .subscribe((translations: string[][]) => {
+      this.subscriptionOptions = this.learnService.randomOptionsUpdateListener$
+         .subscribe((options: string[][]) => {
             this.currentWord = this.words[this.results.length];
-            this.options = translations.map(translation => {
+            this.options = options.map(translation => {
                return {
                   value: translation.join(','),
-                  correct: false
+                  isCorrect: false
                };
             });
 
-            this.shakeTranslations();
+            this.shakeOptions();
             this.onPronounce();
          });
    }
 
-   onAnswer(translationOption: TranslationOption) {
+   onAnswer(gameOption: GameOption) {
       if (this.isOptionClicked) {
          this.results.push({
             id: this.currentWord.id,
-            isCorrect: translationOption.correct
+            isCorrect: gameOption.isCorrect
          });
+         this.requestNewRandomOptions();
       } else {
-         this.highlightCorrectAndChosenOption(translationOption);
+         this.highlightCorrectAndChosenOption(gameOption);
       }
 
       if (this.results.length === this.words.length) {
@@ -72,9 +72,6 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
          return;
       }
 
-      if (this.isOptionClicked) {
-         this.requestNewRandomTranslations();
-      }
       this.isOptionClicked = !this.isOptionClicked;
    }
 
@@ -90,28 +87,29 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
       this.learnService.getWordsToLearn(null, 1);
    }
 
-   private requestNewRandomTranslations() {
-      this.learnService.getRandomTranslations(this.words[this.results.length].russian);
+   private requestNewRandomOptions() {
+      const word = this.words[this.results.length];
+      if (!word) {
+         return;
+      }
+
+      this.learnService.getRandomOptions(word.russian, 'russian');
    }
 
-   private shakeTranslations() {
-      const originalTranslation =  {
+   private shakeOptions() {
+      const correctGameOption =  {
          value: this.currentWord.russian.join(','),
-         correct: true
+         isCorrect: true
       };
 
-      const randomIndex = Math.floor(Math.random() * this.options.length + 1);
-      if (randomIndex === 5) {
-         this.options.push(originalTranslation);
-      } else {
-         this.options.push(this.options[randomIndex]);
-         this.options[randomIndex] = originalTranslation;
-      }
+      const randomIndex = Math.floor(Math.random() * 5);
+      this.options[4] = this.options[randomIndex];
+      this.options[randomIndex] = correctGameOption;
    }
 
-   private highlightCorrectAndChosenOption(translationOption: TranslationOption) {
-      translationOption.color = 'warn';
-      const correctTranslation = this.options.find(opt => opt.correct);
+   private highlightCorrectAndChosenOption(gameOption: GameOption) {
+      gameOption.color = 'warn';
+      const correctTranslation = this.options.find(opt => opt.isCorrect);
       correctTranslation.color = 'primary';
    }
 
@@ -122,7 +120,7 @@ export class WordTranslationComponent implements OnInit, OnDestroy {
    }
 
    ngOnDestroy() {
-      this.subscriptionTranslations.unsubscribe();
+      this.subscriptionOptions.unsubscribe();
       this.subscriptionWords.unsubscribe();
    }
 }

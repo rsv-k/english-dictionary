@@ -5,6 +5,6 @@ const learnController = require('../controllers/learn');
 router.post('', learnController.toggleLearnings);
 router.get('', learnController.getWordsToLearn);
 router.get('/quantity', learnController.countWordsInEachGame);
-router.post('/randomTranslations', learnController.getRandomTranslations);
+router.post('/randomOptions', learnController.getRandomOptions);
 
 module.exports = router;
