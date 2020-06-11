@@ -15,7 +15,7 @@ export class LearnService {
    private wordsToLearn: Word[];
    private words = new Subject<Word[]>();
    wordsUpdateListener$ = this.words.asObservable();
-   private randomOptions = new Subject<string[][]>();
+   private randomOptions = new Subject<string[][] | string[]>();
    randomOptionsUpdateListener$ = this.randomOptions.asObservable();
 
    constructor(
@@ -71,7 +71,7 @@ export class LearnService {
          .pipe(
             map(data => data.options)
          )
-         .subscribe((options: string[][]) => {
+         .subscribe((options: string[][] | string[]) => {
             this.randomOptions.next(options);
          });
    }

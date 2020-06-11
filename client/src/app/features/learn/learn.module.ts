@@ -8,10 +8,11 @@ import { LearnComponent } from './pages/learn/learn.component';
 import { LearnGameCardComponent } from './components/learn-game-card/learn-game-card.component';
 import { WordTranslationComponent } from './pages/word-translation/word-translation.component';
 import { ResultsComponent } from './components/results/results.component';
+import { TranslationWordComponent } from './pages/translation-word/translation-word.component';
 
 
 @NgModule({
-   declarations: [LearnComponent, LearnGameCardComponent, WordTranslationComponent, ResultsComponent],
+   declarations: [LearnComponent, LearnGameCardComponent, WordTranslationComponent, ResultsComponent, TranslationWordComponent],
    imports: [
       CommonModule,
       LearnRoutingModule,
