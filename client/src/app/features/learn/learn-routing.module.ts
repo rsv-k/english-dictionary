@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LearnComponent } from './pages/learn/learn.component';
 import { WordTranslationComponent } from './pages/word-translation/word-translation.component';
+import { GameProtectGuard } from '@core/guards/game-protect.guard';
 
 const routes: Routes = [
    {
@@ -10,7 +11,8 @@ const routes: Routes = [
    },
    {
       path: 'word-translation',
-      component: WordTranslationComponent
+      component: WordTranslationComponent,
+      canActivate: [ GameProtectGuard ]
    }
 ];
 
