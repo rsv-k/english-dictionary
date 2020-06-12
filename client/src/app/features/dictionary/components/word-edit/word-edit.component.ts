@@ -3,13 +3,26 @@ import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
 import { Subscription } from 'rxjs';
 import { UtilsService } from '@core/services/utils.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
    selector: 'app-word-edit',
    templateUrl: './word-edit.component.html',
-   styleUrls: ['./word-edit.component.scss']
+   styleUrls: ['./word-edit.component.scss'],
+   animations: [
+      trigger('editState', [
+         state('hidden', style({
+            transform: 'translateY(-200%)'
+         })),
+         state('displayed', style({
+            transform: 'translateY(0)'
+         })),
+         transition('hidden <=> displayed', animate(500)),
+      ])
+   ]
 })
 export class WordEditComponent implements OnInit, OnDestroy {
+   state = 'hidden';
    @Input() word: Word;
    @Output() hide = new EventEmitter();
 
@@ -26,6 +39,7 @@ export class WordEditComponent implements OnInit, OnDestroy {
       ) { }
 
    ngOnInit(): void {
+      setTimeout(() => this.state = 'displayed', 0);
       this.currentImage = this.word.pic_url;
       this.currentTranslations = [...this.word.russian];
       this.currentText = this.word.text;
@@ -54,7 +68,8 @@ export class WordEditComponent implements OnInit, OnDestroy {
 
    onHide(e: Event) {
       if (e.target === e.currentTarget) {
-         this.hide.emit();
+         this.state = 'hidden';
+         setTimeout(() => this.hide.emit(), 500);
       }
    }
 

@@ -1,0 +1,14 @@
+.game {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   position: relative;
+   width: 100%;
+   height: calc(100vh - 64px);
+}
+
+p {
+   position: absolute;
+   left: 50%;
+   transform: translateX(-50%);
+}
