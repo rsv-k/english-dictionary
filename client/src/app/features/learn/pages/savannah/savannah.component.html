@@ -1,1 +1,19 @@
-<p>savannah works!</p>
+<section class="game">
+   <div class="game__gameplay" *ngIf = "!isFinished">
+      <p [@moveDown] = "state">{{ currentWord?.english }}</p>
+   
+      <mat-card>
+         <button 
+            (click) = "onAnswer(option)"
+            mat-raised-button 
+            [color] = "option?.color"
+            *ngFor = "let option of options">{{ option.value }}</button>
+      </mat-card>
+   </div>
+
+   <app-results
+      *ngIf = "isFinished"
+      [result] = "results"
+      (learnAgain) = "learnAgain()"
+   ></app-results>
+</section>
