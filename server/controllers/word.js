@@ -13,7 +13,7 @@ exports.getTranslations = async (req, res) => {
       const url = 'http://api.lingualeo.com/gettranslates?word=' + word;
       const data = (await axios.get(url)).data;
       const result = {
-         translate: data.translate,
+         translate: data.translate.slice(0, 4),
          word: data.word_value,
          sound_url: wordHelper.changeVoice(data.sound_url, 3),
          transcription: data.transcription
