@@ -11,6 +11,7 @@
 
 .game {
    display: flex;
+   justify-content: space-between;
 
    &__left {
       flex-grow: 1;
@@ -22,11 +23,6 @@
 
    &__wordName {
       font-weight: 500;
-   }
-
-   &__transcription {
-      color: grey;
-      font-weight: 300;
    }
 
    &__option {

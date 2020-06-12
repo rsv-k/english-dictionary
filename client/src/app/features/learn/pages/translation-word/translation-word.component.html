@@ -3,15 +3,11 @@
       <p class="wordsCount">{{ (results.length + 1) + ' / ' + words.length}}</p>
       <mat-card class = "game" >
          <div class="game__left">
-            <button mat-icon-button (click) = "onPronounce()">
-               <mat-icon>volume_up</mat-icon>
-            </button>
-            <h3 class="game__wordName">{{ currentWord.english }}</h3>
-            <h4 class = "game__transcription">[{{ currentWord.transcription }}]</h4>
+            <h3 class="game__wordName">{{ currentWord.russian.join(',') }}</h3>
          </div>
       
          <div class="game__right">
-            <ng-container *ngFor = "let option of options; let i = index">
+            <ng-container *ngFor = "let option of options">
                   <button 
                      (click) = "onAnswer(option)"
                      [color] = "option?.color"

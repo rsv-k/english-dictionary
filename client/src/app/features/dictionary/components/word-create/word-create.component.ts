@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
 import { Word } from '@core/models/word.model';
 import { tap } from 'rxjs/operators';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
    selector: 'app-word-create',
@@ -12,16 +13,19 @@ import { tap } from 'rxjs/operators';
 })
 export class WordCreateComponent implements OnInit {
    @Input() setId: string;
-   inputValue: string;
+   inputValue = '';
    wordText$ = new Subject<string>();
    translations$: Observable<Translation[]>;
+   firstTranslation: Translation;
+   isMyTranslation = false;
 
    constructor(private wordService: WordService) { }
 
    ngOnInit(): void {
       this.translations$ = this.wordService.showTranslations(this.wordText$)
          .pipe(
-            tap(() => {
+            tap((translations) => {
+               this.firstTranslation = translations[0];
                this.wordService.getWords(this.setId, this.inputValue);
             })
          );
@@ -30,6 +34,29 @@ export class WordCreateComponent implements OnInit {
    onInput(str: string) {
       this.inputValue = str.trim();
       this.wordText$.next(this.inputValue);
+   }
+
+   onMyOwnTranslation(e: Event, trigger: MatAutocompleteTrigger, str: string, input: HTMLInputElement) {
+      e.stopPropagation();
+      if (str.trim().length === 0 && this.isMyTranslation) {
+         this.inputValue = '';
+         this.isMyTranslation = false;
+         trigger.closePanel();
+         this.wordText$.next('');
+         this.wordService.getWords(this.setId);
+         return;
+      }
+
+      if (!this.isMyTranslation) {
+         trigger.openPanel();
+         input.value = this.inputValue;
+      } else {
+         this.firstTranslation.value = str;
+         this.firstTranslation.pic_url = '';
+         this.chooseTranslation(this.firstTranslation);
+      }
+
+      this.isMyTranslation = !this.isMyTranslation;
    }
 
    chooseTranslation(translation: Translation) {
@@ -54,5 +81,11 @@ export class WordCreateComponent implements OnInit {
       this.wordService.addWord(word);
       this.inputValue = '';
       this.wordText$.next('');
+   }
+
+   onClosed() {
+      if (this.isMyTranslation) {
+         this.isMyTranslation = false;
+      }
    }
 }

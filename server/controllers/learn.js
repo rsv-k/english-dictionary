@@ -56,24 +56,23 @@ exports.getWordsToLearn = async (req, res) => {
 
       res.status(200).json({ msg: 'words fetched successfully', result: words });
    } catch (err) {
-      console.log(err);
       res.status(500).json({ msg: 'server error', error: err });
    }
 };
 
-exports.getRandomTranslations = async (req, res) => {
-   if (!req.body.except || req.body.except.length === 0) {
+exports.getRandomOptions = async (req, res) => {
+   if (!req.body.except || req.body.except.length === 0 || !req.body.property) {
       return res.status(400).json({ msg: 'no data provided' });
    }
 
    try {
       const words = await Word.aggregate([
-         { $match: { russian: { $ne: req.body.except } } },
+         { $match: { [req.body.property]: { $ne: req.body.except } } },
          { $sample: { size: 4 } }
       ]);
-      const translations = words.map(word => word.russian);
+      const options = words.map(word => word[req.body.property]);
 
-      res.status(200).json({ msg: 'translations fetched successfully', translations });
+      res.status(200).json({ msg: 'options fetched successfully', options });
    } catch (err) {
       res.status(500).json({ msg: 'server error', error: err });
    }
