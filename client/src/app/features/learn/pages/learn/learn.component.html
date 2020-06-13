@@ -6,7 +6,7 @@
    <main class = "games">
       <app-learn-game-card
          *ngFor = "let quantity of wordsQuantities$ | async; let i = index"
-         [routerLink] = "'/learn/' + (titles[i] | lowercase)"
+         [routerLink] = "'/learn/' + (titles[i].split(' ').join('_') | lowercase)"
          [title] = "titles[i]"
          [wordsAmount] = "quantity"></app-learn-game-card>
    </main>
