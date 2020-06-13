@@ -2,13 +2,13 @@
    <div class="game__gameplay" *ngIf = "!isFinished">
       <p [@moveDown] = "state">{{ currentWord?.english }}</p>
    
-      <mat-card>
+      <div class = "options">
          <button 
             (click) = "onAnswer(option)"
-            mat-raised-button 
+            mat-stroked-button 
             [color] = "option?.color"
-            *ngFor = "let option of options">{{ option.value }}</button>
-      </mat-card>
+            *ngFor = "let option of options; let i = index">{{ option.value }}</button>
+      </div>
    </div>
 
    <app-results

@@ -6,7 +6,7 @@ import { GameOption } from '@core/models/GameOption.model';
 import { Subscription } from 'rxjs';
 import { AnswerResult } from '@core/models/answerResult.model';
 
-const ANIMATION_TIME = 4000;
+const ANIMATION_TIME = 15000;
 const PAUSE_ANIMATION = 1000;
 
 @Component({

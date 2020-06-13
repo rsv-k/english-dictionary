@@ -69,9 +69,16 @@ export class LearnService {
    getRandomOptions(except: string[] | string, property: string) {
       this.http.post<{ msg: string, options: any}>(BACKEND_URL + '/randomOptions', { except, property })
          .pipe(
-            map(data => data.options)
+            map(data => data.options),
+            map((options) => {
+               if (Array.isArray(options[0])) {
+                  return options.map(option => option.join(','));
+               }
+
+               return options;
+            })
          )
-         .subscribe((options: string[][] | string[]) => {
+         .subscribe((options: string[]) => {
             this.randomOptions.next(options);
          });
    }

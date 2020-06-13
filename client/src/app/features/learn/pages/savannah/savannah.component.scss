@@ -12,3 +12,17 @@ p {
    left: 50%;
    transform: translateX(-50%);
 }
+
+button {
+   white-space: pre-wrap !important;
+   display: block;
+   margin-bottom: 10px;
+}
+
+mat-card {
+   justify-content: space-between;
+}
+
+.options {
+   width: 100%;
+}
