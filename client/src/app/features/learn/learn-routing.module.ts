@@ -5,6 +5,7 @@ import { GameProtectGuard } from '@core/guards/game-protect.guard';
 import { SavannahComponent } from './pages/savannah/savannah.component';
 import { WordTranslationWordComponent } from './pages/word-translation-word/word-translation-word.component';
 import { WordConstructorComponent } from './pages/word-constructor/word-constructor.component';
+import { ListeningComponent } from './pages/listening/listening.component';
 
 const routes: Routes = [
    {
@@ -31,6 +32,11 @@ const routes: Routes = [
    {
       path: 'word_constructor',
       component: WordConstructorComponent,
+      canActivate: [ GameProtectGuard ]
+   },
+   {
+      path: 'listening',
+      component: ListeningComponent,
       canActivate: [ GameProtectGuard ]
    }
 ];

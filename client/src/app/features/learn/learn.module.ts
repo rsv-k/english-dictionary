@@ -10,14 +10,17 @@ import { ResultsComponent } from './components/results/results.component';
 import { SavannahComponent } from './pages/savannah/savannah.component';
 import { WordTranslationWordComponent } from './pages/word-translation-word/word-translation-word.component';
 import { WordConstructorComponent } from './pages/word-constructor/word-constructor.component';
+import { ListeningComponent } from './pages/listening/listening.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
-   declarations: [LearnComponent, LearnGameCardComponent, ResultsComponent, SavannahComponent, WordTranslationWordComponent, WordConstructorComponent],
+   declarations: [LearnComponent, LearnGameCardComponent, ResultsComponent, SavannahComponent, WordTranslationWordComponent, WordConstructorComponent, ListeningComponent],
    imports: [
       CommonModule,
       LearnRoutingModule,
-      SharedModule
+      SharedModule,
+      FormsModule
    ]
 })
 export class LearnModule { }
