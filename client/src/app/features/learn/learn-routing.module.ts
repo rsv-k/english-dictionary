@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LearnComponent } from './pages/learn/learn.component';
-import { WordTranslationComponent } from './pages/word-translation/word-translation.component';
 import { GameProtectGuard } from '@core/guards/game-protect.guard';
-import { TranslationWordComponent } from './pages/translation-word/translation-word.component';
 import { SavannahComponent } from './pages/savannah/savannah.component';
+import { WordTranslationWordComponent } from './pages/word-translation-word/word-translation-word.component';
+import { WordConstructorComponent } from './pages/word-constructor/word-constructor.component';
 
 const routes: Routes = [
    {
@@ -13,17 +13,24 @@ const routes: Routes = [
    },
    {
       path: 'word-translation',
-      component: WordTranslationComponent,
-      canActivate: [ GameProtectGuard ]
+      component: WordTranslationWordComponent,
+      canActivate: [ GameProtectGuard ],
+      data: { gameName: 'word-translation' }
    },
    {
       path: 'translation-word',
-      component: TranslationWordComponent,
-      canActivate: [ GameProtectGuard ]
+      component: WordTranslationWordComponent,
+      canActivate: [ GameProtectGuard ],
+      data: { gameName: 'translation-word' }
    },
    {
       path: 'savannah',
       component: SavannahComponent,
+      canActivate: [ GameProtectGuard ]
+   },
+   {
+      path: 'word_constructor',
+      component: WordConstructorComponent,
       canActivate: [ GameProtectGuard ]
    }
 ];

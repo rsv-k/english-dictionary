@@ -1,0 +1,26 @@
+<section class = "game-container">
+
+   <div class="main-content" *ngIf = "currentWord && !isFinished">
+      <p class="wordsCount">{{ (results.length + 1) + ' / ' + words.length}}</p>
+      <mat-card class = "game">
+         <h2 class = "game__word">{{ currentWord?.russian.join(',') }}</h2>
+         <div class="characters-holder">
+            <span *ngFor = "let character of englishWord">{{ character }}</span>
+         </div>
+         
+         <div class="characters">
+            <button 
+               [style.animation] = "character.highlight ? 'incorrect .5s' : ''"
+               (click) = "chooseCharacter(character)"
+               mat-stroked-button 
+               color = "primary" 
+               *ngFor = "let character of characters">{{ character.value }}</button>
+         </div>
+      </mat-card>
+   </div>
+
+   <app-results 
+      *ngIf = "isFinished" 
+      [result] = "results"
+      (learnAgain) = "learnAgain()"></app-results>
+</section>

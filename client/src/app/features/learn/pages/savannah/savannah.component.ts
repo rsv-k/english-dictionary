@@ -4,8 +4,9 @@ import { Word } from '@core/models/word.model';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { GameOption } from '@core/models/GameOption.model';
 import { Subscription } from 'rxjs';
+import { AnswerResult } from '@core/models/answerResult.model';
 
-const ANIMATION_TIME = 4000;
+const ANIMATION_TIME = 15000;
 const PAUSE_ANIMATION = 1000;
 
 @Component({
@@ -25,16 +26,18 @@ const PAUSE_ANIMATION = 1000;
    ]
 })
 export class SavannahComponent implements OnInit, OnDestroy {
-   state = 'start';
-   isPauseBeforeStart = false;
-   isFinished = false;
-   results = [];
+   state: string;
+   isPauseBeforeStart: boolean;
+   isFinished: boolean;
+   results: AnswerResult[];
    words: Word[];
    options: GameOption[];
    currentWord: Word;
    timeoutHolder = null;
+
    private wordsSubscription: Subscription;
    private optionsSubscription: Subscription;
+
    @HostListener('window:keyup', ['$event']) onkeyup(e: KeyboardEvent) {
       if (![1, 2, 3, 4, 5].includes(+e.key) || this.isPauseBeforeStart) {
          return;
@@ -47,6 +50,8 @@ export class SavannahComponent implements OnInit, OnDestroy {
    constructor(private learnService: LearnService) { }
 
    ngOnInit(): void {
+      this.initialieState();
+
       this.wordsSubscription = this.learnService.wordsUpdateListener$
          .subscribe((words: Word[]) => {
             this.words = words;
@@ -89,10 +94,7 @@ export class SavannahComponent implements OnInit, OnDestroy {
    }
 
    learnAgain() {
-      this.state = 'start';
-      this.isPauseBeforeStart = false;
-      this.isFinished = false;
-      this.results = [];
+      this.initialieState();
       this.learnService.getWordsToLearn(false, 3);
    }
 
@@ -101,7 +103,7 @@ export class SavannahComponent implements OnInit, OnDestroy {
    }
 
    private finishGame() {
-      const ids = this.results.filter(option => option.isCorrect).map(option => option.id);
+      const ids = this.results.filter(option => option.isCorrect).map(option => option.wordId);
       this.learnService.toggleLearnings(ids, false, 3, false);
       this.isFinished = true;
    }
@@ -132,7 +134,7 @@ export class SavannahComponent implements OnInit, OnDestroy {
 
    private addResult(isCorrect: boolean) {
       const result = {
-         id: this.currentWord.id,
+         wordId: this.currentWord.id,
          isCorrect
       };
 
@@ -157,6 +159,16 @@ export class SavannahComponent implements OnInit, OnDestroy {
       const randomIndex = Math.floor(Math.random() * 5);
       this.options[4] = this.options[randomIndex];
       this.options[randomIndex] = correctGameOption;
+   }
+
+   private initialieState() {
+      this.state = 'start';
+      this.isPauseBeforeStart = false;
+      this.isFinished = false;
+      this.results = [];
+      this.words = [];
+      this.options = [];
+      this.currentWord = null;
    }
 
    ngOnDestroy() {
