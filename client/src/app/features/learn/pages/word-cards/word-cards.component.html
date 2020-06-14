@@ -1,0 +1,32 @@
+<section class="game-container">
+   <div class="main-content" *ngIf = "!isFinished">
+      <mat-card *ngFor = "let word of words$ | async" 
+         [style.border] = "checkedWords[word.id]">
+         <h2>{{ word.english }}</h2>
+         <p *ngIf = "checkedWords[word.id]" class="translation">{{ word.russian.join(',') }}</p>
+         <button mat-icon-button (click) = "onPronounce(word.sound_url)">
+            <mat-icon>volume_up</mat-icon>
+         </button>
+         <p class = "transcription">[{{ word.transcription }}]</p>
+
+         <mat-card-actions>
+            <button
+               *ngIf = "!checkedWords[word.id]"
+               (click) = "addResult(word, true)"
+               mat-raised-button 
+               class = "btn" color = "primary">I know</button>
+            <button
+               *ngIf = "!checkedWords[word.id]"
+               (click) = "addResult(word, false)"
+               mat-raised-button 
+               class = "btn idk">I don't know</button>
+         </mat-card-actions>
+      </mat-card>
+   </div>
+
+   <app-results
+      *ngIf = "isFinished"
+      [result] = "results"
+      (learnAgain) = "learnAgain()"
+   ></app-results>
+</section>
