@@ -4,12 +4,14 @@
 
       <mat-card class = "game" >
          <div class="game__left">
-            <button *ngIf = "gameName === 'word-translation'"mat-icon-button (click) = "onPronounce()">
-               <mat-icon>volume_up</mat-icon>
-            </button>
-            <h3 *ngIf = "gameName === 'word-translation'"class="game__wordName">{{ currentWord.english }}</h3>
+            <div class="word-translation" *ngIf = "gameName === 'word-translation'">
+               <button mat-icon-button (click) = "onPronounce()">
+                  <mat-icon>volume_up</mat-icon>
+               </button>
+               <h3 class="game__wordName">{{ currentWord.english }}</h3>
+               <h4 class = "game__transcription">[{{ currentWord.transcription }}]</h4>
+            </div>
             <h3 *ngIf  = "gameName === 'translation-word'"class="game__wordName">{{ currentWord.russian.join(',') }}</h3>
-            <h4 *ngIf = "gameName === 'word-translation'"class = "game__transcription">[{{ currentWord.transcription }}]</h4>
          </div>
       
          <div class="game__right">

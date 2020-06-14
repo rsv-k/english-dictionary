@@ -17,7 +17,12 @@ export class ListeningComponent implements OnInit, OnDestroy {
    currentWord: Word;
    inputValue: string;
    isAnswered: boolean;
-   @ViewChild('input') input: ElementRef;
+   private inputPlaceholder: HTMLInputElement;
+   @ViewChild('input', { static: false }) set input(el: ElementRef) {
+      if (el) {
+         this.inputPlaceholder = el.nativeElement;
+      }
+   }
 
    private subscriptionWords: Subscription;
 
@@ -58,7 +63,6 @@ export class ListeningComponent implements OnInit, OnDestroy {
       if (this.isAnswered) {
          this.getNextWord();
          this.isAnswered = false;
-         this.input.nativeElement.focus();
          return;
       }
 
@@ -84,6 +88,8 @@ export class ListeningComponent implements OnInit, OnDestroy {
 
       this.inputValue = '';
       this.onPronounce();
+      setTimeout(() => this.inputPlaceholder.focus(), 0);
+
    }
 
    private finishGame() {

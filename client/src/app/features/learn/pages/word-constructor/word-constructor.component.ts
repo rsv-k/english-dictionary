@@ -4,6 +4,7 @@ import { AnswerResult } from '@core/models/answerResult.model';
 import { LearnService } from '@core/services/learn.service';
 import { Subscription } from 'rxjs';
 import { Character } from '@core/models/character.model';
+import { UtilsService } from '@core/services/utils.service';
 
 @Component({
   selector: 'app-word-constructor',
@@ -17,11 +18,17 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
    currentWord: Word;
    englishWord: string[];
    characters: Character[];
+   isAnswered: boolean;
 
    private mistakes: number;
    private subscriptionWords: Subscription;
 
    @HostListener('window:keyup', ['$event']) onkeyup(e: KeyboardEvent) {
+      if (e.key === 'Enter') {
+         this.onNext();
+         return;
+      }
+
       const key = (e.key === ' ' ? '_' : e.key).toUpperCase();
       if (this.characters.findIndex(c => c.value === key) < 0) {
          return;
@@ -30,7 +37,10 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
       this.chooseCharacter(key);
    }
 
-   constructor(private learnService: LearnService) { }
+   constructor(
+      private learnService: LearnService,
+      private utilsService: UtilsService
+      ) { }
 
    ngOnInit(): void {
       this.initializeState();
@@ -63,14 +73,26 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
       }
 
       if (this.characters.length === 0) {
-         this.addResult(true);
-         this.getNextWord();
+         this.onPronounce();
+         this.isAnswered = true;
       }
    }
 
    learnAgain() {
       this.initializeState();
       this.learnService.getWordsToLearn(null, 4);
+   }
+
+   onPronounce() {
+      this.utilsService.onPronounce(this.currentWord.sound_url);
+   }
+
+   onNext() {
+      if (this.isAnswered) {
+         this.addResult(true);
+         this.getNextWord();
+         this.isAnswered = false;
+      }
    }
 
    private finishGame() {
@@ -121,6 +143,7 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
       this.characters = [];
       this.isFinished = false;
       this.mistakes = 0;
+      this.isAnswered = false;
    }
 
    private addResult(isCorrect: boolean) {

@@ -4,6 +4,7 @@
       <p class="wordsCount">{{ (results.length + 1) + ' / ' + words.length}}</p>
       <mat-card class = "game">
          <h2 class = "game__word">{{ currentWord?.russian.join(',') }}</h2>
+         <p *ngIf = "isAnswered">[{{ currentWord.transcription }}]</p>
          <div class="characters-holder">
             <span *ngFor = "let character of englishWord">{{ character }}</span>
          </div>
@@ -16,7 +17,11 @@
                color = "primary" 
                *ngFor = "let character of characters">{{ character.value }}</button>
          </div>
+
+         <button *ngIf = "isAnswered" mat-raised-button (click) = "onNext()">Next</button>
       </mat-card>
+
+
    </div>
 
    <app-results 
