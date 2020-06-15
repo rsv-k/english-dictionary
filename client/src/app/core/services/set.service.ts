@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { Set } from '@core/models/set.model';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { UtilsService } from './utils.service';
 
-const BACKEND_URL = environment.apiUrl + 'set';
+const BACKEND_URL = '/api/set';
 
 @Injectable({
    providedIn: 'root'

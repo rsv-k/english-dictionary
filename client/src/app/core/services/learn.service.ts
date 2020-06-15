@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { UtilsService } from './utils.service';
 import { filter, map } from 'rxjs/operators';
 import { Word } from '@core/models/word.model';
 import { Subject } from 'rxjs';
 
-const BACKEND_URL = environment.apiUrl + 'learn';
+const BACKEND_URL = '/api/learn';
 
 @Injectable({
    providedIn: 'root'

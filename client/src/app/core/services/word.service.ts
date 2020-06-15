@@ -3,12 +3,10 @@ import { Word } from '@core/models/word.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, distinctUntilChanged, debounceTime, switchMap, filter, tap } from 'rxjs/operators';
 import { of, Subject, iif } from 'rxjs';
-
-import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { UtilsService } from './utils.service';
 
-const BACKEND_URL = environment.apiUrl + 'word';
+const BACKEND_URL = '/api/word';
 const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
 
 interface Config {
