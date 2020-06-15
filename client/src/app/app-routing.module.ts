@@ -8,6 +8,7 @@ const routes: Routes = [
    { path: 'set/:setName/:id', loadChildren: () => import('@features/dictionary/dictionary.module').then(m => m.DictionaryModule) },
    { path: 'sets', loadChildren: () => import('@features/sets/sets.module').then(m => m.SetsModule) },
    { path: 'learn', loadChildren: () => import('@features/learn/learn.module').then(m => m.LearnModule) },
+   { path: 'auth', loadChildren: () => import('@features/auth/auth.module').then(m => m.AuthModule) },
 ];
 
 @NgModule({
