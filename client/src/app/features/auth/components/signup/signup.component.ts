@@ -36,8 +36,6 @@ export class SignupComponent implements OnInit, OnDestroy {
       if (!this.authForm.valid) {
          return;
       }
-
-      this.authService.signup(this.authForm.value).subscribe();
    }
 
    private initializeForm() {
