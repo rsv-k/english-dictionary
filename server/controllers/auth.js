@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const authHelper = require('../helpers/authHelper');
 
 exports.signup = async (req, res) => {
    if (!req.body.user) {
@@ -39,7 +40,10 @@ exports.login = async (req, res) => {
          return res.status(404).json({ msg: 'invalid password' });
       }
 
-      res.status(200).json({ msg: 'user found', userId: user._id });
+      const result = authHelper.generateAccessToken(user);
+      result.userId = user._id;
+
+      res.status(200).json({ msg: 'user found', result });
    } catch (err) {
       res.status(500).json({ msg: 'server error', error: err });
    }
@@ -47,7 +51,7 @@ exports.login = async (req, res) => {
 
 exports.checkIfTaken = async (req, res) => {
    if (!req.body.username && !req.body.email) {
-      res.status(400).json({ msg: 'no data provided' });
+      return res.status(400).json({ msg: 'no data provided' });
    }
 
    const options = {
