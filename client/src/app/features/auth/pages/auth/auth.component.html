@@ -1,1 +1,78 @@
-<p>auth works!</p>
+<section class="form-container">
+   <mat-card>
+      <mat-card-header>
+         <mat-card-title>Singup</mat-card-title>
+      </mat-card-header>
+
+      <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+         <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input required matInput formControlName="username" />
+            <mat-error
+               *ngIf="
+                  authForm.get('username').touched &&
+                  authForm.get('username').errors?.minlength
+               "
+               >Username must be at least 4 characters long</mat-error
+            >
+
+            <mat-error
+               *ngIf="
+                  authForm.get('username').touched &&
+                  authForm.get('username').errors?.isPresent
+               "
+               >Username already taken</mat-error
+            >
+         </mat-form-field>
+
+         <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input
+               type="email"
+               minlength="8"
+               required
+               matInput
+               formControlName="email"
+            />
+
+            <mat-error
+               *ngIf="
+                  authForm.get('email').touched &&
+                  authForm.get('email').errors?.isPresent
+               "
+               >Email already taken</mat-error
+            >
+            <mat-error
+               *ngIf="
+                  authForm.get('email').touched &&
+                  authForm.get('email').errors?.email
+               "
+               >Email must be valid</mat-error
+            >
+         </mat-form-field>
+
+         <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input
+               minlength="8"
+               required
+               matInput
+               type="password"
+               formControlName="password"
+            />
+
+            <mat-error
+               *ngIf="
+                  authForm.get('password').touched &&
+                  authForm.get('password').errors?.minlength
+               "
+               >Password must be at least 8 characters long</mat-error
+            >
+         </mat-form-field>
+
+         <button type="submit" mat-raised-button [disabled]="!authForm.valid">
+            Submit
+         </button>
+      </form>
+   </mat-card>
+</section>
