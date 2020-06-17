@@ -90,9 +90,8 @@ export class AuthService {
          .post<{ msg: string; result: AuthData }>('/api/auth/refreshTokens', {
             refreshToken: authInfo.refreshToken
          })
-         .pipe(pluck('result'))
-         .subscribe((authData: AuthData) => {
-            this.initializeAuthState(authData);
+         .subscribe(data => {
+            this.initializeAuthState(data.result);
          });
    }
 

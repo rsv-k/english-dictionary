@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { filter, map } from 'rxjs/operators';
 import { Word } from '@core/models/word.model';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 const BACKEND_URL = '/api/learn';
 
@@ -17,10 +17,7 @@ export class LearnService {
    private randomOptions = new Subject<string[][] | string[]>();
    randomOptionsUpdateListener$ = this.randomOptions.asObservable();
 
-   constructor(
-      private http: HttpClient,
-      private utilsService: UtilsService
-      ) { }
+   constructor(private http: HttpClient, private utilsService: UtilsService) {}
 
    getAvailableGames(): string[] {
       return [
@@ -33,8 +30,14 @@ export class LearnService {
       ];
    }
 
-   toggleLearnings(ids: string[], reverse: boolean, gameNumber: number, option: boolean) {
-      this.http.post(BACKEND_URL, { ids, reverse, gameNumber, option })
+   toggleLearnings(
+      ids: string[],
+      reverse: boolean,
+      gameNumber: number,
+      option: boolean
+   ) {
+      this.http
+         .post(BACKEND_URL, { ids, reverse, gameNumber, option })
          .subscribe(() => {
             this.utilsService.showSnackBar('Words sent to learn');
          });
@@ -52,8 +55,8 @@ export class LearnService {
          queries.params = queries.params.set('fetchFrom', fetchWordsForm + '');
       }
 
-
-      this.http.get<{msg: string, result: any}>(BACKEND_URL, queries)
+      this.http
+         .get<{ msg: string; result: any }>(BACKEND_URL, queries)
          .pipe(
             filter(data => data.result[0] !== null),
             map(this.utilsService.changeIdField),
@@ -66,10 +69,14 @@ export class LearnService {
    }
 
    getRandomOptions(except: string[] | string, property: string) {
-      this.http.post<{ msg: string, options: any}>(BACKEND_URL + '/randomOptions', { except, property })
+      this.http
+         .post<{ msg: string; options: any }>(BACKEND_URL + '/randomOptions', {
+            except,
+            property
+         })
          .pipe(
             map(data => data.options),
-            map((options) => {
+            map(options => {
                if (Array.isArray(options[0])) {
                   return options.map(option => option.join(','));
                }
@@ -82,10 +89,9 @@ export class LearnService {
          });
    }
 
-   getQuantities() {
-      return this.http.get<{ msg: string, result: any[]}>(BACKEND_URL + '/quantity')
-         .pipe(
-            map(data => Object.values(data.result)),
-         );
+   getQuantities(): Observable<string[]> {
+      return this.http
+         .get<{ msg: string; result: any[] }>(BACKEND_URL + '/quantity')
+         .pipe(map(data => Object.values(data.result)));
    }
 }

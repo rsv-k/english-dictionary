@@ -13,15 +13,20 @@ import { WordConstructorComponent } from './pages/word-constructor/word-construc
 import { ListeningComponent } from './pages/listening/listening.component';
 import { FormsModule } from '@angular/forms';
 import { WordCardsComponent } from './pages/word-cards/word-cards.component';
-
+import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-resolver.service';
 
 @NgModule({
-   declarations: [LearnComponent, LearnGameCardComponent, ResultsComponent, SavannahComponent, WordTranslationWordComponent, WordConstructorComponent, ListeningComponent, WordCardsComponent],
-   imports: [
-      CommonModule,
-      LearnRoutingModule,
-      SharedModule,
-      FormsModule
-   ]
+   declarations: [
+      LearnComponent,
+      LearnGameCardComponent,
+      ResultsComponent,
+      SavannahComponent,
+      WordTranslationWordComponent,
+      WordConstructorComponent,
+      ListeningComponent,
+      WordCardsComponent
+   ],
+   imports: [CommonModule, LearnRoutingModule, SharedModule, FormsModule],
+   providers: [LearnWordsAmountResolver]
 })
-export class LearnModule { }
+export class LearnModule {}

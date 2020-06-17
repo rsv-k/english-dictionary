@@ -3,11 +3,12 @@
       <h1>Training</h1>
    </header>
 
-   <main class = "games">
+   <main class="games">
       <app-learn-game-card
-         *ngFor = "let quantity of wordsQuantities$ | async; let i = index"
-         [routerLink] = "'/learn/' + (titles[i].split(' ').join('_') | lowercase)"
-         [title] = "titles[i]"
-         [wordsAmount] = "quantity"></app-learn-game-card>
+         *ngFor="let game of games"
+         (click)="onNavigate(game)"
+         [title]="game.title"
+         [wordsAmount]="game.wordsQuantity"
+      ></app-learn-game-card>
    </main>
 </section>

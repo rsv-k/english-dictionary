@@ -24,7 +24,7 @@ exports.generateRefreshToken = user => {
       id: user._id
    };
 
-   const refreshTokenExpiration = 24 * 60;
+   const refreshTokenExpiration = 24 * 60 * 60;
    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN, {
       expiresIn: refreshTokenExpiration
    });

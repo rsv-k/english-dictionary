@@ -42,33 +42,35 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
       private route: ActivatedRoute,
       private learnService: LearnService,
       private utilsService: UtilsService
-      ) { }
+   ) {}
 
    ngOnInit(): void {
       this.initializeState();
 
       this.learnService.getWordsToLearn(null, this.games[this.gameName]);
-      this.subscriptionWords = this.learnService.wordsUpdateListener$
-         .subscribe((words: Word[]) => {
+      this.subscriptionWords = this.learnService.wordsUpdateListener$.subscribe(
+         (words: Word[]) => {
             this.words = words;
             this.requestNewRandomOptions();
-         });
-
-      this.subscriptionOptions = this.learnService.randomOptionsUpdateListener$
-      .subscribe((options: string[]) => {
-         this.options = options.map(translation => {
-            return {
-               value: translation,
-               isCorrect: false
-            };
-         });
-
-         this.shakeOptions();
-
-         if (this.games[this.gameName] === 1) {
-            this.onPronounce();
          }
-      });
+      );
+
+      this.subscriptionOptions = this.learnService.randomOptionsUpdateListener$.subscribe(
+         (options: string[]) => {
+            this.options = options.map(translation => {
+               return {
+                  value: translation,
+                  isCorrect: false
+               };
+            });
+
+            this.shakeOptions();
+
+            if (this.games[this.gameName] === 1) {
+               this.onPronounce();
+            }
+         }
+      );
    }
 
    onAnswer(gameOption: GameOption) {
@@ -119,8 +121,11 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
       };
       const language = languageToFetch[this.gameName];
 
-      const correctGameOption =  {
-         value: language === 'russian' ? this.currentWord.russian.join(',') : this.currentWord.english,
+      const correctGameOption = {
+         value:
+            language === 'russian'
+               ? this.currentWord.russian.join(',')
+               : this.currentWord.english,
          isCorrect: true
       };
 
@@ -146,8 +151,15 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
    }
 
    private finishGame() {
-      const ids = this.results.filter(option => option.isCorrect).map(option => option.wordId);
-      this.learnService.toggleLearnings(ids, false, this.games[this.gameName], false);
+      const ids = this.results
+         .filter(option => option.isCorrect)
+         .map(option => option.wordId);
+      this.learnService.toggleLearnings(
+         ids,
+         false,
+         this.games[this.gameName],
+         false
+      );
       this.isFinished = true;
    }
 
