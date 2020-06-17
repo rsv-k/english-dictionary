@@ -1,5 +1,6 @@
 const Word = require('../models/word');
 const wordHelper = require('../helpers/wordHelper');
+const mongoose = require('mongoose');
 
 exports.toggleLearnings = async (req, res) => {
    if (!req.body.ids) {
@@ -7,13 +8,16 @@ exports.toggleLearnings = async (req, res) => {
    }
 
    try {
-      const options = { _id: req.body.ids };
+      const options = { _id: req.body.ids, ownerId: req.userData.id };
       if (req.body.reverse) {
          options._id = {
             $nin: req.body.ids
          };
       }
-      const opt = wordHelper.chooseGameToLearn(req.body.gameNumber, req.body.option);
+      const opt = wordHelper.chooseGameToLearn(
+         req.body.gameNumber,
+         req.body.option
+      );
 
       await Word.update(options, { $set: opt }, { multi: true });
 
@@ -33,11 +37,13 @@ exports.getWordsToLearn = async (req, res) => {
          { 'learn.listening': true },
          { 'learn.wordCards': true }
       ];
-      const options = [{
-         $match: {
-            $or: wordsFrom
+      const options = [
+         {
+            $match: {
+               $or: wordsFrom
+            }
          }
-      }];
+      ];
       if (req.query.fetchFrom && req.query.fetchFrom !== 0) {
          options[0].$match = {
             ...wordsFrom[req.query.fetchFrom - 1]
@@ -52,9 +58,13 @@ exports.getWordsToLearn = async (req, res) => {
          });
       }
 
+      options[0].$match.ownerId = mongoose.Types.ObjectId(req.userData.id);
       const words = await Word.aggregate(options);
 
-      res.status(200).json({ msg: 'words fetched successfully', result: words });
+      res.status(200).json({
+         msg: 'words fetched successfully',
+         result: words
+      });
    } catch (err) {
       res.status(500).json({ msg: 'server error', error: err });
    }
@@ -81,15 +91,36 @@ exports.getRandomOptions = async (req, res) => {
 exports.countWordsInEachGame = async (req, res) => {
    try {
       const wordsQuantity = {
-         wordTranslation: await Word.countDocuments({ 'learn.wordTranslation': true }),
-         translationWord: await Word.countDocuments({ 'learn.translationWord': true }),
-         savannah: await Word.countDocuments({ 'learn.savannah': true }),
-         wordConstructor: await Word.countDocuments({ 'learn.wordConstructor': true }),
-         listening: await Word.countDocuments({ 'learn.listening': true }),
-         wordCards: await Word.countDocuments({ 'learn.wordCards': true })
+         wordTranslation: await Word.countDocuments({
+            ownerId: req.userData.id,
+            'learn.wordTranslation': true
+         }),
+         translationWord: await Word.countDocuments({
+            ownerId: req.userData.id,
+            'learn.translationWord': true
+         }),
+         savannah: await Word.countDocuments({
+            ownerId: req.userData.id,
+            'learn.savannah': true
+         }),
+         wordConstructor: await Word.countDocuments({
+            ownerId: req.userData.id,
+            'learn.wordConstructor': true
+         }),
+         listening: await Word.countDocuments({
+            ownerId: req.userData.id,
+            'learn.listening': true
+         }),
+         wordCards: await Word.countDocuments({
+            ownerId: req.userData.id,
+            'learn.wordCards': true
+         })
       };
 
-      res.status(200).json({ msg: 'quantity fetched successfully', result: wordsQuantity });
+      res.status(200).json({
+         msg: 'quantity fetched successfully',
+         result: wordsQuantity
+      });
    } catch (err) {
       res.status(500).json({ msg: 'server error', error: err });
    }

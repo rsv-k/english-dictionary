@@ -5,6 +5,7 @@ import { Translation } from '@core/models/translation.model';
 import { Word } from '@core/models/word.model';
 import { tap } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
    selector: 'app-word-create',
@@ -19,12 +20,16 @@ export class WordCreateComponent implements OnInit {
    firstTranslation: Translation;
    isMyTranslation = false;
 
-   constructor(private wordService: WordService) { }
+   constructor(
+      private wordService: WordService,
+      private authService: AuthService
+   ) {}
 
    ngOnInit(): void {
-      this.translations$ = this.wordService.showTranslations(this.wordText$)
+      this.translations$ = this.wordService
+         .showTranslations(this.wordText$)
          .pipe(
-            tap((translations) => {
+            tap(translations => {
                this.firstTranslation = translations[0];
                this.wordService.getWords(this.setId, this.inputValue);
             })
@@ -36,7 +41,12 @@ export class WordCreateComponent implements OnInit {
       this.wordText$.next(this.inputValue);
    }
 
-   onMyOwnTranslation(e: Event, trigger: MatAutocompleteTrigger, str: string, input: HTMLInputElement) {
+   onMyOwnTranslation(
+      e: Event,
+      trigger: MatAutocompleteTrigger,
+      str: string,
+      input: HTMLInputElement
+   ) {
       e.stopPropagation();
       if (str.trim().length === 0 && this.isMyTranslation) {
          this.inputValue = '';
@@ -61,7 +71,9 @@ export class WordCreateComponent implements OnInit {
 
    chooseTranslation(translation: Translation) {
       const word: Word = {
-         english: translation.origin[0].toUpperCase() + translation.origin.slice(1).toLowerCase(),
+         english:
+            translation.origin[0].toUpperCase() +
+            translation.origin.slice(1).toLowerCase(),
          russian: [translation.value],
          pic_url: translation.pic_url,
          setId: this.setId ? [this.setId] : [],
@@ -74,7 +86,8 @@ export class WordCreateComponent implements OnInit {
             wordConstructor: true,
             listening: true,
             wordCards: true
-         }
+         },
+         ownerId: this.authService.userId
       };
 
       this.wordService.getWords(this.setId);

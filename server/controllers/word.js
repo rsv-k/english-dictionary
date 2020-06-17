@@ -19,7 +19,10 @@ exports.getTranslations = async (req, res) => {
          transcription: data.transcription
       };
 
-      res.status(200).json({ msg: 'translations fetched successfully', result });
+      res.status(200).json({
+         msg: 'translations fetched successfully',
+         result
+      });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -43,7 +46,7 @@ exports.addWord = async (req, res) => {
 exports.getWords = async (req, res) => {
    try {
       const setId = req.query.setId || null;
-      const options = {};
+      const options = { ownerId: req.userData.id };
 
       if (setId) {
          options.setId = {
@@ -61,7 +64,10 @@ exports.getWords = async (req, res) => {
          startsFrom = req.query.startsFrom * 20;
       }
 
-      const words = await Word.find(options).sort({ createdAt: -1 }).skip(startsFrom).limit(20);
+      const words = await Word.find(options)
+         .sort({ createdAt: -1 })
+         .skip(startsFrom)
+         .limit(20);
 
       res.status(200).json({ msg: 'word added successfully', result: words });
    } catch (err) {
@@ -76,7 +82,10 @@ exports.deleteWord = async (req, res) => {
 
    try {
       const word = await Word.findByIdAndDelete(req.params.id);
-      res.status(200).json({ msg: 'word deleted successfully', result: [word] });
+      res.status(200).json({
+         msg: 'word deleted successfully',
+         result: [word]
+      });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -88,8 +97,14 @@ exports.getSpecificWord = async (req, res) => {
    }
 
    try {
-      const word = await Word.findOne({ english: req.params.word });
-      res.status(200).json({ msg: 'word fetched successfully', result: [word] });
+      const word = await Word.findOne({
+         english: req.params.word,
+         ownerId: req.userData.id
+      });
+      res.status(200).json({
+         msg: 'word fetched successfully',
+         result: [word]
+      });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -101,8 +116,15 @@ exports.updateWord = async (req, res) => {
    }
 
    try {
-      const word = await Word.findOneAndUpdate({ _id: req.body.word.id }, req.body.word, { new: true });
-      res.status(200).json({ msg: 'word fetched successfully', result: [word] });
+      const word = await Word.findOneAndUpdate(
+         { _id: req.body.word.id, ownerId: req.userData.id },
+         req.body.word,
+         { new: true }
+      );
+      res.status(200).json({
+         msg: 'word fetched successfully',
+         result: [word]
+      });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
@@ -114,7 +136,7 @@ exports.deleteMany = async (req, res) => {
    }
 
    try {
-      const options = { _id: req.body.ids };
+      const options = { _id: req.body.ids, ownerId: req.userData.id };
       if (req.body.reverse) {
          options._id = {
             $nin: req.body.ids
@@ -122,7 +144,9 @@ exports.deleteMany = async (req, res) => {
       }
 
       if (req.body.setId) {
-         await Word.updateMany(options, { $pullAll: { setId: [req.body.setId] } });
+         await Word.updateMany(options, {
+            $pullAll: { setId: [req.body.setId] }
+         });
       } else {
          await Word.deleteMany(options);
       }

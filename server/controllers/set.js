@@ -18,7 +18,7 @@ exports.addSet = async (req, res) => {
 
 exports.getSets = async (req, res) => {
    try {
-      const sets = await Set.find();
+      const sets = await Set.find({ ownerId: req.userData.id });
       res.status(201).json({ msg: 'set successfully created', result: sets });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
@@ -31,18 +31,18 @@ exports.deleteSet = async (req, res) => {
    }
 
    try {
-      await Word.updateMany({
-         setId: {
-            $in: [
-               req.params.id
-            ]
+      await Word.updateMany(
+         {
+            setId: {
+               $in: [req.params.id]
+            }
+         },
+         {
+            $pullAll: {
+               setId: [req.params.id]
+            }
          }
-      },
-      {
-         $pullAll: {
-            setId: [req.params.id]
-         }
-      });
+      );
       const set = await Set.findByIdAndDelete(req.params.id);
 
       res.status(200).json({ msg: 'set deleted successfully', result: [set] });

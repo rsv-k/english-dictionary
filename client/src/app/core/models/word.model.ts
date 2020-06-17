@@ -9,12 +9,13 @@ export interface Word {
    sound_url?: string;
    transcription?: string;
    learn: {
-      wordTranslation?: boolean,
-      translationWord?: boolean,
+      wordTranslation?: boolean;
+      translationWord?: boolean;
       savannah?: boolean;
       wordConstructor?: boolean;
       listening?: boolean;
       wordCards?: boolean;
    };
    isChecked?: boolean;
+   ownerId: string;
 }
