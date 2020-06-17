@@ -2,29 +2,17 @@
    <mat-label>Word</mat-label>
    <input
       matInput
-      #input
-      (input) = "onInput($event.target.value)"
-      #trigger = "matAutocompleteTrigger"
-      [matAutocomplete]="auto">
-   <mat-autocomplete #auto="matAutocomplete" (closed) = "onClosed()">
-         <mat-option
-            [matTooltip] = "translation.value.length > 50 ? translation.value : null"
-            class = "create__option"
-            *ngFor="let translation of translations$ | async"
-            (click) = "chooseTranslation(translation)">
-            {{ translation.value }}
-         </mat-option>
-
-         <mat-option 
-            (click) = "onMyOwnTranslation($event, trigger, myTranslation.value, input); myTranslation.focus()"
-            *ngIf = "(translations$ | async)?.length"
-            class = "create__ownTranslation">
-            <mat-form-field>
-               <input placeholder = "My own translation" matInput #myTranslation (keydown) = "$event.stopPropagation()">
-            </mat-form-field>
-            <button mat-icon-button color = "primary" *ngIf = "myTranslation.value.length > 0">
-               <mat-icon>save</mat-icon>
-            </button>
-         </mat-option>
+      (input)="onInput($event.target.value)"
+      [matAutocomplete]="auto"
+   />
+   <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+         [matTooltip]="translation.value.length > 50 ? translation.value : null"
+         class="create__option"
+         *ngFor="let translation of translations$ | async"
+         (click)="chooseTranslation(translation)"
+      >
+         {{ translation.value }}
+      </mat-option>
    </mat-autocomplete>
 </mat-form-field>

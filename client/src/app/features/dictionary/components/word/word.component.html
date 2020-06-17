@@ -1,42 +1,50 @@
-<mat-expansion-panel (opened) = "isPanelOpened = true" (closed) = "isPanelOpened = false">
+<mat-expansion-panel
+   (opened)="isPanelOpened = true"
+   (closed)="isPanelOpened = false"
+>
    <mat-expansion-panel-header>
-     <mat-panel-title>
-      {{ word.english }}
-     </mat-panel-title>
-     <mat-panel-description *ngIf = "!isPanelOpened">
-      {{ word.russian.join(', ') | cutLength:30 }}
-     </mat-panel-description>
+      <mat-panel-title>
+         {{ word.english }}
+      </mat-panel-title>
+      <mat-panel-description *ngIf="!isPanelOpened">
+         {{ word.russian.join(', ') | cutLength: 30 }}
+      </mat-panel-description>
    </mat-expansion-panel-header>
 
    <ng-template matExpansionPanelContent>
       <div class="content">
-         <button 
-            mat-button 
-            *ngIf = "word.transcription" 
+         <button
+            mat-button
+            *ngIf="word.transcription"
             class="content__transcription"
-            (click) = "pronounce()">{{ word.transcription }}</button>
+            (click)="pronounce()"
+         >
+            {{ word.transcription }}
+         </button>
 
          <div class="content__top">
             <div class="picture__container">
-               <img [src] = "word.pic_url" [alt]="word.english" class = "picture">
+               <img [src]="word.pic_url" [alt]="word.english" class="picture" />
             </div>
-            <div class="content__translation" *ngIf = "isPanelOpened">
+            <div class="content__translation" *ngIf="isPanelOpened">
                {{ word.russian.join(', ') }}
             </div>
          </div>
-         
-         <p class = "text--plain">
+
+         <p class="text--plain">
             {{ word.text }}
          </p>
       </div>
-   
-      <mat-action-row class = "action">
-         <p class="date">
-            Added {{ date | date:'d MMMM y' }}
-         </p>
+
+      <mat-action-row class="action">
+         <p class="date">Added {{ date | date: 'd MMMM y' }}</p>
          <div class="buttons">
-            <button (click) = "onDelete()" mat-raised-button color = "accent">Delete</button>
-            <button (click) = "onEdit()" mat-raised-button color = "primary">Edit</button>
+            <button (click)="onDelete()" mat-raised-button color="warn">
+               Delete
+            </button>
+            <button (click)="onEdit()" mat-raised-button color="primary">
+               Edit
+            </button>
          </div>
       </mat-action-row>
    </ng-template>
