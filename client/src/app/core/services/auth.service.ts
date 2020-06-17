@@ -44,10 +44,34 @@ export class AuthService {
 
       const accesTokenExpiresIn = authData.accessTokenExpiration;
       this.setTimeWhenAuthExpires(accesTokenExpiresIn);
+      this.saveAuthData(authData);
+   }
+
+   autoAuthUser() {
+      const authInformation = this.getAuthData();
+      if (!authInformation) {
+         return this.logout();
+      }
+
+      const now = new Date().getTime();
+      const isInFuture = authInformation.accessTokenExpiration > now;
+      if (isInFuture) {
+         const authData: AuthData = {
+            userId: authInformation.userId,
+            accessToken: authInformation.accessToken,
+            accessTokenExpiration:
+               (authInformation.accessTokenExpiration - now) / 1000
+         };
+
+         this.initializeAuthState(authData);
+      } else {
+         this.logout();
+      }
    }
 
    logout() {
       this.terminateAuthState();
+      this.clearAuthData();
       this.router.navigate(['/auth/login']);
    }
 
@@ -62,5 +86,42 @@ export class AuthService {
       this.expiresInTimer = setTimeout(() => {
          this.logout();
       }, expiresIn * 1000);
+   }
+
+   private saveAuthData(authData: AuthData) {
+      const accessTokenExpiration = new Date(
+         Date.now() + authData.accessTokenExpiration * 1000
+      );
+      localStorage.setItem('userId', authData.userId);
+      localStorage.setItem('accessToken', authData.accessToken);
+      localStorage.setItem(
+         'accessTokenExpiration',
+         accessTokenExpiration.toISOString()
+      );
+   }
+
+   private clearAuthData() {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('accessTokenExpiration');
+   }
+
+   private getAuthData() {
+      const userId = localStorage.getItem('userId');
+      const accessToken = localStorage.getItem('accessToken');
+      const accessTokenExpiration = localStorage.getItem(
+         'accessTokenExpiration'
+      );
+
+      if ([userId, accessToken, accessTokenExpiration].includes(null)) {
+         this.logout();
+         return;
+      }
+
+      return {
+         userId,
+         accessToken,
+         accessTokenExpiration: new Date(accessTokenExpiration).getTime()
+      };
    }
 }
