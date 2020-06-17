@@ -1,4 +1,8 @@
 <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+   <span class="incorrectCredentials" *ngIf="isError"
+      >Invalid email or password</span
+   >
+
    <mat-form-field>
       <mat-label>Email</mat-label>
       <input type="email" matInput formControlName="email" />

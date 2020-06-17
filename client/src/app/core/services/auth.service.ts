@@ -20,7 +20,9 @@ export class AuthService {
    constructor(private http: HttpClient, private router: Router) {}
 
    signup(userModel: User) {
-      return this.http.post('/api/auth/signup', { user: userModel });
+      this.http.post('/api/auth/signup', { user: userModel }).subscribe(() => {
+         this.router.navigate(['/auth/login']);
+      });
    }
 
    login(userModel: User) {
@@ -82,11 +84,11 @@ export class AuthService {
    }
 
    private getNewTokens() {
-      const authData = this.getAuthData();
+      const authInfo = this.getAuthData();
 
       this.http
          .post<{ msg: string; result: AuthData }>('/api/auth/refreshTokens', {
-            refreshToken: authData.refreshToken
+            refreshToken: authInfo.refreshToken
          })
          .pipe(pluck('result'))
          .subscribe((authData: AuthData) => {

@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { AuthService } from '@core/services/auth.service';
-import { Router } from '@angular/router';
 import {
    debounceTime,
    distinctUntilChanged,
@@ -36,6 +35,8 @@ export class SignupComponent implements OnInit, OnDestroy {
       if (!this.authForm.valid) {
          return;
       }
+
+      this.authService.signup(this.authForm.value);
    }
 
    private initializeForm() {

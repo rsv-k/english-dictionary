@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit, OnDestroy {
    authForm: FormGroup;
+   isError = false;
    private subscription: Subscription;
 
    constructor(private authService: AuthService, private router: Router) {}
@@ -24,10 +25,15 @@ export class LoginComponent implements OnInit, OnDestroy {
          return;
       }
 
-      this.authService.login(this.authForm.value).subscribe(data => {
-         this.authService.initializeAuthState(data);
-         this.router.navigate(['/dictionary']);
-      });
+      this.authService.login(this.authForm.value).subscribe(
+         data => {
+            this.authService.initializeAuthState(data);
+            this.router.navigate(['/dictionary']);
+         },
+         error => {
+            this.isError = error.status === 404;
+         }
+      );
    }
 
    private initializeForm() {
