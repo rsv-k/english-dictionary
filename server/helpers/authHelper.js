@@ -17,3 +17,20 @@ exports.generateAccessToken = user => {
       accessTokenExpiration
    };
 };
+
+exports.generateRefreshToken = user => {
+   const payload = {
+      email: user.email,
+      id: user._id
+   };
+
+   const refreshTokenExpiration = 24 * 60;
+   const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN, {
+      expiresIn: refreshTokenExpiration
+   });
+
+   return {
+      refreshToken,
+      refreshTokenExpiration
+   };
+};

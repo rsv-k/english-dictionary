@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const authHelper = require('../helpers/authHelper');
+const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res) => {
    if (!req.body.user) {
@@ -40,8 +41,11 @@ exports.login = async (req, res) => {
          return res.status(404).json({ msg: 'invalid password' });
       }
 
-      const result = authHelper.generateAccessToken(user);
-      result.userId = user._id;
+      const result = {
+         ...authHelper.generateAccessToken(user),
+         ...authHelper.generateRefreshToken(user),
+         userId: user._id
+      };
 
       res.status(200).json({ msg: 'user found', result });
    } catch (err) {
@@ -63,5 +67,29 @@ exports.checkIfTaken = async (req, res) => {
       res.status(200).json({ isPresent: !!result });
    } catch (err) {
       res.status(500).json({ msg: 'internal server error', error: err });
+   }
+};
+
+exports.refreshTokens = async (req, res) => {
+   if (!req.body.refreshToken) {
+      return res.status(401).json({ msg: 'Auth failed' });
+   }
+
+   try {
+      const decodedToken = jwt.verify(
+         req.body.refreshToken,
+         process.env.REFRESH_TOKEN
+      );
+      const user = await User.findOne({ _id: decodedToken.id });
+
+      const result = {
+         ...authHelper.generateAccessToken(user),
+         ...authHelper.generateRefreshToken(user),
+         userId: user._id
+      };
+
+      res.status(200).json({ msg: 'user found', result });
+   } catch (err) {
+      res.status(401).json({ msg: 'Auth failed' });
    }
 };
