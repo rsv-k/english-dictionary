@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, distinctUntilChanged, debounceTime, switchMap, filter, tap } from 'rxjs/operators';
+import {
+   map,
+   distinctUntilChanged,
+   debounceTime,
+   switchMap,
+   filter,
+   tap
+} from 'rxjs/operators';
 import { of, Subject, iif } from 'rxjs';
 import { Observable } from 'rxjs';
 import { UtilsService } from './utils.service';
 
 const BACKEND_URL = '/api/word';
-const DEFAULT_PIC = 'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
+const DEFAULT_PIC =
+   'https://contentcdn.lingualeo.com/uploads/upimages/0bbdd3793cb97ec4189557013fc4d6e4bed4f714.png';
 
 interface Config {
    msg: string;
@@ -23,10 +31,7 @@ export class WordService {
 
    wordsUpdateListener$ = this.wordsUpdateListener.asObservable();
 
-   constructor(
-      private http: HttpClient,
-      private utilsService: UtilsService
-      ) { }
+   constructor(private http: HttpClient, private utilsService: UtilsService) {}
 
    getWords(setId?: string, startsWith?: string, startsFrom?: number) {
       const options = {
@@ -45,7 +50,8 @@ export class WordService {
          options.params = options.params.set('startsFrom', startsFrom + '');
       }
 
-      this.http.get<Config>(BACKEND_URL, options)
+      this.http
+         .get<Config>(BACKEND_URL, options)
          .pipe(
             filter(data => !!data.result[0]),
             map(this.utilsService.changeIdField),
@@ -93,7 +99,8 @@ export class WordService {
          word.pic_url = null;
       }
 
-      return this.http.put<Config>(BACKEND_URL, { word })
+      return this.http
+         .put<Config>(BACKEND_URL, { word })
          .pipe(
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic),
@@ -105,7 +112,8 @@ export class WordService {
       if (word.pic_url === DEFAULT_PIC) {
          word.pic_url = null;
       }
-      return this.http.post<Config>(BACKEND_URL, { word })
+      return this.http
+         .post<Config>(BACKEND_URL, { word })
          .pipe(
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic),
@@ -114,7 +122,8 @@ export class WordService {
    }
 
    deleteWord(id: string) {
-      this.http.delete<Config>(BACKEND_URL + '/' + id)
+      this.http
+         .delete<Config>(BACKEND_URL + '/' + id)
          .pipe(
             map(this.utilsService.changeIdField),
             tap((words: Word[]) => this.updateWords('DELETE', words))
@@ -123,7 +132,8 @@ export class WordService {
    }
 
    deleteManyWords(setId: string, ids: string[], reverse?: boolean) {
-      this.http.post(BACKEND_URL + '/deleteMany', { setId, ids, reverse })
+      this.http
+         .post(BACKEND_URL + '/deleteMany', { setId, ids, reverse })
          .subscribe(() => {
             const deletedWords = {};
 
@@ -147,12 +157,15 @@ export class WordService {
       return word.pipe(
          debounceTime(1000),
          distinctUntilChanged(),
-         switchMap(w => iif(() => w.trim().length === 0, of([]), this.getTranslations(w)))
+         switchMap(w =>
+            iif(() => w.trim().length === 0, of([]), this.getTranslations(w))
+         )
       );
    }
 
    private getSpecificWord(word: string) {
-      return this.http.get<{msg: string, result: any}>(BACKEND_URL + '/' + word)
+      return this.http
+         .get<{ msg: string; result: any }>(BACKEND_URL + '/' + word)
          .pipe(
             map(data => {
                if (data.result[0] === null) {
@@ -161,25 +174,23 @@ export class WordService {
 
                return data;
             }),
-            map(this.utilsService.changeIdField),
+            map(this.utilsService.changeIdField)
          );
    }
 
-   private getTranslations(word) {
+   private getTranslations(word: string) {
       const url = BACKEND_URL + '/translations/' + word;
-      return this.http.get<{msg: string, result: any}>(url)
-      .pipe(
+      return this.http.get<{ msg: string; result: any }>(url).pipe(
          map(data => {
             return data.result.translate.map(translation => {
                return {
                   pic_url: translation.pic_url || null,
                   value: translation.value,
-                  origin: data.result.word,
                   sound_url: data.result.sound_url,
                   transcription: data.result.transcription
                };
             });
-         }),
+         })
       );
    }
 
@@ -195,7 +206,9 @@ export class WordService {
             this.words = this.words.filter(word => word.id !== words[0].id);
             break;
          case 'EDIT':
-            this.words = this.words.map(word => word.id === words[0].id ? words[0] : word);
+            this.words = this.words.map(word =>
+               word.id === words[0].id ? words[0] : word
+            );
             break;
       }
 

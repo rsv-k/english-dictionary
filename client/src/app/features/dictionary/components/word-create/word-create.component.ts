@@ -46,9 +46,7 @@ export class WordCreateComponent implements OnInit {
 
    chooseTranslation(translation: Translation) {
       const word: Word = {
-         english:
-            translation.origin[0].toUpperCase() +
-            translation.origin.slice(1).toLowerCase(),
+         english: this.inputValue,
          russian: [translation.value],
          pic_url: translation.pic_url,
          setId: this.setId ? [this.setId] : [],
