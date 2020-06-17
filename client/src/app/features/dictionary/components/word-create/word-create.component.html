@@ -2,17 +2,20 @@
    <mat-label>Word</mat-label>
    <input
       matInput
-      (input)="onInput($event.target.value)"
+      #wordInput
+      (input)="onInput(wordInput.value)"
       [matAutocomplete]="auto"
    />
    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option
-         [matTooltip]="translation.value.length > 50 ? translation.value : null"
-         class="create__option"
-         *ngFor="let translation of translations$ | async"
-         (click)="chooseTranslation(translation)"
-      >
-         {{ translation.value }}
-      </mat-option>
+      <ng-container *ngIf = "wordInput.value.length > 0">
+         <mat-option
+            [matTooltip]="translation.value.length > 50 ? translation.value : null"
+            class="create__option"
+            *ngFor="let translation of translations$ | async"
+            (click)="chooseTranslation(translation)"
+         >
+            {{ translation.value }}
+         </mat-option>
+      </ng-container>
    </mat-autocomplete>
 </mat-form-field>

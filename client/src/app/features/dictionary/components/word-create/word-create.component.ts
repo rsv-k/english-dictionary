@@ -32,8 +32,15 @@ export class WordCreateComponent implements OnInit {
          );
    }
 
-   onInput(str: string) {
-      this.inputValue = str.trim();
+   onInput(wordValue: string) {
+      this.inputValue = wordValue.trim();
+      if (!wordValue) {
+         return this.wordService.getWords(this.setId);
+      }
+
+      if (!this.inputValue) {
+         return;
+      }
       this.wordText$.next(this.inputValue);
    }
 
