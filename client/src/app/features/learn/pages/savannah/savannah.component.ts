@@ -102,6 +102,7 @@ export class SavannahComponent implements OnInit, OnDestroy {
          return;
       }
 
+      clearTimeout(this.timeoutHolder);
       this.highlightCorrectAndClicked(gameOption);
       this.isPauseBeforeStart = true;
       this.addResult(gameOption.isCorrect);
