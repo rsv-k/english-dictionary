@@ -1,35 +1,63 @@
-<section class = "game-container" >
-   <div class="main-content" *ngIf = "currentWord && !isFinished">
-      <p class="wordsCount">{{ (results.length + 1) + ' / ' + words.length}}</p>
+<section class="game-container">
+   <div class="main-content" *ngIf="currentWord && !isFinished">
+      <p class="wordsCount">{{ currentPlayNumber + ' / ' + words.length }}</p>
 
-      <mat-card class = "game" >
-         <div class="game__left">
-            <div class="word-translation" *ngIf = "gameName === 'word-translation'">
-               <button mat-icon-button (click) = "onPronounce()">
-                  <mat-icon>volume_up</mat-icon>
-               </button>
-               <h3 class="game__wordName">{{ currentWord.english }}</h3>
-               <h4 class = "game__transcription">[{{ currentWord.transcription }}]</h4>
+      <mat-card class="game">
+         <div class="game__top">
+            <div class="game__left">
+               <div
+                  class="word-translation"
+                  *ngIf="gameName === 'word-translation'"
+               >
+                  <button mat-icon-button (click)="onPronounce()">
+                     <mat-icon>volume_up</mat-icon>
+                  </button>
+                  <h3 class="game__wordName">{{ currentWord.english }}</h3>
+                  <h4 class="game__transcription">
+                     [{{ currentWord.transcription }}]
+                  </h4>
+               </div>
+               <h3
+                  *ngIf="gameName === 'translation-word'"
+                  class="game__wordName"
+               >
+                  {{ currentWord.russian.join(',') }}
+               </h3>
             </div>
-            <h3 *ngIf  = "gameName === 'translation-word'"class="game__wordName">{{ currentWord.russian.join(',') }}</h3>
-         </div>
-      
-         <div class="game__right">
-            <ng-container *ngFor = "let option of options">
-                  <button 
-                     (click) = "onAnswer(option)"
-                     [color] = "option?.color"
-                     class = "game__option"
-                     mat-stroked-button >
+
+            <div class="game__right">
+               <ng-container *ngFor="let option of options; let i = index">
+                  <button
+                     [attr.data-before]="i + 1"
+                     (click)="onAnswer(option)"
+                     [color]="option?.color"
+                     class="game__option"
+                     mat-stroked-button
+                  >
                      {{ option.value }}
                   </button>
-            </ng-container>
+               </ng-container>
+            </div>
          </div>
+
+         <mat-divider></mat-divider>
+
+         <mat-card-actions class="game__bottom">
+            <button
+               (click)="onNothing()"
+               class="button-nothing"
+               mat-raised-button
+               [color]="isOptionClicked ? 'primary' : 'warn'"
+            >
+               {{ isOptionClicked ? 'Continue' : "I don't know" }}
+            </button>
+         </mat-card-actions>
       </mat-card>
    </div>
 
-   <app-results 
-      *ngIf = "isFinished" 
-      [result] = "results"
-      (learnAgain) = "learnAgain()"></app-results>
+   <app-results
+      *ngIf="isFinished"
+      [result]="results"
+      (learnAgain)="learnAgain()"
+   ></app-results>
 </section>

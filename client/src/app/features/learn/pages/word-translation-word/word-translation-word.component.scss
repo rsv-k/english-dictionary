@@ -1,7 +1,6 @@
 .game-container {
    margin-top: 100px;
    width: 500px;
-   height: 200px;
    margin: 0 auto;
 }
 
@@ -9,33 +8,56 @@
    text-align: right;
 }
 
-.game {
+.game__top {
    display: flex;
    justify-content: space-between;
+   margin-bottom: 5px;
+}
 
-   &__left {
-      width: 30%;
+.game__left {
+   width: 30%;
+}
+
+.game__right {
+   width: 65%;
+}
+
+.game__wordName {
+   font-weight: 500;
+}
+
+.game__transcription {
+   color: grey;
+   font-weight: 300;
+}
+
+.game__option {
+   width: 100%;
+   white-space: pre-wrap !important;
+   position: relative;
+
+   &:nth-child(n + 2) {
+      margin-top: 5px;
    }
 
-   &__right {
-      width: 65%;
-   }
-
-   &__wordName {
-      font-weight: 500;
-   }
-
-   &__transcription {
+   &::before {
+      content: attr(data-before);
+      position: absolute;
+      left: -15px;
       color: grey;
-      font-weight: 300;
+      font-size: 1em;
    }
+}
 
-   &__option {
-      width: 100%;
-      white-space: pre-wrap !important;
+mat-card-actions {
+   text-align: right;
+}
 
-      &:nth-child(n+ 2) {
-         margin-top: 5px;
-      }
-   }
+.button-nothing::before {
+   content: 'Enter';
+   position: absolute;
+   left: -40px;
+   color: grey;
+   font-size: 1em;
+   cursor: none;
 }

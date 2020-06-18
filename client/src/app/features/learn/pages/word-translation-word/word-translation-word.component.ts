@@ -25,13 +25,18 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
    options: GameOption[];
    isOptionClicked = false;
    isFinished = false;
+   currentPlayNumber: number;
 
    private subscriptionOptions: Subscription;
    private subscriptionWords: Subscription;
 
    @HostListener('window:keyup', ['$event']) onkeyup(e: KeyboardEvent) {
-      if (![1, 2, 3, 4, 5].includes(+e.key)) {
+      if (![1, 2, 3, 4, 5].includes(+e.key) && e.key !== 'Enter') {
          return;
+      }
+
+      if (e.key === 'Enter') {
+         return this.onNothing();
       }
 
       const option = this.options[+e.key - 1];
@@ -75,17 +80,30 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
 
    onAnswer(gameOption: GameOption) {
       if (this.isOptionClicked) {
-         this.results.push({
-            wordId: this.currentWord.id,
-            isCorrect: gameOption.isCorrect
-         });
          this.requestNewRandomOptions();
+         this.currentPlayNumber++;
       } else {
          if (this.games[this.gameName] === 2) {
             this.onPronounce();
          }
 
+         this.addResult(gameOption.isCorrect);
          this.highlightCorrectAndChosenOption(gameOption);
+      }
+
+      this.isOptionClicked = !this.isOptionClicked;
+   }
+
+   onNothing() {
+      if (!this.isOptionClicked) {
+         this.addResult(false);
+         if (this.games[this.gameName] === 2) {
+            this.onPronounce();
+            this.highlightCorrectAndChosenOption();
+         }
+      } else {
+         this.requestNewRandomOptions();
+         this.currentPlayNumber++;
       }
 
       this.isOptionClicked = !this.isOptionClicked;
@@ -98,6 +116,13 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
    learnAgain() {
       this.initializeState();
       this.learnService.getWordsToLearn(null, this.games[this.gameName]);
+   }
+
+   private addResult(isCorrect: boolean) {
+      this.results.push({
+         wordId: this.currentWord.id,
+         isCorrect
+      });
    }
 
    private requestNewRandomOptions() {
@@ -142,10 +167,14 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
       this.options = [];
       this.isOptionClicked = false;
       this.isFinished = false;
+      this.currentPlayNumber = 1;
    }
 
-   private highlightCorrectAndChosenOption(gameOption: GameOption) {
-      gameOption.color = 'warn';
+   private highlightCorrectAndChosenOption(gameOption?: GameOption) {
+      if (gameOption) {
+         gameOption.color = 'warn';
+      }
+
       const correctTranslation = this.options.find(opt => opt.isCorrect);
       correctTranslation.color = 'primary';
    }
