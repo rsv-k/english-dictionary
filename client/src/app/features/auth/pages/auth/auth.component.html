@@ -1,4 +1,4 @@
-<section class="form-container">
+<app-centered-projection>
    <mat-card>
       <mat-card-header>
          <mat-card-title>{{ form | uppercase }}</mat-card-title>
@@ -7,4 +7,4 @@
       <app-signup *ngIf="form === 'signup'"></app-signup>
       <app-login *ngIf="form === 'login'"></app-login>
    </mat-card>
-</section>
+</app-centered-projection>
