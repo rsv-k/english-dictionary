@@ -15,58 +15,49 @@ export class SetService {
    setsUpdateListener$ = this.sets$.asObservable();
    sets: Set[] = [];
 
-   constructor(
-      private http: HttpClient,
-      private utilsService: UtilsService
-      ) { }
+   constructor(private http: HttpClient, private utilsService: UtilsService) {}
 
    getSets() {
-      this.sets$.next([...this.sets]);
-      this.http.get<{msg: string, sets: any}>(BACKEND_URL)
-         .pipe(
-            map(this.utilsService.changeIdField)
-         )
-         .subscribe((sets: Set[]) => {
-            this.updateSets('GET', sets);
-         });
+      this.http
+         .get<{ msg: string; sets: any }>(BACKEND_URL)
+         .pipe(map(this.utilsService.changeIdField))
+         .subscribe(sets => this.updateSets('GET', sets));
    }
 
    addSet(set: Set) {
-      this.http.post<{msg: string, sets: any}>(BACKEND_URL, { set })
-         .pipe(
-            map(this.utilsService.changeIdField)
-         )
+      this.http
+         .post<{ msg: string; sets: any }>(BACKEND_URL, { set })
+         .pipe(map(this.utilsService.changeIdField))
          .subscribe((sets: Set[]) => {
             this.updateSets('ADD', sets);
          });
    }
 
    deleteSet(id: string) {
-      this.http.delete<{msg: string, sets: any}>(BACKEND_URL + '/' + id)
-         .pipe(
-            map(this.utilsService.changeIdField)
-         )
+      this.http
+         .delete<{ msg: string; sets: any }>(BACKEND_URL + '/' + id)
+         .pipe(map(this.utilsService.changeIdField))
          .subscribe((sets: Set[]) => {
             this.updateSets('DELETE', sets);
          });
    }
 
    editSet(set: Set) {
-      this.http.put<{msg: string, sets: any}>(BACKEND_URL, { set })
-         .pipe(
-            map(this.utilsService.changeIdField)
-         )
+      this.http
+         .put<{ msg: string; sets: any }>(BACKEND_URL, { set })
+         .pipe(map(this.utilsService.changeIdField))
          .subscribe((sets: Set[]) => {
             this.updateSets('EDIT', sets);
          });
    }
 
    addWordsToSet(setId: string, ids: string[], reverse: boolean) {
-      this.http.put(BACKEND_URL + '/addToSet', { setId, ids, reverse })
+      this.http
+         .put(BACKEND_URL + '/addToSet', { setId, ids, reverse })
          .subscribe();
    }
 
-   private updateSets(operation, sets: Set[]) {
+   private updateSets(operation: string, sets: Set[]) {
       switch (operation) {
          case 'ADD':
             this.sets.push(sets[0]);
@@ -78,7 +69,9 @@ export class SetService {
             this.sets = this.sets.filter(set => set.id !== sets[0].id);
             break;
          case 'EDIT':
-            this.sets = this.sets.map(set => set.id === sets[0].id ? sets[0] : set);
+            this.sets = this.sets.map(set =>
+               set.id === sets[0].id ? sets[0] : set
+            );
             break;
       }
 

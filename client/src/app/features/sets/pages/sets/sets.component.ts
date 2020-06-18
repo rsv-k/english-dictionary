@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Set } from '@core/models/set.model';
-import { Observable } from 'rxjs';
 import { SetService } from '@core/services/set.service';
 import { AuthService } from '@core/services/auth.service';
+import { ActivatedRoute, Data } from '@angular/router';
 
 @Component({
    selector: 'app-sets',
@@ -10,16 +10,18 @@ import { AuthService } from '@core/services/auth.service';
    styleUrls: ['./sets.component.scss']
 })
 export class SetsComponent implements OnInit {
-   sets$: Observable<Set[]>;
+   sets: Set[];
 
    constructor(
       private setService: SetService,
-      private authService: AuthService
+      private authService: AuthService,
+      private route: ActivatedRoute
    ) {}
 
    ngOnInit(): void {
-      this.sets$ = this.setService.setsUpdateListener$;
-      this.setService.getSets();
+      this.route.data.subscribe((data: Data) => {
+         this.sets = data.sets;
+      });
    }
 
    onCreateSet(title: string) {
