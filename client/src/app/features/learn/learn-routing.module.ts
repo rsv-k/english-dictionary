@@ -9,6 +9,7 @@ import { ListeningComponent } from './pages/listening/listening.component';
 import { WordCardsComponent } from './pages/word-cards/word-cards.component';
 import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-resolver.service';
 import { ResultsComponent } from './pages/results/results.component';
+import { ResultGuard } from '@core/guards/result.guard';
 
 const routes: Routes = [
    {
@@ -50,7 +51,8 @@ const routes: Routes = [
    },
    {
       path: 'result',
-      component: ResultsComponent
+      component: ResultsComponent,
+      canActivate: [ResultGuard]
    }
 ];
 
