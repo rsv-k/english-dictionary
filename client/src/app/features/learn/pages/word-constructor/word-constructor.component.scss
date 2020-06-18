@@ -6,6 +6,10 @@
    height: calc(100vh - 64px);
 }
 
+.transcription {
+   color: grey;
+}
+
 .main-content {
    width: 600px;
    height: 300px;
@@ -39,12 +43,18 @@ span {
    user-select: none;
 }
 
-span:nth-child(n+2) {
+span:nth-child(n + 2) {
    margin-left: 2px;
 }
 
 @keyframes incorrect {
-   0% { background: initial; }
-   50% { background: red; }
-   100% { background: initial }
+   0% {
+      background: initial;
+   }
+   50% {
+      background: red;
+   }
+   100% {
+      background: initial;
+   }
 }

@@ -7,9 +7,9 @@ import { Character } from '@core/models/character.model';
 import { UtilsService } from '@core/services/utils.service';
 
 @Component({
-  selector: 'app-word-constructor',
-  templateUrl: './word-constructor.component.html',
-  styleUrls: ['./word-constructor.component.scss']
+   selector: 'app-word-constructor',
+   templateUrl: './word-constructor.component.html',
+   styleUrls: ['./word-constructor.component.scss']
 })
 export class WordConstructorComponent implements OnInit, OnDestroy {
    isFinished: boolean;
@@ -40,21 +40,24 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
    constructor(
       private learnService: LearnService,
       private utilsService: UtilsService
-      ) { }
+   ) {}
 
    ngOnInit(): void {
       this.initializeState();
       this.learnService.getWordsToLearn(null, 4);
-      this.subscriptionWords = this.learnService.wordsUpdateListener$
-         .subscribe((words: Word[]) => {
+      this.subscriptionWords = this.learnService.wordsUpdateListener$.subscribe(
+         (words: Word[]) => {
             this.words = words;
             this.getNextWord();
-         });
+         }
+      );
    }
 
    chooseCharacter(key: string) {
       if (this.isItNextLetter(key)) {
-         this.englishWord[this.currentWord.english.length - this.characters.length] = key;
+         this.englishWord[
+            this.currentWord.english.length - this.characters.length
+         ] = key;
 
          const charIndex = this.characters.findIndex(c => c.value === key);
          this.characters.splice(charIndex, 1);
@@ -69,7 +72,7 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
          this.mistakes++;
          const charIndex = this.characters.findIndex(c => c.value === key);
          this.characters[charIndex].highlight = true;
-         setTimeout(() => this.characters[charIndex].highlight = false, 500);
+         setTimeout(() => (this.characters[charIndex].highlight = false), 500);
       }
 
       if (this.characters.length === 0) {
@@ -95,6 +98,16 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
       }
    }
 
+   private shuffleCharacters(arr: string[]) {
+      for (let i = 0; i < arr.length; i++) {
+         const randomIndex = Math.floor(Math.random() * (i + 1));
+         const itemAtIndex = arr[randomIndex];
+
+         arr[randomIndex] = arr[i];
+         arr[i] = itemAtIndex;
+      }
+   }
+
    private finishGame() {
       const ids = this.results.filter(r => r.isCorrect).map(w => w.wordId);
       this.learnService.toggleLearnings(ids, false, 4, false);
@@ -116,13 +129,12 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
    private calculateCharacters(word: string) {
       const characters = [];
       for (const c of word) {
-         characters.push(
-            {
-               value: c.trim().toUpperCase() || '_',
-               highlight: false
-            }
-         );
+         characters.push({
+            value: c.trim().toUpperCase() || '_',
+            highlight: false
+         });
       }
+      this.shuffleCharacters(characters);
 
       return characters;
    }
@@ -132,7 +144,11 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
          character = ' ';
       }
 
-      return this.currentWord.english[this.currentWord.english.length - this.characters.length].toUpperCase() === character;
+      return (
+         this.currentWord.english[
+            this.currentWord.english.length - this.characters.length
+         ].toUpperCase() === character
+      );
    }
 
    private initializeState() {
