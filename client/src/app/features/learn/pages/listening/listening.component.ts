@@ -1,17 +1,24 @@
-import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild } from '@angular/core';
+import {
+   Component,
+   OnInit,
+   OnDestroy,
+   HostListener,
+   ElementRef,
+   ViewChild
+} from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { AnswerResult } from '@core/models/answerResult.model';
 import { Subscription } from 'rxjs';
 import { LearnService } from '@core/services/learn.service';
 import { UtilsService } from '@core/services/utils.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-listening',
-  templateUrl: './listening.component.html',
-  styleUrls: ['./listening.component.scss']
+   selector: 'app-listening',
+   templateUrl: './listening.component.html',
+   styleUrls: ['./listening.component.scss']
 })
 export class ListeningComponent implements OnInit, OnDestroy {
-   isFinished: boolean;
    results: AnswerResult[];
    words: Word[];
    currentWord: Word;
@@ -35,17 +42,19 @@ export class ListeningComponent implements OnInit, OnDestroy {
    }
    constructor(
       private learnService: LearnService,
-      private utilsService: UtilsService
-      ) { }
+      private utilsService: UtilsService,
+      private router: Router
+   ) {}
 
    ngOnInit(): void {
       this.initializeState();
 
-      this.subscriptionWords = this.learnService.wordsUpdateListener$
-         .subscribe((words: Word[]) => {
+      this.subscriptionWords = this.learnService.wordsUpdateListener$.subscribe(
+         (words: Word[]) => {
             this.words = words;
             this.getNextWord();
-         });
+         }
+      );
       this.learnService.getWordsToLearn(false, 5);
    }
 
@@ -54,7 +63,9 @@ export class ListeningComponent implements OnInit, OnDestroy {
 
       const result = {
          wordId: this.currentWord.id,
-         isCorrect: this.inputValue.toUpperCase() === this.currentWord.english.toUpperCase()
+         isCorrect:
+            this.inputValue.toUpperCase() ===
+            this.currentWord.english.toUpperCase()
       };
       this.results.push(result);
    }
@@ -89,13 +100,18 @@ export class ListeningComponent implements OnInit, OnDestroy {
       this.inputValue = '';
       this.onPronounce();
       setTimeout(() => this.inputPlaceholder.focus(), 0);
-
    }
 
    private finishGame() {
-      this.isFinished = true;
       const ids = this.results.filter(r => r.isCorrect).map(r => r.wordId);
       this.learnService.toggleLearnings(ids, false, 5, false);
+
+      this.router.navigate(['/learn/result'], {
+         state: {
+            gameName: 'Listening',
+            result: this.results
+         }
+      });
    }
 
    private initializeState() {
@@ -104,11 +120,9 @@ export class ListeningComponent implements OnInit, OnDestroy {
       this.results = [];
       this.inputValue = '';
       this.isAnswered = false;
-      this.isFinished = false;
    }
 
    ngOnDestroy() {
       this.subscriptionWords.unsubscribe();
    }
-
 }

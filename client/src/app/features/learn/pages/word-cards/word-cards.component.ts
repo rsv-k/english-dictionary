@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { LearnService } from '@core/services/learn.service';
 import { UtilsService } from '@core/services/utils.service';
 import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
    selector: 'app-word-cards',
@@ -12,7 +13,6 @@ import { tap } from 'rxjs/operators';
    styleUrls: ['./word-cards.component.scss']
 })
 export class WordCardsComponent implements OnInit {
-   isFinished: boolean;
    wordsLength: number;
    results: AnswerResult[];
    words$: Observable<Word[]>;
@@ -20,15 +20,15 @@ export class WordCardsComponent implements OnInit {
 
    constructor(
       private learnService: LearnService,
-      private utilsService: UtilsService
-      ) { }
+      private utilsService: UtilsService,
+      private router: Router
+   ) {}
 
    ngOnInit(): void {
       this.initializeState();
-      this.words$ = this.learnService.wordsUpdateListener$
-         .pipe(
-            tap((words) => this.wordsLength = words.length)
-         );
+      this.words$ = this.learnService.wordsUpdateListener$.pipe(
+         tap(words => (this.wordsLength = words.length))
+      );
       this.learnService.getWordsToLearn(false, 6);
    }
 
@@ -42,7 +42,9 @@ export class WordCardsComponent implements OnInit {
          isCorrect
       };
 
-      this.checkedWords[word.id] = isCorrect ? '1px solid green' : '1px solid red';
+      this.checkedWords[word.id] = isCorrect
+         ? '1px solid green'
+         : '1px solid red';
       this.onPronounce(word.sound_url);
 
       this.results.push(result);
@@ -57,17 +59,21 @@ export class WordCardsComponent implements OnInit {
       this.learnService.getWordsToLearn(false, 6);
    }
 
-   finishGame() {
+   private finishGame() {
       const ids = this.results.filter(r => r.isCorrect).map(r => r.wordId);
       this.learnService.toggleLearnings(ids, false, 6, false);
-      this.isFinished = true;
+
+      this.router.navigate(['/learn/result'], {
+         state: {
+            gameName: 'Word cards',
+            result: this.results
+         }
+      });
    }
 
    private initializeState() {
       this.results = [];
-      this.isFinished = false;
       this.wordsLength = 0;
       this.checkedWords = {};
    }
-
 }

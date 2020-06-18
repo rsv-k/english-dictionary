@@ -5,6 +5,7 @@ import { LearnService } from '@core/services/learn.service';
 import { Subscription } from 'rxjs';
 import { Character } from '@core/models/character.model';
 import { UtilsService } from '@core/services/utils.service';
+import { Router } from '@angular/router';
 
 @Component({
    selector: 'app-word-constructor',
@@ -12,7 +13,6 @@ import { UtilsService } from '@core/services/utils.service';
    styleUrls: ['./word-constructor.component.scss']
 })
 export class WordConstructorComponent implements OnInit, OnDestroy {
-   isFinished: boolean;
    results: AnswerResult[];
    words: Word[];
    currentWord: Word;
@@ -39,7 +39,8 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
 
    constructor(
       private learnService: LearnService,
-      private utilsService: UtilsService
+      private utilsService: UtilsService,
+      private router: Router
    ) {}
 
    ngOnInit(): void {
@@ -98,20 +99,16 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
       }
    }
 
-   private shuffleCharacters(arr: string[]) {
-      for (let i = 0; i < arr.length; i++) {
-         const randomIndex = Math.floor(Math.random() * (i + 1));
-         const itemAtIndex = arr[randomIndex];
-
-         arr[randomIndex] = arr[i];
-         arr[i] = itemAtIndex;
-      }
-   }
-
    private finishGame() {
       const ids = this.results.filter(r => r.isCorrect).map(w => w.wordId);
       this.learnService.toggleLearnings(ids, false, 4, false);
-      this.isFinished = true;
+
+      this.router.navigate(['/learn/result'], {
+         state: {
+            gameName: 'Word constructor',
+            result: this.results
+         }
+      });
    }
 
    private getNextWord() {
@@ -127,14 +124,14 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
    }
 
    private calculateCharacters(word: string) {
-      const characters = [];
+      let characters = [];
       for (const c of word) {
          characters.push({
             value: c.trim().toUpperCase() || '_',
             highlight: false
          });
       }
-      this.shuffleCharacters(characters);
+      characters = this.utilsService.shuffleArray(characters);
 
       return characters;
    }
@@ -157,7 +154,6 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
       this.currentWord = null;
       this.englishWord = [];
       this.characters = [];
-      this.isFinished = false;
       this.mistakes = 0;
       this.isAnswered = false;
    }

@@ -8,12 +8,13 @@ export class ResultGuard implements CanActivate {
    constructor(private router: Router) {}
 
    canActivate(): boolean {
+      const currentNavigation = this.router.getCurrentNavigation().extras;
       const result =
-         window.history.state &&
-         window.history.state.gameName &&
-         window.history.state.result;
+         currentNavigation.state &&
+         currentNavigation.state.gameName &&
+         currentNavigation.state.result;
       if (result) {
-         return window.history.state.gameName && window.history.state.result;
+         return true;
       }
 
       this.router.navigate(['/learn']);

@@ -11,6 +11,8 @@ import {
 import { GameOption } from '@core/models/GameOption.model';
 import { Subscription } from 'rxjs';
 import { AnswerResult } from '@core/models/answerResult.model';
+import { Router } from '@angular/router';
+import { UtilsService } from '@core/services/utils.service';
 
 const ANIMATION_TIME = 5000;
 const PAUSE_ANIMATION = 1000;
@@ -40,7 +42,6 @@ const PAUSE_ANIMATION = 1000;
 export class SavannahComponent implements OnInit, OnDestroy {
    state: string;
    isPauseBeforeStart: boolean;
-   isFinished: boolean;
    results: AnswerResult[];
    words: Word[];
    options: GameOption[];
@@ -59,7 +60,11 @@ export class SavannahComponent implements OnInit, OnDestroy {
       }
    }
 
-   constructor(private learnService: LearnService) {}
+   constructor(
+      private learnService: LearnService,
+      private router: Router,
+      private utilsService: UtilsService
+   ) {}
 
    ngOnInit(): void {
       this.initialieState();
@@ -82,8 +87,12 @@ export class SavannahComponent implements OnInit, OnDestroy {
                   isCorrect: false
                };
             });
+            this.options.push({
+               value: this.currentWord.russian.join(','),
+               isCorrect: true
+            });
 
-            this.shakeOptions();
+            this.options = this.utilsService.shuffleArray(this.options);
          }
       );
    }
@@ -95,15 +104,17 @@ export class SavannahComponent implements OnInit, OnDestroy {
 
       this.highlightCorrectAndClicked(gameOption);
       this.isPauseBeforeStart = true;
-      if (gameOption.isCorrect) {
-         this.addResult(true);
-      } else {
-         this.addResult(false);
+      this.addResult(gameOption.isCorrect);
+      if (this.results.length === this.words.length) {
+         return this.finishGame();
       }
 
       this.state = 'start';
       this.getNextWord();
-      setTimeout(() => this.animationMove(), PAUSE_ANIMATION);
+      this.timeoutHolder = setTimeout(
+         () => this.animationMove(),
+         PAUSE_ANIMATION
+      );
    }
 
    learnAgain() {
@@ -116,11 +127,19 @@ export class SavannahComponent implements OnInit, OnDestroy {
    }
 
    private finishGame() {
+      clearTimeout(this.timeoutHolder);
+
       const ids = this.results
          .filter(option => option.isCorrect)
          .map(option => option.wordId);
       this.learnService.toggleLearnings(ids, false, 3, false);
-      this.isFinished = true;
+
+      this.router.navigate(['/learn/result'], {
+         state: {
+            gameName: 'Savannah',
+            result: this.results
+         }
+      });
    }
 
    private highlightCorrectAndClicked(gameOption: GameOption) {
@@ -137,49 +156,29 @@ export class SavannahComponent implements OnInit, OnDestroy {
       this.timeoutHolder = setTimeout(() => {
          this.addResult(false);
          this.getNextWord();
-         if (this.isFinished) {
-            clearTimeout(this.timeoutHolder);
-            return;
-         }
 
          this.state = 'start';
-         setTimeout(() => this.animationMove(), PAUSE_ANIMATION);
+         this.timeoutHolder = setTimeout(
+            () => this.animationMove(),
+            PAUSE_ANIMATION
+         );
       }, ANIMATION_TIME);
    }
 
    private addResult(isCorrect: boolean) {
-      const result = {
+      this.results.push({
          wordId: this.currentWord.id,
          isCorrect
-      };
-
-      this.results.push(result);
+      });
    }
 
    private getNextWord() {
-      if (this.results.length !== this.words.length) {
-         this.currentWord = this.words[this.results.length];
-      } else {
-         this.isFinished = true;
-         this.finishGame();
-      }
-   }
-
-   private shakeOptions() {
-      const correctGameOption = {
-         value: this.currentWord.russian.join(','),
-         isCorrect: true
-      };
-
-      const randomIndex = Math.floor(Math.random() * 5);
-      this.options[4] = this.options[randomIndex];
-      this.options[randomIndex] = correctGameOption;
+      this.currentWord = this.words[this.results.length];
    }
 
    private initialieState() {
       this.state = 'start';
       this.isPauseBeforeStart = false;
-      this.isFinished = false;
       this.results = [];
       this.words = [];
       this.options = [];

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,11 +8,13 @@ import { Router } from '@angular/router';
    styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
-   constructor(private router: Router) {}
+   constructor(private location: Location, private router: Router) {}
 
    ngOnInit(): void {
       console.log(window.history.state);
    }
 
-   onClick() {}
+   onClick() {
+      this.location.back();
+   }
 }
