@@ -1,5 +1,5 @@
 <section class="game">
-   <div class="game__gameplay" *ngIf="!isFinished">
+   <div class="game__gameplay">
       <p [@moveDown]="state">{{ currentWord?.english }}</p>
 
       <div class="options">
@@ -15,10 +15,4 @@
          </button>
       </div>
    </div>
-
-   <app-results
-      *ngIf="isFinished"
-      [result]="results"
-      (learnAgain)="learnAgain()"
-   ></app-results>
 </section>

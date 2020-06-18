@@ -8,6 +8,7 @@ import { WordConstructorComponent } from './pages/word-constructor/word-construc
 import { ListeningComponent } from './pages/listening/listening.component';
 import { WordCardsComponent } from './pages/word-cards/word-cards.component';
 import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-resolver.service';
+import { ResultsComponent } from './pages/results/results.component';
 
 const routes: Routes = [
    {
@@ -46,6 +47,10 @@ const routes: Routes = [
       path: 'word_cards',
       component: WordCardsComponent,
       canActivate: [GameProtectGuard]
+   },
+   {
+      path: 'result',
+      component: ResultsComponent
    }
 ];
 

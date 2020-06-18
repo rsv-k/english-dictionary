@@ -1,5 +1,5 @@
 <section class="game-container">
-   <div class="main-content" *ngIf="currentWord && !isFinished">
+   <div class="main-content" *ngIf="currentWord">
       <p class="wordsCount">{{ currentPlayNumber + ' / ' + words.length }}</p>
 
       <mat-card class="game">
@@ -54,10 +54,4 @@
          </mat-card-actions>
       </mat-card>
    </div>
-
-   <app-results
-      *ngIf="isFinished"
-      [result]="results"
-      (learnAgain)="learnAgain()"
-   ></app-results>
 </section>

@@ -1,33 +1,34 @@
 <section class="game-container">
-   <div class="main-content" *ngIf = "!isFinished">
-      <p class="wordsCount">{{ (results.length + 1) + ' / ' + words.length}}</p>
+   <div class="main-content">
+      <p class="wordsCount">{{ results.length + 1 + ' / ' + words.length }}</p>
       <mat-card class="game">
-         <h2 class = "btn--pronounce">
-            <button mat-fab color="primary" (click) = "onPronounce()">
+         <h2 class="btn--pronounce">
+            <button mat-fab color="primary" (click)="onPronounce()">
                <mat-icon>volume_up</mat-icon>
             </button>
          </h2>
 
-         <mat-form-field class = "input" *ngIf = "!isAnswered">
+         <mat-form-field class="input" *ngIf="!isAnswered">
             <mat-label>Type word here</mat-label>
-            <input matInput [(ngModel)] = "inputValue" #input>
+            <input matInput [(ngModel)]="inputValue" #input />
          </mat-form-field>
-         
-         <div class="show" *ngIf = "isAnswered">
-            <p class = "show__wordCorrect">{{ currentWord.english }}</p>
-            <p class = "show__wordIncorrect" *ngIf = "inputValue.toUpperCase() !== currentWord.english.toUpperCase()">{{ inputValue }}</p>
-            <p class = "show__transcription">[{{ currentWord.transcription }}]</p>
+
+         <div class="show" *ngIf="isAnswered">
+            <p class="show__wordCorrect">{{ currentWord.english }}</p>
+            <p
+               class="show__wordIncorrect"
+               *ngIf="
+                  inputValue.toUpperCase() !== currentWord.english.toUpperCase()
+               "
+            >
+               {{ inputValue }}
+            </p>
+            <p class="show__transcription">[{{ currentWord.transcription }}]</p>
             <p>{{ currentWord.russian.join(',') }}</p>
             <p>{{ currentWord.text }}</p>
          </div>
 
-         <button mat-raised-button (click) = "onEnterClick()">Enter</button>
+         <button mat-raised-button (click)="onEnterClick()">Enter</button>
       </mat-card>
    </div>
-
-   <app-results
-      *ngIf = "isFinished"
-      [result] = "results"
-      (learnAgain) = "learnAgain()"
-   ></app-results>
 </section>

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Word } from '@core/models/word.model';
 import { GameOption } from '@core/models/GameOption.model';
 import { Subscription } from 'rxjs';
@@ -24,7 +24,6 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
    currentWord: Word;
    options: GameOption[];
    isOptionClicked = false;
-   isFinished = false;
    currentPlayNumber: number;
 
    private subscriptionOptions: Subscription;
@@ -46,7 +45,8 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
    constructor(
       private route: ActivatedRoute,
       private learnService: LearnService,
-      private utilsService: UtilsService
+      private utilsService: UtilsService,
+      private router: Router
    ) {}
 
    ngOnInit(): void {
@@ -166,7 +166,6 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
       this.currentWord = null;
       this.options = [];
       this.isOptionClicked = false;
-      this.isFinished = false;
       this.currentPlayNumber = 1;
    }
 
@@ -189,7 +188,13 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
          this.games[this.gameName],
          false
       );
-      this.isFinished = true;
+
+      this.router.navigate(['/learn/result'], {
+         state: {
+            gameName: this.gameName,
+            result: this.results
+         }
+      });
    }
 
    private getNextWord() {
