@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Set } from '@core/models/set.model';
 import { SetService } from '@core/services/set.service';
 import { AuthService } from '@core/services/auth.service';
 import { ActivatedRoute, Data } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
    selector: 'app-sets',
    templateUrl: './sets.component.html',
    styleUrls: ['./sets.component.scss']
 })
-export class SetsComponent implements OnInit {
+export class SetsComponent implements OnInit, OnDestroy {
    sets: Set[];
 
+   private subscription: Subscription;
    constructor(
       private setService: SetService,
       private authService: AuthService,
@@ -22,6 +24,12 @@ export class SetsComponent implements OnInit {
       this.route.data.subscribe((data: Data) => {
          this.sets = data.sets;
       });
+
+      this.subscription = this.setService.setsUpdateListener$.subscribe(
+         (sets: Set[]) => {
+            this.sets = sets;
+         }
+      );
    }
 
    onCreateSet(title: string) {
@@ -31,5 +39,9 @@ export class SetsComponent implements OnInit {
       };
 
       this.setService.addSet(set);
+   }
+
+   ngOnDestroy() {
+      this.subscription.unsubscribe();
    }
 }
