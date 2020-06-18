@@ -26,3 +26,14 @@ mat-card {
 .options {
    width: 100%;
 }
+
+.option {
+   position: relative;
+   &::before {
+      content: attr(data-before);
+      position: absolute;
+      left: -15px;
+      color: grey;
+      font-size: 1em;
+   }
+}

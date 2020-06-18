@@ -1,12 +1,18 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { LearnService } from '@core/services/learn.service';
 import { Word } from '@core/models/word.model';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import {
+   trigger,
+   state,
+   style,
+   transition,
+   animate
+} from '@angular/animations';
 import { GameOption } from '@core/models/GameOption.model';
 import { Subscription } from 'rxjs';
 import { AnswerResult } from '@core/models/answerResult.model';
 
-const ANIMATION_TIME = 15000;
+const ANIMATION_TIME = 5000;
 const PAUSE_ANIMATION = 1000;
 
 @Component({
@@ -15,12 +21,18 @@ const PAUSE_ANIMATION = 1000;
    styleUrls: ['./savannah.component.scss'],
    animations: [
       trigger('moveDown', [
-         state('start', style({
-            bottom: 'calc(100vh - 100px)'
-         })),
-         state('move', style({
-            bottom: 0
-         })),
+         state(
+            'start',
+            style({
+               bottom: 'calc(100vh - 100px)'
+            })
+         ),
+         state(
+            'move',
+            style({
+               bottom: 0
+            })
+         ),
          transition('start => move', animate(ANIMATION_TIME))
       ])
    ]
@@ -47,22 +59,23 @@ export class SavannahComponent implements OnInit, OnDestroy {
       }
    }
 
-   constructor(private learnService: LearnService) { }
+   constructor(private learnService: LearnService) {}
 
    ngOnInit(): void {
       this.initialieState();
 
-      this.wordsSubscription = this.learnService.wordsUpdateListener$
-         .subscribe((words: Word[]) => {
+      this.wordsSubscription = this.learnService.wordsUpdateListener$.subscribe(
+         (words: Word[]) => {
             this.words = words;
             this.currentWord = this.words[this.results.length];
 
             this.animationMove();
-         });
+         }
+      );
       this.learnService.getWordsToLearn(null, 3);
 
-      this.optionsSubscription = this.learnService.randomOptionsUpdateListener$
-         .subscribe((options: string[]) => {
+      this.optionsSubscription = this.learnService.randomOptionsUpdateListener$.subscribe(
+         (options: string[]) => {
             this.options = options.map(translation => {
                return {
                   value: translation,
@@ -71,8 +84,8 @@ export class SavannahComponent implements OnInit, OnDestroy {
             });
 
             this.shakeOptions();
-         });
-
+         }
+      );
    }
 
    onAnswer(gameOption: GameOption) {
@@ -103,7 +116,9 @@ export class SavannahComponent implements OnInit, OnDestroy {
    }
 
    private finishGame() {
-      const ids = this.results.filter(option => option.isCorrect).map(option => option.wordId);
+      const ids = this.results
+         .filter(option => option.isCorrect)
+         .map(option => option.wordId);
       this.learnService.toggleLearnings(ids, false, 3, false);
       this.isFinished = true;
    }
@@ -151,7 +166,7 @@ export class SavannahComponent implements OnInit, OnDestroy {
    }
 
    private shakeOptions() {
-      const correctGameOption =  {
+      const correctGameOption = {
          value: this.currentWord.russian.join(','),
          isCorrect: true
       };

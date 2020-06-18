@@ -1,19 +1,24 @@
 <section class="game">
-   <div class="game__gameplay" *ngIf = "!isFinished">
-      <p [@moveDown] = "state">{{ currentWord?.english }}</p>
-   
-      <div class = "options">
-         <button 
-            (click) = "onAnswer(option)"
-            mat-stroked-button 
-            [color] = "option?.color"
-            *ngFor = "let option of options; let i = index">{{ option.value }}</button>
+   <div class="game__gameplay" *ngIf="!isFinished">
+      <p [@moveDown]="state">{{ currentWord?.english }}</p>
+
+      <div class="options">
+         <button
+            class="option"
+            [attr.data-before]="i + 1"
+            (click)="onAnswer(option)"
+            mat-stroked-button
+            [color]="option?.color"
+            *ngFor="let option of options; let i = index"
+         >
+            {{ option.value }}
+         </button>
       </div>
    </div>
 
    <app-results
-      *ngIf = "isFinished"
-      [result] = "results"
-      (learnAgain) = "learnAgain()"
+      *ngIf="isFinished"
+      [result]="results"
+      (learnAgain)="learnAgain()"
    ></app-results>
 </section>
