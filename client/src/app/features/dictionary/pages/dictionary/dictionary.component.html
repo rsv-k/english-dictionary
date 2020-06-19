@@ -14,17 +14,23 @@
 
    <mat-card>
       <ng-container *ngFor="let word of words$ | async">
-         <mat-checkbox
-            [checked]="checkAll || word.isChecked"
-            (change)="onCheckBoxChange(word)"
-            color="primary"
-            class="dictionary__checkbox"
-         ></mat-checkbox>
-         <app-word
-            class="dictionary__word"
-            [word]="word"
-            (showEditing)="toggleEditing($event)"
-         ></app-word>
+         <p *ngIf="word.title; else wordAlternative" class="date-title">
+            {{ word.title | date: 'd MMMM y' }}
+         </p>
+
+         <ng-template #wordAlternative>
+            <mat-checkbox
+               [checked]="checkAll || word.isChecked"
+               (change)="onCheckBoxChange(word)"
+               color="primary"
+               class="dictionary__checkbox"
+            ></mat-checkbox>
+            <app-word
+               class="dictionary__word"
+               [word]="word"
+               (showEditing)="toggleEditing($event)"
+            ></app-word>
+         </ng-template>
       </ng-container>
 
       <p *ngIf="!(words$ | async)?.length" class="dictionary__empty">

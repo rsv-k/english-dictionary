@@ -32,3 +32,9 @@ mat-card {
    align-items: center;
    row-gap: 5px;
 }
+
+.date-title {
+   grid-column-start: span 2;
+   font-weight: 500;
+   justify-self: center;
+}
