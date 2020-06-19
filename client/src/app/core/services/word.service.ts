@@ -99,13 +99,14 @@ export class WordService {
          word.pic_url = null;
       }
 
-      return this.http
+      this.http
          .put<Config>(BACKEND_URL, { word })
          .pipe(
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic),
             tap((words: Word[]) => this.updateWords('EDIT', words))
-         );
+         )
+         .subscribe();
    }
 
    createWord(word: Word) {

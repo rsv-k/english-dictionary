@@ -36,16 +36,10 @@ export class DictionaryComponent implements OnInit {
       this.wordService.getWords(this.setId);
    }
 
-   showEditing(word: Word) {
-      this.showEdit = true;
+   toggleEditing(word: Word) {
+      this.showEdit = !this.showEdit;
       this.word = word;
-      document.body.style.overflowY = 'hidden';
-   }
-
-   hideEditing() {
-      this.showEdit = false;
-      document.body.style.overflowY = '';
-
+      document.body.style.overflowY = this.showEdit ? 'hidden' : '';
    }
 
    onCheckBoxChange(word: Word) {

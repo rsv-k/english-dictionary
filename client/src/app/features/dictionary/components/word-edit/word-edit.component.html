@@ -1,55 +1,73 @@
-<div class="container" (click) = "onHide($event)" >
-   <mat-card class = "form" [@editState] = "state">
-         <mat-card-content>
-            <div class="left">
-               <h3 class = "form__wordName">{{ word.english }}</h3>
-               <button mat-button (click) = "onPronounce()" class="form__wordTranscription">[{{ word.transcription }}]</button>
-               <div class="form__image-container">
-                  <img [src] = "currentImage" [alt]="word.english" class = "form__picture">
-                  
-                  <button 
-                     class="form__buttonChangePicture" 
-                     mat-icon-button 
-                     (click) = "showPictureInput = !showPictureInput" 
-                     color = "primary">
-                     <mat-icon>{{ showPictureInput ? 'save' : 'edit' }}</mat-icon>
-                  </button>
-            
-                  <mat-form-field *ngIf = "showPictureInput" class = "form__group">
-                     <mat-label>Picture url</mat-label>
-                     <input matInput [(ngModel)] = "currentImage">
-                  </mat-form-field>
-               </div>
+<div class="container" (click)="onHide($event)">
+   <mat-card class="form" [@editState]="state">
+      <button
+         *ngIf="hasAnythingChanged()"
+         (click)="onUpdateWord()"
+         mat-icon-button
+         color="primary"
+         class="save"
+      >
+         <mat-icon>save</mat-icon>
+      </button>
+
+      <mat-card-header>
+         <mat-card-title>{{ word.english }}</mat-card-title>
+         <mat-card-subtitle>
+            <button
+               mat-button
+               (click)="onPronounce()"
+               class="form__wordTranscription"
+            >
+               [{{ word.transcription }}]
+            </button>
+         </mat-card-subtitle>
+      </mat-card-header>
+
+      <div class="top">
+         <div class="left form__image-container">
+            <img
+               [src]="currentImage"
+               [alt]="word.english"
+               class="form__picture"
+            />
+
+            <button
+               class="form__buttonChangePicture"
+               mat-icon-button
+               (click)="showPictureInput = !showPictureInput"
+               color="primary"
+            >
+               <mat-icon>{{ showPictureInput ? 'save' : 'edit' }}</mat-icon>
+            </button>
+
+            <mat-form-field *ngIf="showPictureInput" class="form__group">
+               <mat-label>Picture url</mat-label>
+               <input matInput [(ngModel)]="currentImage" />
+            </mat-form-field>
+         </div>
+
+         <div class="middle">
+            <div class="form__word-translations">
+               <p class="translations__title">Translations</p>
+               <p *ngFor="let translation of currentTranslations">
+                  {{ translation }}
+                  <mat-icon
+                     (click)="onDeleteTranslation(translation)"
+                     *ngIf="currentTranslations.length > 1"
+                     class="form__icon"
+                     color="accent"
+                     >delete</mat-icon
+                  >
+               </p>
             </div>
-      
-            <div class="middle">
-               <div class="form__word-translations">
-                  <h3>Translations</h3>
-                  <p *ngFor = "let translation of currentTranslations">
-                     {{ translation }}
-                     <mat-icon 
-                        (click) = "onDeleteTranslation(translation)"
-                        *ngIf = "currentTranslations.length > 1"
-                        class = "form__icon" 
-                        color = "accent">delete</mat-icon>
-                  </p>
-               </div>
-            </div>
-            
-            <div class="right">
-               <mat-form-field class="form__group">
-                  <mat-label>Context of word</mat-label>
-                  <textarea matInput [(ngModel)] = "currentText"></textarea>
-               </mat-form-field>
-            </div>
-         </mat-card-content>
-      
-         <mat-card-actions>
-            <button 
-               (click) = "onUpdateWord()"
-               mat-raised-button 
-               color = "primary" 
-               class = "form__button">Update word</button>
-         </mat-card-actions>
-      </mat-card>
+         </div>
+      </div>
+
+      <div class="bottom">
+         <mat-form-field class="form__group">
+            <mat-label>Context of word</mat-label>
+            <textarea matInput [(ngModel)]="currentText"></textarea>
+         </mat-form-field>
+      </div>
+   </mat-card>
 </div>
