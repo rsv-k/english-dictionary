@@ -3,7 +3,7 @@ import { WordService } from '@core/services/word.service';
 import { Observable, Subject } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
 import { Word } from '@core/models/word.model';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class WordCreateComponent implements OnInit {
    inputValue = '';
    wordText$ = new Subject<string>();
    translations$: Observable<Translation[]>;
+   word: Word;
 
    constructor(
       private wordService: WordService,
@@ -26,8 +27,22 @@ export class WordCreateComponent implements OnInit {
       this.translations$ = this.wordService
          .showTranslations(this.wordText$)
          .pipe(
-            tap(translations => {
+            tap((result: { word: Word[]; translations: Translation[] }) => {
+               this.word = result.word[0];
                this.wordService.getWords(this.setId, this.inputValue);
+            }),
+            map(result => {
+               const presentTranslations = {};
+               if (this.word) {
+                  for (const t of this.word.russian) {
+                     presentTranslations[t] = true;
+                  }
+               }
+               return result.translations.map(translation => {
+                  translation.isPresent =
+                     presentTranslations[translation.value];
+                  return translation;
+               });
             })
          );
    }
@@ -45,26 +60,31 @@ export class WordCreateComponent implements OnInit {
    }
 
    chooseTranslation(translation: Translation) {
-      const word: Word = {
-         english: this.inputValue,
-         russian: [translation.value],
-         pic_url: translation.pic_url,
-         setId: this.setId ? [this.setId] : [],
-         sound_url: translation.sound_url,
-         transcription: translation.transcription,
-         learn: {
-            wordTranslation: true,
-            translationWord: true,
-            savannah: true,
-            wordConstructor: true,
-            listening: true,
-            wordCards: true
-         },
-         ownerId: this.authService.userId
-      };
-
       this.wordService.getWords(this.setId);
-      this.wordService.addWord(word);
+      if (this.word) {
+         this.word.russian.push(translation.value);
+         this.wordService.editWord(this.word);
+      } else {
+         const word: Word = {
+            english: this.inputValue,
+            russian: [translation.value],
+            pic_url: translation.pic_url,
+            setId: this.setId ? [this.setId] : [],
+            sound_url: translation.sound_url,
+            transcription: translation.transcription,
+            learn: {
+               wordTranslation: true,
+               translationWord: true,
+               savannah: true,
+               wordConstructor: true,
+               listening: true,
+               wordCards: true
+            },
+            ownerId: this.authService.userId
+         };
+
+         this.wordService.createWord(word);
+      }
       this.inputValue = '';
       this.wordText$.next('');
    }

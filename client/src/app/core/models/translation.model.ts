@@ -3,4 +3,5 @@ export interface Translation {
    value: string;
    sound_url?: string;
    transcription?: string;
+   isPresent?: boolean;
 }

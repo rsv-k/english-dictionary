@@ -9,9 +9,10 @@ import {
    filter,
    tap
 } from 'rxjs/operators';
-import { of, Subject, iif } from 'rxjs';
+import { of, Subject, iif, forkJoin } from 'rxjs';
 import { Observable } from 'rxjs';
 import { UtilsService } from './utils.service';
+import { Translation } from '@core/models/translation.model';
 
 const BACKEND_URL = '/api/word';
 const DEFAULT_PIC =
@@ -78,22 +79,6 @@ export class WordService {
       this.words = [];
    }
 
-   addWord(word: Word) {
-      this.getSpecificWord(word.english)
-         .pipe(
-            switchMap((words: Word[]) => {
-               if (words.length) {
-                  words[0].russian.push(word.russian.pop());
-                  words[0].setId.push(word.setId.pop());
-                  return this.editWord(words[0]);
-               } else {
-                  return this.createWord(word);
-               }
-            })
-         )
-         .subscribe();
-   }
-
    editWord(word: Word) {
       if (word.pic_url === DEFAULT_PIC) {
          word.pic_url = null;
@@ -119,7 +104,8 @@ export class WordService {
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic),
             tap((words: Word[]) => this.updateWords('ADD', words))
-         );
+         )
+         .subscribe();
    }
 
    deleteWord(id: string) {
@@ -154,12 +140,18 @@ export class WordService {
          });
    }
 
-   showTranslations(word: Observable<string>) {
+   showTranslations(
+      word: Observable<string>
+   ): Observable<{ word: Word[]; translations: Translation[] }> {
       return word.pipe(
          debounceTime(1000),
          distinctUntilChanged(),
          switchMap(w =>
-            iif(() => w.trim().length === 0, of([]), this.getTranslations(w))
+            forkJoin({
+               translations:
+                  w.trim().length === 0 ? of([]) : this.getTranslations(w),
+               word: this.getSpecificWord(w)
+            })
          )
       );
    }

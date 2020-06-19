@@ -7,11 +7,14 @@
       [matAutocomplete]="auto"
    />
    <mat-autocomplete #auto="matAutocomplete">
-      <ng-container *ngIf = "wordInput.value.length > 0">
+      <ng-container *ngIf="wordInput.value.length > 0">
          <mat-option
-            [matTooltip]="translation.value.length > 50 ? translation.value : null"
+            [matTooltip]="
+               translation.value.length > 50 ? translation.value : null
+            "
             class="create__option"
             *ngFor="let translation of translations$ | async"
+            [disabled]="translation.isPresent"
             (click)="chooseTranslation(translation)"
          >
             {{ translation.value }}
