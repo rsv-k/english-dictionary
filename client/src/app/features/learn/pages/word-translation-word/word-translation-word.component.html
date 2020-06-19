@@ -17,12 +17,12 @@
                      [{{ currentWord.transcription }}]
                   </h4>
                </div>
-               <h3
+               <span
                   *ngIf="gameName === 'translation-word'"
                   class="game__wordName"
                >
                   {{ currentWord.russian.join(',') }}
-               </h3>
+               </span>
             </div>
 
             <div class="game__right">
