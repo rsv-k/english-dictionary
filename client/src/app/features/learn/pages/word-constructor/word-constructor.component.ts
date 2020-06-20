@@ -64,7 +64,6 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
          this.characters.splice(charIndex, 1);
       } else {
          if (this.mistakes === 1) {
-            this.mistakes = 0;
             this.addResult(false);
             this.getNextWord();
             return;
@@ -112,6 +111,7 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
    }
 
    private getNextWord() {
+      this.mistakes = 0;
       this.currentWord = this.words[this.results.length];
 
       if (!this.currentWord) {
