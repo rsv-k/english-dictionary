@@ -19,6 +19,25 @@
          >
             {{ translation.value }}
          </mat-option>
+         <mat-option
+            *ngIf="(translations$ | async)?.length"
+            (click)="isMyTranslation = true; wordInput.value = inputValue"
+            >my translation</mat-option
+         >
       </ng-container>
    </mat-autocomplete>
 </mat-form-field>
+<div class="custom" *ngIf="isMyTranslation">
+   <mat-form-field>
+      <mat-label>my translation</mat-label>
+      <input matInput #myTranslation (blur)="onBlur(); wordInput.value = ''" />
+   </mat-form-field>
+   <button
+      (click)="onMyTranslationAdd(myTranslation.value)"
+      class="custom__button"
+      mat-raised-button
+      *ngIf="myTranslation.value.length > 0"
+   >
+      add
+   </button>
+</div>

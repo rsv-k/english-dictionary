@@ -1,3 +1,11 @@
 .create__group {
    width: 100%;
 }
+
+.custom {
+   display: flex;
+
+   &__button {
+      align-self: center;
+   }
+}

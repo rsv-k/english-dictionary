@@ -3,7 +3,9 @@
       <h2>words have been learned</h2>
 
       <div class="buttons">
-         <button mat-button (click)="onClick()">Learn more</button>
+         <button *ngIf="results.length === 12" mat-button (click)="onClick()">
+            Learn more
+         </button>
          <button mat-button routerLink="/learn">Go to training</button>
       </div>
    </mat-card>

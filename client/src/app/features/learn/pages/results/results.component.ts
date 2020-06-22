@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { AnswerResult } from '@core/models/answerResult.model';
 
 @Component({
    selector: 'app-results',
@@ -8,10 +9,11 @@ import { Router } from '@angular/router';
    styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
+   results: AnswerResult[];
    constructor(private location: Location, private router: Router) {}
 
    ngOnInit(): void {
-      console.log(window.history.state);
+      this.results = window.history.state.result;
    }
 
    onClick() {

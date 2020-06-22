@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { WordService } from '@core/services/word.service';
 import { Observable, Subject } from 'rxjs';
 import { Translation } from '@core/models/translation.model';
@@ -16,7 +16,17 @@ export class WordCreateComponent implements OnInit {
    inputValue = '';
    wordText$ = new Subject<string>();
    translations$: Observable<Translation[]>;
+   private translation: Translation;
    word: Word;
+   isMyTranslation = false;
+
+   @ViewChild('myTranslation', { static: false }) set customTranslation(
+      el: ElementRef
+   ) {
+      if (el) {
+         setTimeout(() => (el.nativeElement as HTMLInputElement).focus(), 0);
+      }
+   }
 
    constructor(
       private wordService: WordService,
@@ -29,6 +39,7 @@ export class WordCreateComponent implements OnInit {
          .pipe(
             tap((result: { word: Word[]; translations: Translation[] }) => {
                this.word = result.word[0];
+               this.translation = result.translations[0];
                this.wordService.getWords(this.setId, this.inputValue);
             }),
             map(result => {
@@ -87,5 +98,16 @@ export class WordCreateComponent implements OnInit {
       }
       this.inputValue = '';
       this.wordText$.next('');
+      this.translation = null;
+   }
+
+   onMyTranslationAdd(translation: string) {
+      this.translation.value = translation;
+      this.translation.pic_url = null;
+      this.chooseTranslation(this.translation);
+   }
+
+   onBlur() {
+      setTimeout(() => (this.isMyTranslation = false), 500);
    }
 }
