@@ -8,12 +8,12 @@
          [checkAll]="checkAll"
          (uncheckWords)="uncheckWords()"
          (setCheckAll)="setCheckAll($event)"
-         *ngIf="(words$ | async)?.length"
+         *ngIf="words?.length"
       ></app-manage-words>
    </header>
 
    <mat-card>
-      <ng-container *ngFor="let word of words$ | async">
+      <ng-container *ngFor="let word of words">
          <p *ngIf="word.title; else wordAlternative" class="date-title">
             {{ word.title | date: 'd MMMM y' }}
          </p>
@@ -33,7 +33,7 @@
          </ng-template>
       </ng-container>
 
-      <p *ngIf="!(words$ | async)?.length" class="dictionary__empty">
+      <p *ngIf="!words?.length" class="dictionary__empty">
          Nothing added yet
       </p>
    </mat-card>

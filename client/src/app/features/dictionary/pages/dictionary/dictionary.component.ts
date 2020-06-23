@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
-import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { ActivatedRoute, Data } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -10,8 +10,8 @@ import { map } from 'rxjs/operators';
    templateUrl: './dictionary.component.html',
    styleUrls: ['./dictionary.component.scss']
 })
-export class DictionaryComponent implements OnInit {
-   words$: Observable<Word[] | { title: Date }[]>;
+export class DictionaryComponent implements OnInit, OnDestroy {
+   words: Word[] | { title: Date };
    word: Word;
    showEdit = false;
    setId: string;
@@ -19,6 +19,7 @@ export class DictionaryComponent implements OnInit {
    checkedWords: Word[] = [];
    checkAll = false;
    currentPage = 0;
+   private subscription: Subscription;
 
    constructor(
       private wordService: WordService,
@@ -33,32 +34,40 @@ export class DictionaryComponent implements OnInit {
 
       this.title = title ? title.split('_').join(' ') : 'dictionary';
 
-      this.words$ = this.wordService.wordsUpdateListener$.pipe(
-         map(words => {
-            const newArr = [];
-            const addedDates = {};
+      this.route.data.subscribe((data: Data) => {
+         this.words = data.words;
+      });
 
-            for (const word of words) {
-               const date = new Date(word.createdAt);
-               const shortDate =
-                  date.getDate() +
-                  '-' +
-                  date.getMonth() +
-                  '-' +
-                  date.getFullYear();
-               if (!addedDates[shortDate]) {
-                  newArr.push({
-                     title: new Date(word.createdAt)
-                  });
-                  addedDates[shortDate] = true;
+      this.subscription = this.wordService.wordsUpdateListener$
+         .pipe(
+            map(words => {
+               const newArr = [];
+               const addedDates = {};
+
+               for (const word of words) {
+                  const date = new Date(word.createdAt);
+                  const shortDate =
+                     date.getDate() +
+                     '-' +
+                     date.getMonth() +
+                     '-' +
+                     date.getFullYear();
+                  if (!addedDates[shortDate]) {
+                     newArr.push({
+                        title: new Date(word.createdAt)
+                     });
+                     addedDates[shortDate] = true;
+                  }
+
+                  newArr.push(word);
                }
 
-               newArr.push(word);
-            }
-
-            return newArr;
-         })
-      );
+               return newArr;
+            })
+         )
+         .subscribe((words: Word[] | { title: Date }) => {
+            this.words = words;
+         });
       this.wordService.getWords(this.setId);
    }
 
@@ -95,5 +104,9 @@ export class DictionaryComponent implements OnInit {
          return false;
       });
       this.checkAll = false;
+   }
+
+   ngOnDestroy() {
+      this.subscription.unsubscribe();
    }
 }
