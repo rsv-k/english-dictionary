@@ -10,13 +10,33 @@ import { AnswerResult } from '@core/models/answerResult.model';
 })
 export class ResultsComponent implements OnInit {
    results: AnswerResult[];
+   correct: number;
+   incorrect: number;
    constructor(private location: Location, private router: Router) {}
 
    ngOnInit(): void {
       this.results = window.history.state.result;
+      [this.correct, this.incorrect] = this.calculateCorrectAndIncorrect(
+         this.results
+      );
    }
 
    onClick() {
       this.location.back();
+   }
+
+   private calculateCorrectAndIncorrect(results: AnswerResult[]) {
+      let correct = 0;
+      let incorrect = 0;
+
+      for (const res of this.results) {
+         if (res.isCorrect) {
+            correct++;
+         } else {
+            incorrect++;
+         }
+      }
+
+      return [correct, incorrect];
    }
 }
