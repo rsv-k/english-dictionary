@@ -24,7 +24,7 @@ export class ManageWordsComponent implements OnInit {
       private learnService: LearnService,
       private wordService: WordService,
       private setService: SetService
-   ) { }
+   ) {}
 
    ngOnInit(): void {
       this.availableGames = ['All', ...this.learnService.getAvailableGames()];
@@ -59,6 +59,16 @@ export class ManageWordsComponent implements OnInit {
       this.uncheckWords.emit();
    }
 
+   setAsLearned() {
+      if (!this.checkAll && !this.checkedWords.length) {
+         return;
+      }
+      const ids = this.getOnlyIds();
+
+      this.learnService.toggleLearnings(ids, this.checkAll, 0, false);
+      this.uncheckWords.emit();
+   }
+
    private deleteSelected() {
       const ids = this.getOnlyIds();
       this.wordService.deleteManyWords(this.setId, ids, this.checkAll);
@@ -72,5 +82,4 @@ export class ManageWordsComponent implements OnInit {
    private getOnlyIds(): string[] {
       return this.checkedWords.map(checkedWord => checkedWord.id);
    }
-
 }
