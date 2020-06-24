@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { AnswerResult } from '@core/models/answerResult.model';
@@ -12,6 +12,18 @@ export class ResultsComponent implements OnInit {
    results: AnswerResult[];
    correct: number;
    incorrect: number;
+   @HostListener('window:keyup', ['$event']) onkeyup(e: KeyboardEvent) {
+      if (e.key !== 'Enter') {
+         return;
+      }
+
+      if (this.results.length === 12) {
+         this.onClick();
+      } else {
+         this.router.navigate(['/learn']);
+      }
+   }
+
    constructor(private location: Location, private router: Router) {}
 
    ngOnInit(): void {
