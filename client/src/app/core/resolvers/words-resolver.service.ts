@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Resolve } from '@angular/router';
+import {
+   Resolve,
+   ActivatedRouteSnapshot,
+   RouterStateSnapshot
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { WordService } from '@core/services/word.service';
@@ -8,11 +12,21 @@ import { Word } from '@core/models/word.model';
 @Injectable({
    providedIn: 'root'
 })
-export class WordsResolver implements Resolve<Word[] | { title: Date }> {
+export class WordsResolver implements Resolve<Word[] | { title: Date }[]> {
    constructor(private wordService: WordService) {}
 
-   resolve(): Observable<Word[] | { title: Date }> {
-      this.wordService.getWords();
+   resolve(
+      route: ActivatedRouteSnapshot,
+      state: RouterStateSnapshot
+   ): Observable<Word[] | { title: Date }[]> {
+      const setId = route.paramMap.get('id');
+
+      const options = {
+         setId
+      };
+      this.wordService.emptyWords();
+
+      this.wordService.getWords(options);
       return this.wordService.wordsUpdateListener$.pipe(
          first(),
          map(words => {

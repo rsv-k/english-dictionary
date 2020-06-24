@@ -40,7 +40,12 @@ export class WordCreateComponent implements OnInit {
             tap((result: { word: Word[]; translations: Translation[] }) => {
                this.word = result.word[0];
                this.translation = result.translations[0];
-               this.wordService.getWords(this.setId, this.inputValue);
+               const options = {
+                  setId: this.setId,
+                  startsWith: this.inputValue
+               };
+
+               this.wordService.getWords(options);
             }),
             map(result => {
                const presentTranslations = {};
@@ -61,7 +66,11 @@ export class WordCreateComponent implements OnInit {
    onInput(wordValue: string) {
       this.inputValue = wordValue.trim();
       if (!wordValue) {
-         return this.wordService.getWords(this.setId);
+         const options = {
+            setId: this.setId
+         };
+
+         return this.wordService.getWords(options);
       }
 
       if (!this.inputValue) {
@@ -71,7 +80,11 @@ export class WordCreateComponent implements OnInit {
    }
 
    chooseTranslation(translation: Translation) {
-      this.wordService.getWords(this.setId);
+      const options = {
+         setId: this.setId
+      };
+
+      this.wordService.getWords(options);
       if (this.word) {
          this.word.russian.push(translation.value);
          this.wordService.editWord(this.word);

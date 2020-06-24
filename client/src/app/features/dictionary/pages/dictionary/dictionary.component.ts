@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
    styleUrls: ['./dictionary.component.scss']
 })
 export class DictionaryComponent implements OnInit, OnDestroy {
-   words: Word[] | { title: Date };
+   words: Word[] | { title: Date }[];
    word: Word;
    showEdit = false;
    setId: string;
@@ -27,8 +27,6 @@ export class DictionaryComponent implements OnInit, OnDestroy {
    ) {}
 
    ngOnInit(): void {
-      this.wordService.emptyWords();
-
       this.setId = this.route.snapshot.params.id;
       const title = this.route.snapshot.params.setName;
 
@@ -65,10 +63,9 @@ export class DictionaryComponent implements OnInit, OnDestroy {
                return newArr;
             })
          )
-         .subscribe((words: Word[] | { title: Date }) => {
+         .subscribe((words: Word[] | { title: Date }[]) => {
             this.words = words;
          });
-      this.wordService.getWords(this.setId);
    }
 
    toggleEditing(word: Word) {
@@ -91,7 +88,12 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
    onScroll() {
       this.currentPage++;
-      this.wordService.getWords(this.setId, null, this.currentPage);
+      const options = {
+         setId: this.setId,
+         startsFrom: this.currentPage,
+         isCachingWords: true
+      };
+      this.wordService.getWords(options);
    }
 
    setCheckAll(isChecked: boolean) {

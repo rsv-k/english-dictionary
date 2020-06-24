@@ -34,45 +34,40 @@ export class WordService {
 
    constructor(private http: HttpClient, private utilsService: UtilsService) {}
 
-   getWords(setId?: string, startsWith?: string, startsFrom?: number) {
-      const options = {
+   getWords(options: {
+      setId?: string;
+      startsWith?: string;
+      startsFrom?: number;
+      isCachingWords?: boolean;
+   }) {
+      const payload = {
          params: new HttpParams()
       };
 
-      if (setId) {
-         options.params = options.params.set('setId', setId);
-      }
-
-      if (startsWith) {
-         options.params = options.params.set('startsWith', startsWith);
-      }
-
-      if (startsFrom) {
-         options.params = options.params.set('startsFrom', startsFrom + '');
+      for (const option in options) {
+         if (options[option]) {
+            payload.params = payload.params.set(option, options[option]);
+         }
       }
 
       this.http
-         .get<Config>(BACKEND_URL, options)
+         .get<Config>(BACKEND_URL, payload)
          .pipe(
             filter(data => !!data.result[0]),
             map(this.utilsService.changeIdField),
-            map(this.utilsService.setDefaultPic),
-            tap((words: Word[]) => {
-               if (startsWith) {
-                  this.wordsUpdateListener.next([...words]);
-                  return;
-               }
-
-               if (this.words[0] && this.words[0].id === words[0].id) {
-                  this.updateWords('GET', this.words);
-                  return;
-               }
-
-               this.words = [...this.words, ...words];
-               this.updateWords('GET', this.words);
-            })
+            map(this.utilsService.setDefaultPic)
          )
-         .subscribe();
+         .subscribe((words: Word[]) => {
+            if (options.startsWith) {
+               this.wordsUpdateListener.next([...words]);
+               return;
+            }
+
+            if (options.isCachingWords || this.words.length === 0) {
+               this.words = [...this.words, ...words];
+            }
+            this.updateWords('GET', this.words);
+         });
    }
 
    emptyWords() {
