@@ -39,7 +39,9 @@ export class LearnService {
       this.http
          .post(BACKEND_URL, { ids, reverse, gameNumber, option })
          .subscribe(() => {
-            this.utilsService.showSnackBar('Words sent to learn');
+            if (option) {
+               this.utilsService.showSnackBar('Words sent to learn');
+            }
          });
    }
 

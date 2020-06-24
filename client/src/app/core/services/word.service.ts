@@ -6,7 +6,6 @@ import {
    distinctUntilChanged,
    debounceTime,
    switchMap,
-   filter,
    tap
 } from 'rxjs/operators';
 import { of, Subject, iif, forkJoin } from 'rxjs';
@@ -53,7 +52,6 @@ export class WordService {
       this.http
          .get<Config>(BACKEND_URL, payload)
          .pipe(
-            filter(data => !!data.result[0]),
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic)
          )

@@ -7,7 +7,7 @@
             class="option"
             [attr.data-before]="i + 1"
             (click)="onAnswer(option)"
-            mat-stroked-button
+            mat-raised-button
             [color]="option?.color"
             *ngFor="let option of options; let i = index"
          >
