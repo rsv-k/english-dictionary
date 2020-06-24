@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { LearnRoutingModule } from './learn-routing.module';
 import { SharedModule } from '@shared/shared.module';
@@ -11,7 +10,6 @@ import { SavannahComponent } from './pages/savannah/savannah.component';
 import { WordTranslationWordComponent } from './pages/word-translation-word/word-translation-word.component';
 import { WordConstructorComponent } from './pages/word-constructor/word-constructor.component';
 import { ListeningComponent } from './pages/listening/listening.component';
-import { FormsModule } from '@angular/forms';
 import { WordCardsComponent } from './pages/word-cards/word-cards.component';
 import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-resolver.service';
 
@@ -26,7 +24,7 @@ import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-res
       ListeningComponent,
       WordCardsComponent
    ],
-   imports: [CommonModule, LearnRoutingModule, SharedModule, FormsModule],
+   imports: [LearnRoutingModule, SharedModule],
    providers: [LearnWordsAmountResolver]
 })
 export class LearnModule {}
