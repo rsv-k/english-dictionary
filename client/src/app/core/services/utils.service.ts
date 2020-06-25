@@ -49,4 +49,25 @@ export class UtilsService {
 
       return newArr;
    }
+
+   addDateAmongWords(words: Word[]): Word[] | { title: Date }[] {
+      const newArr = [];
+      const addedDates = {};
+
+      for (const word of words) {
+         const date = new Date(word.createdAt);
+         const shortDate =
+            date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear();
+         if (!addedDates[shortDate]) {
+            newArr.push({
+               title: new Date(word.createdAt)
+            });
+            addedDates[shortDate] = true;
+         }
+
+         newArr.push(word);
+      }
+
+      return newArr;
+   }
 }

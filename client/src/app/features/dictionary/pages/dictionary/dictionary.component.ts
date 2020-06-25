@@ -4,6 +4,7 @@ import { WordService } from '@core/services/word.service';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Data } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { UtilsService } from '@core/services/utils.service';
 
 @Component({
    selector: 'app-dictionary',
@@ -23,7 +24,8 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
    constructor(
       private wordService: WordService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private utilsService: UtilsService
    ) {}
 
    ngOnInit(): void {
@@ -37,32 +39,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
       });
 
       this.subscription = this.wordService.wordsUpdateListener$
-         .pipe(
-            map(words => {
-               const newArr = [];
-               const addedDates = {};
-
-               for (const word of words) {
-                  const date = new Date(word.createdAt);
-                  const shortDate =
-                     date.getDate() +
-                     '-' +
-                     date.getMonth() +
-                     '-' +
-                     date.getFullYear();
-                  if (!addedDates[shortDate]) {
-                     newArr.push({
-                        title: new Date(word.createdAt)
-                     });
-                     addedDates[shortDate] = true;
-                  }
-
-                  newArr.push(word);
-               }
-
-               return newArr;
-            })
-         )
+         .pipe(map(this.utilsService.addDateAmongWords))
          .subscribe((words: Word[] | { title: Date }[]) => {
             this.words = words;
          });

@@ -8,12 +8,16 @@ import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { WordService } from '@core/services/word.service';
 import { Word } from '@core/models/word.model';
+import { UtilsService } from '@core/services/utils.service';
 
 @Injectable({
    providedIn: 'root'
 })
 export class WordsResolver implements Resolve<Word[] | { title: Date }[]> {
-   constructor(private wordService: WordService) {}
+   constructor(
+      private wordService: WordService,
+      private utilsService: UtilsService
+   ) {}
 
    resolve(
       route: ActivatedRouteSnapshot,
@@ -29,30 +33,7 @@ export class WordsResolver implements Resolve<Word[] | { title: Date }[]> {
       this.wordService.getWords(options);
       return this.wordService.wordsUpdateListener$.pipe(
          first(),
-         map(words => {
-            const newArr = [];
-            const addedDates = {};
-
-            for (const word of words) {
-               const date = new Date(word.createdAt);
-               const shortDate =
-                  date.getDate() +
-                  '-' +
-                  date.getMonth() +
-                  '-' +
-                  date.getFullYear();
-               if (!addedDates[shortDate]) {
-                  newArr.push({
-                     title: new Date(word.createdAt)
-                  });
-                  addedDates[shortDate] = true;
-               }
-
-               newArr.push(word);
-            }
-
-            return newArr;
-         })
+         map(this.utilsService.addDateAmongWords)
       );
    }
 }
