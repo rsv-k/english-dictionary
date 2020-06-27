@@ -20,16 +20,17 @@ const DEFAULT_PIC =
 interface Config {
    msg: string;
    result: any;
+   wordsCount?: number;
 }
 
 @Injectable({
    providedIn: 'root'
 })
 export class WordService {
+   wordsCount: number;
    private wordsUpdateListener = new Subject<Word[]>();
-   private words: Word[] = [];
-
    wordsUpdateListener$ = this.wordsUpdateListener.asObservable();
+   private words: Word[] = [];
 
    constructor(private http: HttpClient, private utilsService: UtilsService) {}
 
@@ -52,6 +53,7 @@ export class WordService {
       this.http
          .get<Config>(BACKEND_URL, payload)
          .pipe(
+            tap(data => (this.wordsCount = data.wordsCount)),
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic)
          )

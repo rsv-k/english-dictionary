@@ -20,6 +20,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
    checkedWords: Word[] = [];
    checkAll = false;
    currentPage = 0;
+   wordsCount = 0;
    private subscription: Subscription;
 
    constructor(
@@ -36,6 +37,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
       this.route.data.subscribe((data: Data) => {
          this.words = data.words;
+         this.wordsCount = this.wordService.wordsCount;
       });
 
       this.subscription = this.wordService.wordsUpdateListener$

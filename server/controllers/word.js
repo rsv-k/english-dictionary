@@ -46,9 +46,16 @@ exports.getWords = async (req, res) => {
    try {
       const setId = req.query.setId || null;
       const options = { ownerId: req.userData.id };
+      const countOptions = {
+         ownerId: req.userData.id
+      };
 
       if (setId) {
          options.setId = {
+            $in: [req.query.setId]
+         };
+
+         countOptions.setId = {
             $in: [req.query.setId]
          };
       }
@@ -67,8 +74,13 @@ exports.getWords = async (req, res) => {
          .sort({ createdAt: -1 })
          .skip(startsFrom)
          .limit(20);
+      const wordsCount = await Word.count(countOptions);
 
-      res.status(200).json({ msg: 'word added successfully', result: words });
+      res.status(200).json({
+         msg: 'words fetched successfully',
+         result: words,
+         wordsCount
+      });
    } catch (err) {
       res.status(500).json({ msg: 'server error' });
    }
