@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Word } from '@core/models/word.model';
 import { WordService } from '@core/services/word.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { UtilsService } from '@core/services/utils.service';
@@ -74,6 +74,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
    }
 
    setCheckAll(isChecked: boolean) {
+      this.uncheckWords();
       this.checkAll = isChecked;
    }
 
