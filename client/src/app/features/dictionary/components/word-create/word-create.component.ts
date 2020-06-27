@@ -80,6 +80,11 @@ export class WordCreateComponent implements OnInit {
    }
 
    chooseTranslation(translation: Translation) {
+      if (!translation) {
+         this.isMyTranslation = true;
+         return;
+      }
+
       const options = {
          setId: this.setId
       };

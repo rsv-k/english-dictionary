@@ -19,6 +19,7 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
    englishWord: string[];
    characters: Character[];
    isAnswered: boolean;
+   wordsPassed: string;
 
    private mistakes: number;
    private subscriptionWords: Subscription;
@@ -118,6 +119,7 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
          this.finishGame();
          return;
       }
+      this.wordsPassed = this.results.length + 1 + ' / ' + this.words.length;
 
       this.englishWord = Array(this.currentWord.english.length);
       this.characters = this.calculateCharacters(this.currentWord.english);
