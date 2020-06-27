@@ -1,6 +1,6 @@
 <app-centered-projection>
    <div class="main-content" *ngIf="currentWord">
-      <p class="wordsCount">{{ results.length + 1 + ' / ' + words.length }}</p>
+      <p class="wordsCount">{{ wordsPassed }}</p>
       <mat-card class="game">
          <h2 class="game__word">{{ currentWord?.russian.join(',') }}</h2>
          <p class="transcription" *ngIf="isAnswered">

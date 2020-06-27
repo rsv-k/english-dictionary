@@ -24,6 +24,8 @@ export class ListeningComponent implements OnInit, OnDestroy {
    currentWord: Word;
    inputValue: string;
    isAnswered: boolean;
+   wordsPassed: string;
+
    private inputPlaceholder: HTMLInputElement;
    @ViewChild('input', { static: false }) set input(el: ElementRef) {
       if (el) {
@@ -96,6 +98,8 @@ export class ListeningComponent implements OnInit, OnDestroy {
          this.finishGame();
          return;
       }
+
+      this.wordsPassed = this.results.length + 1 + ' / ' + this.words.length;
 
       this.inputValue = '';
       this.onPronounce();
