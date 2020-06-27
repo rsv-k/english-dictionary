@@ -6,7 +6,12 @@
       (input)="onInput(wordInput.value)"
       [matAutocomplete]="auto"
    />
-   <mat-autocomplete #auto="matAutocomplete">
+   <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="
+         chooseTranslation($event.option.value); wordInput.value = inputValue
+      "
+   >
       <ng-container *ngIf="wordInput.value.length > 0">
          <mat-option
             [matTooltip]="
@@ -15,13 +20,11 @@
             class="create__option"
             *ngFor="let translation of translations$ | async"
             [disabled]="translation.isPresent"
-            (click)="chooseTranslation(translation)"
+            [value]="translation"
          >
             {{ translation.value }}
          </mat-option>
-         <mat-option
-            *ngIf="(translations$ | async)?.length"
-            (click)="isMyTranslation = true; wordInput.value = inputValue"
+         <mat-option *ngIf="(translations$ | async)?.length"
             >my translation</mat-option
          >
       </ng-container>
