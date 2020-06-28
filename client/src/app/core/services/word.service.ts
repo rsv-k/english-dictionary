@@ -8,7 +8,7 @@ import {
    switchMap,
    tap
 } from 'rxjs/operators';
-import { of, Subject, iif, forkJoin } from 'rxjs';
+import { of, Subject, iif, forkJoin, BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { UtilsService } from './utils.service';
 import { Translation } from '@core/models/translation.model';
@@ -27,7 +27,10 @@ interface Config {
    providedIn: 'root'
 })
 export class WordService {
-   wordsCount: number;
+   private wordsCountUpdateListener = new BehaviorSubject<number>(0);
+   private wordsCount = 0;
+   wordsCount$ = this.wordsCountUpdateListener.asObservable();
+
    private wordsUpdateListener = new Subject<Word[]>();
    wordsUpdateListener$ = this.wordsUpdateListener.asObservable();
    private words: Word[] = [];
@@ -53,7 +56,9 @@ export class WordService {
       this.http
          .get<Config>(BACKEND_URL, payload)
          .pipe(
-            tap(data => (this.wordsCount = data.wordsCount)),
+            tap(data => {
+               this.updateWordsCount(data.wordsCount);
+            }),
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic)
          )
@@ -98,7 +103,10 @@ export class WordService {
          .pipe(
             map(this.utilsService.changeIdField),
             map(this.utilsService.setDefaultPic),
-            tap((words: Word[]) => this.updateWords('ADD', words))
+            tap((words: Word[]) => {
+               this.updateWordsCount(this.wordsCount + 1);
+               this.updateWords('ADD', words);
+            })
          )
          .subscribe(() => {
             this.wordsCount += 1;
@@ -110,7 +118,10 @@ export class WordService {
          .delete<Config>(BACKEND_URL + '/' + id)
          .pipe(
             map(this.utilsService.changeIdField),
-            tap((words: Word[]) => this.updateWords('DELETE', words))
+            tap((words: Word[]) => {
+               this.updateWordsCount(this.wordsCount - 1);
+               this.updateWords('DELETE', words);
+            })
          )
          .subscribe(() => {
             this.wordsCount -= 1;
@@ -134,6 +145,8 @@ export class WordService {
                }
                return !deletedWords[word.id];
             });
+
+            this.updateWordsCount(this.wordsCount - ids.length);
 
             this.wordsUpdateListener.next([...this.words]);
             this.utilsService.showSnackBar('Words deleted');
@@ -212,5 +225,10 @@ export class WordService {
          this.utilsService.showSnackBar('Word ' + action);
       }
       this.wordsUpdateListener.next([...this.words]);
+   }
+
+   private updateWordsCount(count: number) {
+      this.wordsCount = count;
+      this.wordsCountUpdateListener.next(this.wordsCount);
    }
 }

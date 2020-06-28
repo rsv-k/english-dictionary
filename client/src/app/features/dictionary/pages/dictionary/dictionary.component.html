@@ -1,6 +1,6 @@
 <section class="dictionary" infinite-scroll (scrolled)="onScroll()">
    <header class="dictionary__header">
-      <h1>{{ title | uppercase }} ({{ wordsCount }} words)</h1>
+      <h1>{{ title | uppercase }} ({{ wordsCount$ | async }} words)</h1>
       <app-word-create [setId]="setId"></app-word-create>
       <app-manage-words
          [setId]="setId"
