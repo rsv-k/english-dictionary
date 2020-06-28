@@ -74,7 +74,7 @@ exports.getWords = async (req, res) => {
          .sort({ createdAt: -1 })
          .skip(startsFrom)
          .limit(20);
-      const wordsCount = await Word.count(countOptions);
+      const wordsCount = await Word.countDocuments(countOptions);
 
       res.status(200).json({
          msg: 'words fetched successfully',
@@ -92,12 +92,29 @@ exports.deleteWord = async (req, res) => {
    }
 
    try {
-      const word = await Word.findByIdAndDelete(req.params.id);
+      let word;
+      if (req.query.setId) {
+         word = await Word.findByIdAndUpdate(
+            req.params.id,
+            {
+               $pullAll: {
+                  setId: [req.query.setId]
+               }
+            },
+            {
+               useFindAndModify: false
+            }
+         );
+      } else {
+         word = await Word.findByIdAndDelete(req.params.id);
+      }
+
       res.status(200).json({
          msg: 'word deleted successfully',
          result: [word]
       });
    } catch (err) {
+      console.log(err);
       res.status(500).json({ msg: 'server error' });
    }
 };
@@ -109,7 +126,7 @@ exports.getSpecificWord = async (req, res) => {
 
    try {
       const word = await Word.findOne({
-         english: req.params.word.trim(),
+         english: new RegExp(req.params.word.trim(), 'i'),
          ownerId: req.userData.id
       });
       res.status(200).json({

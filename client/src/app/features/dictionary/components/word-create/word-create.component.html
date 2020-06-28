@@ -1,11 +1,22 @@
 <mat-form-field class="create__group">
    <mat-label>Word</mat-label>
-   <input
-      matInput
-      #wordInput
-      (input)="onInput(wordInput.value)"
-      [matAutocomplete]="auto"
-   />
+   <div class="creation">
+      <input
+         matInput
+         #wordInput
+         (input)="onInput(wordInput.value)"
+         [matAutocomplete]="auto"
+      />
+      <button
+         (click)="clearInput(); wordInput.value = ''"
+         *ngIf="wordInput.value.length > 1"
+         class="clear--button"
+         mat-icon-button
+      >
+         <mat-icon>clear</mat-icon>
+      </button>
+   </div>
+
    <mat-autocomplete
       #auto="matAutocomplete"
       (optionSelected)="

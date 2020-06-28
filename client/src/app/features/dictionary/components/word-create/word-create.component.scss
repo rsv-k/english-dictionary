@@ -2,6 +2,17 @@
    width: 100%;
 }
 
+.creation {
+   position: relative;
+}
+
+.clear--button {
+   position: absolute;
+   right: 0;
+   top: -8px;
+   z-index: 9999;
+}
+
 .custom {
    display: flex;
 
