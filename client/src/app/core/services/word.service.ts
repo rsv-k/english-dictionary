@@ -113,9 +113,14 @@ export class WordService {
          });
    }
 
-   deleteWord(id: string) {
+   deleteWord(id: string, setId: string) {
+      let query = '';
+      if (setId) {
+         query = '?setId=' + setId;
+      }
+
       this.http
-         .delete<Config>(BACKEND_URL + '/' + id)
+         .delete<Config>(BACKEND_URL + '/' + id + query)
          .pipe(
             map(this.utilsService.changeIdField),
             tap((words: Word[]) => {
@@ -123,9 +128,7 @@ export class WordService {
                this.updateWords('DELETE', words);
             })
          )
-         .subscribe(() => {
-            this.wordsCount -= 1;
-         });
+         .subscribe(() => {});
    }
 
    deleteManyWords(setId: string, ids: string[], reverse?: boolean) {
