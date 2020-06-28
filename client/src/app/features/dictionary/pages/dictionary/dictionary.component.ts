@@ -66,6 +66,10 @@ export class DictionaryComponent implements OnInit, OnDestroy {
    }
 
    onScroll() {
+      if (this.words.length < 20) {
+         return;
+      }
+
       this.currentPage++;
       const options = {
          setId: this.setId,
