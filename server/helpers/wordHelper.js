@@ -21,7 +21,8 @@ exports.chooseGameToLearn = (gameNumber, option) => {
       3: 'savannah',
       4: 'wordConstructor',
       5: 'listening',
-      6: 'wordCards'
+      6: 'wordCards',
+      7: 'brainstorm'
    };
    const opt = {};
 

@@ -40,9 +40,9 @@ const PAUSE_ANIMATION = 1000;
    ]
 })
 export class SavannahComponent implements OnInit, OnDestroy {
-   state: string;
-   isPauseBeforeStart: boolean;
-   results: AnswerResult[];
+   state = 'start';
+   isPauseBeforeStart = false;
+   results: AnswerResult[] = [];
    words: Word[];
    options: GameOption[];
    currentWord: Word;
@@ -56,7 +56,7 @@ export class SavannahComponent implements OnInit, OnDestroy {
          return;
       } else {
          const gameOption = this.options[+e.key - 1];
-         this.onAnswer(gameOption);
+         this.onAnswer(gameOption, gameOption.isCorrect);
       }
    }
 
@@ -67,17 +67,15 @@ export class SavannahComponent implements OnInit, OnDestroy {
    ) {}
 
    ngOnInit(): void {
-      this.initialieState();
-
+      this.learnService.getWordsToLearn(null, 3);
       this.wordsSubscription = this.learnService.wordsUpdateListener$.subscribe(
          (words: Word[]) => {
             this.words = words;
-            this.currentWord = this.words[this.results.length];
+            this.getNextWord();
 
-            this.animationMove();
+            this.requestNewOptions();
          }
       );
-      this.learnService.getWordsToLearn(null, 3);
 
       this.optionsSubscription = this.learnService.randomOptionsUpdateListener$.subscribe(
          (options: string[]) => {
@@ -93,11 +91,13 @@ export class SavannahComponent implements OnInit, OnDestroy {
             });
 
             this.options = this.utilsService.shuffleArray(this.options);
+
+            this.animationMove();
          }
       );
    }
 
-   onAnswer(gameOption: GameOption) {
+   onAnswer(gameOption: GameOption, isCorrect: boolean) {
       if (this.isPauseBeforeStart) {
          return;
       }
@@ -105,22 +105,18 @@ export class SavannahComponent implements OnInit, OnDestroy {
       clearTimeout(this.timeoutHolder);
       this.highlightCorrectAndClicked(gameOption);
       this.isPauseBeforeStart = true;
-      this.addResult(gameOption.isCorrect);
-      if (this.results.length === this.words.length) {
+      this.addResult(isCorrect);
+      this.getNextWord();
+
+      if (!this.currentWord) {
          return this.finishGame();
       }
-
       this.state = 'start';
-      this.getNextWord();
-      this.timeoutHolder = setTimeout(
-         () => this.animationMove(),
-         PAUSE_ANIMATION
-      );
-   }
 
-   learnAgain() {
-      this.initialieState();
-      this.learnService.getWordsToLearn(false, 3);
+      this.timeoutHolder = setTimeout(() => {
+         this.animationMove();
+         this.requestNewOptions();
+      }, PAUSE_ANIMATION);
    }
 
    private requestNewOptions() {
@@ -145,24 +141,22 @@ export class SavannahComponent implements OnInit, OnDestroy {
 
    private highlightCorrectAndClicked(gameOption: GameOption) {
       gameOption.color = 'warn';
+      this.highlightCorrect();
+   }
+
+   private highlightCorrect() {
       const correctOption = this.options.find(option => option.isCorrect);
       correctOption.color = 'primary';
    }
 
    private animationMove() {
-      this.requestNewOptions();
       clearTimeout(this.timeoutHolder);
       this.isPauseBeforeStart = false;
       this.state = 'move';
-      this.timeoutHolder = setTimeout(() => {
-         this.addResult(false);
-         this.getNextWord();
 
-         this.state = 'start';
-         this.timeoutHolder = setTimeout(
-            () => this.animationMove(),
-            PAUSE_ANIMATION
-         );
+      this.timeoutHolder = setTimeout(() => {
+         const correctOption = this.options.find(option => option.isCorrect);
+         this.onAnswer(correctOption, false);
       }, ANIMATION_TIME);
    }
 
@@ -175,15 +169,6 @@ export class SavannahComponent implements OnInit, OnDestroy {
 
    private getNextWord() {
       this.currentWord = this.words[this.results.length];
-   }
-
-   private initialieState() {
-      this.state = 'start';
-      this.isPauseBeforeStart = false;
-      this.results = [];
-      this.words = [];
-      this.options = [];
-      this.currentWord = null;
    }
 
    ngOnDestroy() {

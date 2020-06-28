@@ -10,12 +10,13 @@ import { WordCardsComponent } from './pages/word-cards/word-cards.component';
 import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-resolver.service';
 import { ResultsComponent } from './pages/results/results.component';
 import { ResultGuard } from '@core/guards/result.guard';
+import { BrainstormComponent } from './pages/brainstorm/brainstorm.component';
 
 const routes: Routes = [
    {
       path: '',
       component: LearnComponent,
-      resolve: { quantities: LearnWordsAmountResolver }
+      resolve: { data: LearnWordsAmountResolver }
    },
    {
       path: 'word-translation',
@@ -47,6 +48,11 @@ const routes: Routes = [
    {
       path: 'word_cards',
       component: WordCardsComponent,
+      canActivate: [GameProtectGuard]
+   },
+   {
+      path: 'brainstorm',
+      component: BrainstormComponent,
       canActivate: [GameProtectGuard]
    },
    {

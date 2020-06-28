@@ -26,7 +26,8 @@ export class LearnService {
          'Savannah',
          'Word constructor',
          'Listening',
-         'Word cards'
+         'Word cards',
+         'Brainstorm'
       ];
    }
 
@@ -45,7 +46,11 @@ export class LearnService {
          });
    }
 
-   getWordsToLearn(fetchAllWords?: boolean, fetchWordsForm?: number) {
+   getWordsToLearn(
+      fetchAllWords?: boolean,
+      fetchWordsForm?: number,
+      setId?: string
+   ) {
       const queries = {
          params: new HttpParams()
       };
@@ -55,6 +60,10 @@ export class LearnService {
 
       if (fetchWordsForm) {
          queries.params = queries.params.set('fetchFrom', fetchWordsForm + '');
+      }
+
+      if (setId) {
+         queries.params = queries.params.set('setId', setId);
       }
 
       this.http
@@ -91,9 +100,14 @@ export class LearnService {
          });
    }
 
-   getQuantities(): Observable<string[]> {
+   getQuantities(setId?: string): Observable<string[]> {
+      let from = '';
+      if (setId) {
+         from = '?setId=' + setId;
+      }
+
       return this.http
-         .get<{ msg: string; result: any[] }>(BACKEND_URL + '/quantity')
+         .get<{ msg: string; result: any[] }>(BACKEND_URL + '/quantity' + from)
          .pipe(map(data => Object.values(data.result)));
    }
 }

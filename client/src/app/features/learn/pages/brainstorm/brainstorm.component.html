@@ -1,0 +1,27 @@
+<app-centered-projection>
+   <mat-card>
+      <mat-card-content>
+         <button mat-icon-button (click)="onPronounce()">
+            <mat-icon>volume_up</mat-icon>
+         </button>
+
+         <div class="word-info" *ngIf="currentWord">
+            <div class="pic-holder">
+               <img src="{{ currentWord.pic_url }}" alt="" />
+            </div>
+            <p class="word-english">{{ currentWord.english }}</p>
+            <p class="word-russian">{{ currentWord.russian.join(',') }}</p>
+            <p class="word-transcription">[{{ currentWord.transcription }}]</p>
+         </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+         <button mat-raised-button color="warn" (click)="onAnswer(false)">
+            I don't know
+         </button>
+         <button mat-raised-button color="primary" (click)="onAnswer(true)">
+            I know
+         </button>
+      </mat-card-actions>
+   </mat-card>
+</app-centered-projection>

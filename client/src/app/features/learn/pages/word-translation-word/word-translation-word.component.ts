@@ -51,8 +51,9 @@ export class WordTranslationWordComponent implements OnInit, OnDestroy {
 
    ngOnInit(): void {
       this.initializeState();
+      const setId = this.route.snapshot.queryParams.setId;
 
-      this.learnService.getWordsToLearn(null, this.games[this.gameName]);
+      this.learnService.getWordsToLearn(null, this.games[this.gameName], setId);
       this.subscriptionWords = this.learnService.wordsUpdateListener$.subscribe(
          (words: Word[]) => {
             this.words = words;
