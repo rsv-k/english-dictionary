@@ -85,11 +85,6 @@ export class WordCreateComponent implements OnInit {
          return;
       }
 
-      const options = {
-         setId: this.setId
-      };
-
-      this.wordService.getWords(options);
       if (this.word) {
          this.word.russian.push(translation.value);
          this.wordService.editWord(this.word);
@@ -115,9 +110,7 @@ export class WordCreateComponent implements OnInit {
 
          this.wordService.createWord(word);
       }
-      this.inputValue = '';
-      this.wordText$.next('');
-      this.translation = null;
+      this.clearInput();
    }
 
    onMyTranslationAdd(translation: string) {
@@ -128,5 +121,17 @@ export class WordCreateComponent implements OnInit {
 
    onBlur() {
       setTimeout(() => (this.isMyTranslation = false), 500);
+   }
+
+   clearInput() {
+      this.inputValue = '';
+      this.wordText$.next('');
+      this.translation = null;
+      this.word = null;
+      const options = {
+         setId: this.setId
+      };
+
+      this.wordService.getWords(options);
    }
 }
