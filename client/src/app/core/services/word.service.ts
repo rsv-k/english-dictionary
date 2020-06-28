@@ -215,6 +215,22 @@ export class WordService {
             this.words = this.words.map(word =>
                word.id === words[0].id ? words[0] : word
             );
+
+            if (this.words.findIndex(word => word.id === words[0].id) < 0) {
+               const wordAfter = this.words.findIndex(word => {
+                  const wordA = new Date(word.createdAt).getTime();
+                  const wordB = new Date(words[0].createdAt).getTime();
+
+                  return wordB - wordA > 0;
+               });
+
+               if (wordAfter >= 0) {
+                  this.words.splice(wordAfter, 0, words[0]);
+               } else if (this.words.length < 20) {
+                  this.words.push(words[0]);
+               }
+            }
+
             break;
       }
 

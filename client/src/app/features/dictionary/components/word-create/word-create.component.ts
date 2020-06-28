@@ -86,6 +86,10 @@ export class WordCreateComponent implements OnInit {
       }
 
       if (this.word) {
+         if (this.setId && !this.word.setId.includes(this.setId)) {
+            this.word.setId.push(this.setId);
+         }
+
          this.word.russian.push(translation.value);
          this.wordService.editWord(this.word);
       } else {

@@ -109,7 +109,7 @@ exports.getSpecificWord = async (req, res) => {
 
    try {
       const word = await Word.findOne({
-         english: req.params.word.trim(),
+         english: new RegExp(req.params.word.trim(), 'i'),
          ownerId: req.userData.id
       });
       res.status(200).json({
