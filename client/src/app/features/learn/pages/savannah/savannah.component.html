@@ -6,7 +6,7 @@
          <button
             class="option"
             [attr.data-before]="i + 1"
-            (click)="onAnswer(option)"
+            (click)="onAnswer(option, option.isCorrect)"
             mat-raised-button
             [color]="option?.color"
             *ngFor="let option of options; let i = index"

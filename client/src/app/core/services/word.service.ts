@@ -100,7 +100,9 @@ export class WordService {
             map(this.utilsService.setDefaultPic),
             tap((words: Word[]) => this.updateWords('ADD', words))
          )
-         .subscribe();
+         .subscribe(() => {
+            this.wordsCount += 1;
+         });
    }
 
    deleteWord(id: string) {
@@ -110,13 +112,16 @@ export class WordService {
             map(this.utilsService.changeIdField),
             tap((words: Word[]) => this.updateWords('DELETE', words))
          )
-         .subscribe();
+         .subscribe(() => {
+            this.wordsCount -= 1;
+         });
    }
 
    deleteManyWords(setId: string, ids: string[], reverse?: boolean) {
       this.http
          .post(BACKEND_URL + '/deleteMany', { setId, ids, reverse })
          .subscribe(() => {
+            this.wordsCount -= ids.length;
             const deletedWords = {};
 
             ids.forEach(id => {
