@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { LearnService } from '@core/services/learn.service';
 import { UtilsService } from '@core/services/utils.service';
 import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
    selector: 'app-word-cards',
@@ -21,15 +21,17 @@ export class WordCardsComponent implements OnInit {
    constructor(
       private learnService: LearnService,
       private utilsService: UtilsService,
-      private router: Router
+      private router: Router,
+      private route: ActivatedRoute
    ) {}
 
    ngOnInit(): void {
       this.initializeState();
+      const setId = this.route.snapshot.queryParams.setId;
       this.words$ = this.learnService.wordsUpdateListener$.pipe(
          tap(words => (this.wordsLength = words.length))
       );
-      this.learnService.getWordsToLearn(false, 6);
+      this.learnService.getWordsToLearn(false, 6, setId);
    }
 
    onPronounce(soundUrl: string) {

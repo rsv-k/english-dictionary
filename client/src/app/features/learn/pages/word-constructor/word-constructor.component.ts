@@ -5,7 +5,7 @@ import { LearnService } from '@core/services/learn.service';
 import { Subscription } from 'rxjs';
 import { Character } from '@core/models/character.model';
 import { UtilsService } from '@core/services/utils.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
    selector: 'app-word-constructor',
@@ -41,12 +41,14 @@ export class WordConstructorComponent implements OnInit, OnDestroy {
    constructor(
       private learnService: LearnService,
       private utilsService: UtilsService,
-      private router: Router
+      private router: Router,
+      private route: ActivatedRoute
    ) {}
 
    ngOnInit(): void {
       this.initializeState();
-      this.learnService.getWordsToLearn(null, 4);
+      const setId = this.route.snapshot.queryParams.setId;
+      this.learnService.getWordsToLearn(null, 4, setId);
       this.subscriptionWords = this.learnService.wordsUpdateListener$.subscribe(
          (words: Word[]) => {
             this.words = words;

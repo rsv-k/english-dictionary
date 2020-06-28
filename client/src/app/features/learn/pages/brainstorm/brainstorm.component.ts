@@ -4,7 +4,7 @@ import { LearnService } from '@core/services/learn.service';
 import { Word } from '@core/models/word.model';
 import { UtilsService } from '@core/services/utils.service';
 import { AnswerResult } from '@core/models/answerResult.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
    selector: 'app-brainstorm',
@@ -21,17 +21,19 @@ export class BrainstormComponent implements OnInit, OnDestroy {
    constructor(
       private learnService: LearnService,
       private utilsService: UtilsService,
-      private router: Router
+      private router: Router,
+      private route: ActivatedRoute
    ) {}
 
    ngOnInit(): void {
+      const setId = this.route.snapshot.queryParams.setId;
       this.wordsSub = this.learnService.wordsUpdateListener$.subscribe(
          (words: Word[]) => {
             this.words = words;
             this.getNextWord();
          }
       );
-      this.learnService.getWordsToLearn(false, 7);
+      this.learnService.getWordsToLearn(false, 7, setId);
    }
 
    onPronounce() {

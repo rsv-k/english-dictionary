@@ -11,7 +11,7 @@ import {
 import { GameOption } from '@core/models/GameOption.model';
 import { Subscription } from 'rxjs';
 import { AnswerResult } from '@core/models/answerResult.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UtilsService } from '@core/services/utils.service';
 
 const ANIMATION_TIME = 5000;
@@ -63,11 +63,13 @@ export class SavannahComponent implements OnInit, OnDestroy {
    constructor(
       private learnService: LearnService,
       private router: Router,
-      private utilsService: UtilsService
+      private utilsService: UtilsService,
+      private route: ActivatedRoute
    ) {}
 
    ngOnInit(): void {
-      this.learnService.getWordsToLearn(null, 3);
+      const setId = this.route.snapshot.queryParams.setId;
+      this.learnService.getWordsToLearn(null, 3, setId);
       this.wordsSubscription = this.learnService.wordsUpdateListener$.subscribe(
          (words: Word[]) => {
             this.words = words;
