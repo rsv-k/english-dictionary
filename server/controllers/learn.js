@@ -6,7 +6,6 @@ exports.toggleLearnings = async (req, res) => {
    if (!req.body.ids) {
       return res.status(400).json({ msg: 'no data provided' });
    }
-
    try {
       const options = { _id: req.body.ids, ownerId: req.userData.id };
       if (req.body.reverse) {
@@ -35,7 +34,8 @@ exports.getWordsToLearn = async (req, res) => {
          { 'learn.savannah': true },
          { 'learn.wordConstructor': true },
          { 'learn.listening': true },
-         { 'learn.wordCards': true }
+         { 'learn.wordCards': true },
+         { 'learn.brainstorm': true }
       ];
       const options = [
          {
@@ -114,6 +114,10 @@ exports.countWordsInEachGame = async (req, res) => {
          wordCards: await Word.countDocuments({
             ownerId: req.userData.id,
             'learn.wordCards': true
+         }),
+         brainstorm: await Word.countDocuments({
+            ownerId: req.userData.id,
+            'learn.brainstorm': true
          })
       };
 

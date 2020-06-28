@@ -15,6 +15,7 @@ export interface Word {
       wordConstructor?: boolean;
       listening?: boolean;
       wordCards?: boolean;
+      brainstorm?: boolean;
    };
    isChecked?: boolean;
    ownerId: string;

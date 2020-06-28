@@ -107,7 +107,8 @@ export class WordCreateComponent implements OnInit {
                savannah: true,
                wordConstructor: true,
                listening: true,
-               wordCards: true
+               wordCards: true,
+               brainstorm: true
             },
             ownerId: this.authService.userId
          };

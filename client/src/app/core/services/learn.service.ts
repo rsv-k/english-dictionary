@@ -26,7 +26,8 @@ export class LearnService {
          'Savannah',
          'Word constructor',
          'Listening',
-         'Word cards'
+         'Word cards',
+         'Brainstorm'
       ];
    }
 

@@ -12,6 +12,7 @@ import { WordConstructorComponent } from './pages/word-constructor/word-construc
 import { ListeningComponent } from './pages/listening/listening.component';
 import { WordCardsComponent } from './pages/word-cards/word-cards.component';
 import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-resolver.service';
+import { BrainstormComponent } from './pages/brainstorm/brainstorm.component';
 
 @NgModule({
    declarations: [
@@ -22,7 +23,8 @@ import { LearnWordsAmountResolver } from '@core/resolvers/learn-words-amount-res
       WordTranslationWordComponent,
       WordConstructorComponent,
       ListeningComponent,
-      WordCardsComponent
+      WordCardsComponent,
+      BrainstormComponent
    ],
    imports: [LearnRoutingModule, SharedModule],
    providers: [LearnWordsAmountResolver]
