@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LearnService } from '@core/services/learn.service';
 import { ActivatedRoute, Data, Router } from '@angular/router';
+import { Set } from '@core/models/set.model';
+import { Subscription } from 'rxjs';
 
 interface Game {
    title: string;
@@ -12,9 +14,12 @@ interface Game {
    templateUrl: './learn.component.html',
    styleUrls: ['./learn.component.scss']
 })
-export class LearnComponent implements OnInit {
+export class LearnComponent implements OnInit, OnDestroy {
    games: Game[] = [];
+   sets: Set[];
+   selectedSet: Set;
 
+   private gamesSub: Subscription;
    constructor(
       private learnService: LearnService,
       private route: ActivatedRoute,
@@ -23,15 +28,30 @@ export class LearnComponent implements OnInit {
 
    ngOnInit() {
       this.route.data.subscribe((data: Data) => {
-         const titles = this.learnService.getAvailableGames();
+         this.sets = [
+            {
+               title: 'All words'
+            },
+            ...data.data.sets
+         ];
 
-         for (let i = 0; i < data.quantities.length; i++) {
-            this.games.push({
-               title: titles[i],
-               wordsQuantity: data.quantities[i]
-            });
-         }
+         this.setGames(data.data.quantities);
       });
+   }
+
+   onSelectionChange(value: string) {
+      if (this.gamesSub) {
+         this.gamesSub.unsubscribe();
+      }
+
+      const set = this.sets.find(s => s.title === value);
+      this.selectedSet = set;
+
+      this.learnService
+         .getQuantities(set.id ? set.id : null)
+         .subscribe((quantities: string[]) => {
+            this.setGames(quantities);
+         });
    }
 
    onNavigate(game: Game) {
@@ -39,6 +59,36 @@ export class LearnComponent implements OnInit {
          .split(' ')
          .join('_')
          .toLowerCase();
-      this.router.navigate(['/learn/' + destination]);
+
+      let queryParams = {};
+      if (this.selectedSet && this.selectedSet.id) {
+         queryParams = {
+            setId: this.selectedSet.id
+         };
+      }
+
+      this.router.navigate(['/learn/' + destination], {
+         queryParams
+      });
+   }
+
+   ngOnDestroy() {
+      if (this.gamesSub) {
+         this.gamesSub.unsubscribe();
+      }
+   }
+
+   private setGames(quantities: string[]) {
+      const titles = this.learnService.getAvailableGames();
+      const games = [];
+
+      for (let i = 0; i < quantities.length; i++) {
+         games.push({
+            title: titles[i],
+            wordsQuantity: +quantities[i]
+         });
+      }
+
+      this.games = games;
    }
 }

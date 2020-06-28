@@ -16,7 +16,7 @@ const routes: Routes = [
    {
       path: '',
       component: LearnComponent,
-      resolve: { quantities: LearnWordsAmountResolver }
+      resolve: { data: LearnWordsAmountResolver }
    },
    {
       path: 'word-translation',

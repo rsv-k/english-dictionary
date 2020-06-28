@@ -37,6 +37,7 @@ exports.getWordsToLearn = async (req, res) => {
          { 'learn.wordCards': true },
          { 'learn.brainstorm': true }
       ];
+
       const options = [
          {
             $match: {
@@ -44,6 +45,7 @@ exports.getWordsToLearn = async (req, res) => {
             }
          }
       ];
+
       if (req.query.fetchFrom && req.query.fetchFrom !== 0) {
          options[0].$match = {
             ...wordsFrom[req.query.fetchFrom - 1]
@@ -56,6 +58,10 @@ exports.getWordsToLearn = async (req, res) => {
                size: 12
             }
          });
+      }
+
+      if (req.query.setId) {
+         options[0].$match.setId = [mongoose.Types.ObjectId(req.query.setId)];
       }
 
       options[0].$match.ownerId = mongoose.Types.ObjectId(req.userData.id);
@@ -90,34 +96,41 @@ exports.getRandomOptions = async (req, res) => {
 
 exports.countWordsInEachGame = async (req, res) => {
    try {
+      const options = {
+         ownerId: req.userData.id
+      };
+      if (req.query.setId) {
+         options.setId = [req.query.setId];
+      }
+
       const wordsQuantity = {
          wordTranslation: await Word.countDocuments({
-            ownerId: req.userData.id,
-            'learn.wordTranslation': true
+            'learn.wordTranslation': true,
+            ...options
          }),
          translationWord: await Word.countDocuments({
-            ownerId: req.userData.id,
-            'learn.translationWord': true
+            'learn.translationWord': true,
+            ...options
          }),
          savannah: await Word.countDocuments({
-            ownerId: req.userData.id,
-            'learn.savannah': true
+            'learn.savannah': true,
+            ...options
          }),
          wordConstructor: await Word.countDocuments({
-            ownerId: req.userData.id,
-            'learn.wordConstructor': true
+            'learn.wordConstructor': true,
+            ...options
          }),
          listening: await Word.countDocuments({
-            ownerId: req.userData.id,
-            'learn.listening': true
+            'learn.listening': true,
+            ...options
          }),
          wordCards: await Word.countDocuments({
-            ownerId: req.userData.id,
-            'learn.wordCards': true
+            'learn.wordCards': true,
+            ...options
          }),
          brainstorm: await Word.countDocuments({
-            ownerId: req.userData.id,
-            'learn.brainstorm': true
+            'learn.brainstorm': true,
+            ...options
          })
       };
 

@@ -3,11 +3,16 @@
    margin: 0 auto;
 }
 
+header {
+   display: flex;
+   justify-content: space-between;
+}
+
 .games {
    display: grid;
    grid-template-columns: 1fr 1fr 1fr;
-   grid-template-rows: repeat(4, 100px);
-   grid-gap: 40px 20px;
+   grid-template-rows: repeat(4, 120px);
+   grid-gap: 15px;
 }
 
 app-learn-game-card:focus {
