@@ -11,7 +11,7 @@ import { AnswerResult } from '@core/models/answerResult.model';
 import { Subscription } from 'rxjs';
 import { LearnService } from '@core/services/learn.service';
 import { UtilsService } from '@core/services/utils.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
    selector: 'app-listening',
@@ -45,19 +45,20 @@ export class ListeningComponent implements OnInit, OnDestroy {
    constructor(
       private learnService: LearnService,
       private utilsService: UtilsService,
-      private router: Router
+      private router: Router,
+      private route: ActivatedRoute
    ) {}
 
    ngOnInit(): void {
       this.initializeState();
-
+      const setId = this.route.snapshot.queryParams.setId;
       this.subscriptionWords = this.learnService.wordsUpdateListener$.subscribe(
          (words: Word[]) => {
             this.words = words;
             this.getNextWord();
          }
       );
-      this.learnService.getWordsToLearn(false, 5);
+      this.learnService.getWordsToLearn(false, 5, setId);
    }
 
    private onEnterAnswer() {
