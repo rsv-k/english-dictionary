@@ -6,3 +6,11 @@ mat-card-header {
    display: flex;
    justify-content: center;
 }
+
+mat-card-actions {
+   text-align: center;
+
+   p {
+      cursor: pointer;
+   }
+}
