@@ -13,7 +13,7 @@
       <input matInput type="password" formControlName="password" />
    </mat-form-field>
 
-   <button type="submit" mat-raised-button>
+   <button type="submit" mat-raised-button [disabled]="!authForm.valid">
       Submit
    </button>
 </form>
