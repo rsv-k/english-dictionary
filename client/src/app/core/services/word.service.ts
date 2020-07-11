@@ -8,7 +8,7 @@ import {
    switchMap,
    tap
 } from 'rxjs/operators';
-import { of, Subject, iif, forkJoin, BehaviorSubject } from 'rxjs';
+import { of, Subject, forkJoin, BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { UtilsService } from './utils.service';
 import { Translation } from '@core/models/translation.model';
@@ -68,9 +68,7 @@ export class WordService {
                return;
             }
 
-            if (options.isCachingWords || this.words.length === 0) {
-               this.words = [...this.words, ...words];
-            }
+            this.words = [...this.words, ...words];
             this.updateWords('GET', this.words);
          });
    }

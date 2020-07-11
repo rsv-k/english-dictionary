@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
    selector: 'app-auth',
@@ -8,11 +8,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AuthComponent implements OnInit {
    form: string;
-   constructor(private route: ActivatedRoute) {}
+   constructor(private route: ActivatedRoute, private router: Router) {}
 
    ngOnInit(): void {
       this.route.url.subscribe(data => {
          this.form = data[0].path;
       });
+   }
+
+   onNavigate() {
+      const where = this.form === 'signup' ? 'login' : 'signup';
+
+      this.router.navigate([`/auth/${where}`]);
    }
 }

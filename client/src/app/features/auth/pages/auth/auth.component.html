@@ -6,5 +6,15 @@
 
       <app-signup *ngIf="form === 'signup'"></app-signup>
       <app-login *ngIf="form === 'login'"></app-login>
+
+      <mat-card-actions>
+         <p (click)="onNavigate()">
+            {{
+               form === 'signup'
+                  ? 'Have an account? Log in'
+                  : "Don't have an account? Sign up"
+            }}
+         </p>
+      </mat-card-actions>
    </mat-card>
 </app-centered-projection>

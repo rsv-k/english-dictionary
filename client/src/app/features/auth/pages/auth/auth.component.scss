@@ -1,8 +1,16 @@
 mat-card {
-   width: 300px;
+   width: 400px;
 }
 
 mat-card-header {
    display: flex;
    justify-content: center;
+}
+
+mat-card-actions {
+   text-align: center;
+
+   p {
+      cursor: pointer;
+   }
 }
