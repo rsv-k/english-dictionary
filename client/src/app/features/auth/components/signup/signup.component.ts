@@ -15,6 +15,7 @@ import {
    map,
    first
 } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
    selector: 'app-signup',
@@ -25,7 +26,7 @@ export class SignupComponent implements OnInit, OnDestroy {
    authForm: FormGroup;
    private subscription: Subscription;
 
-   constructor(private authService: AuthService) {}
+   constructor(private authService: AuthService, private router: Router) {}
 
    ngOnInit(): void {
       this.initializeForm();
@@ -36,7 +37,11 @@ export class SignupComponent implements OnInit, OnDestroy {
          return;
       }
 
-      this.authService.signup(this.authForm.value);
+      this.subscription = this.authService
+         .signup(this.authForm.value)
+         .subscribe(() => {
+            this.router.navigate(['/auth/login']);
+         });
    }
 
    private initializeForm() {

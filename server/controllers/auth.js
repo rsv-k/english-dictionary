@@ -54,7 +54,7 @@ exports.login = async (req, res) => {
 };
 
 exports.checkIfTaken = async (req, res) => {
-   if (!req.body.username && !req.body.email) {
+   if (!req.body.username && !req.body.email && !req.body.googleId) {
       return res.status(400).json({ msg: 'no data provided' });
    }
 
@@ -89,6 +89,46 @@ exports.refreshTokens = async (req, res) => {
       };
 
       res.status(200).json({ msg: 'user found', result });
+   } catch (err) {
+      res.status(401).json({ msg: 'Auth failed' });
+   }
+};
+
+exports.googleAuth = async (req, res) => {
+   if (!req.body.profile) {
+      return res.status(401).json({ msg: 'Auth failed' });
+   }
+
+   try {
+      const user = await User.findOne({ googleId: req.body.profile.id });
+      if (user) {
+         const result = {
+            ...authHelper.generateAccessToken(user),
+            ...authHelper.generateRefreshToken(user),
+            userId: user._id
+         };
+
+         return res.status(200).json({ msg: 'user found', result });
+      }
+      const hashedPassword = await bcrypt.hash(req.body.profile.id, 10);
+
+      const sentUser = {
+         email: req.body.profile.email,
+         googleId: req.body.profile.id,
+         username: req.body.profile.name,
+         password: hashedPassword
+      };
+
+      const newUser = new User(sentUser);
+      await newUser.save();
+
+      const result = {
+         ...authHelper.generateAccessToken(newUser),
+         ...authHelper.generateRefreshToken(newUser),
+         userId: newUser._id
+      };
+
+      res.status(201).json({ msg: 'user successfully created', result });
    } catch (err) {
       res.status(401).json({ msg: 'Auth failed' });
    }

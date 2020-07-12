@@ -6,5 +6,6 @@ router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.post('/isTaken', authController.checkIfTaken);
 router.post('/refreshTokens', authController.refreshTokens);
+router.post('/google', authController.googleAuth);
 
 module.exports = router;

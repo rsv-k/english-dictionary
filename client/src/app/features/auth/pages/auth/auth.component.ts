@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { SocialAuthService } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
+import { switchMap, filter } from 'rxjs/operators';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
    selector: 'app-auth',
@@ -14,7 +16,8 @@ export class AuthComponent implements OnInit {
    constructor(
       private route: ActivatedRoute,
       private router: Router,
-      private socialAuthService: SocialAuthService
+      private socialAuthService: SocialAuthService,
+      private authService: AuthService
    ) {}
 
    ngOnInit(): void {
@@ -22,9 +25,16 @@ export class AuthComponent implements OnInit {
          this.form = data[0].path;
       });
 
-      this.socialAuthService.authState.subscribe(user => {
-         console.log(user);
-      });
+      this.socialAuthService.authState
+         .pipe(
+            filter(profile => !!profile),
+            switchMap(profile => this.authService.googleAuth(profile))
+         )
+         .subscribe(data => {
+            this.authService.initializeAuthState(data);
+            this.router.navigate(['/dictionary']);
+            this.socialAuthService.signOut();
+         });
    }
 
    signInWithGoogle() {
