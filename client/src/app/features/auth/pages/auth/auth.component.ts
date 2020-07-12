@@ -12,6 +12,7 @@ import { AuthService } from '@core/services/auth.service';
    styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+   error: string;
    form: string;
    constructor(
       private route: ActivatedRoute,
@@ -30,11 +31,19 @@ export class AuthComponent implements OnInit {
             filter(profile => !!profile),
             switchMap(profile => this.authService.googleAuth(profile))
          )
-         .subscribe(data => {
-            this.authService.initializeAuthState(data);
-            this.router.navigate(['/dictionary']);
-            this.socialAuthService.signOut();
-         });
+         .subscribe(
+            data => {
+               this.authService.initializeAuthState(data);
+               this.router.navigate(['/dictionary']);
+               this.socialAuthService.signOut();
+            },
+            err => {
+               this.error =
+                  err.error.error.path === 'email'
+                     ? 'User with such email already registered'
+                     : 'Random error occured';
+            }
+         );
    }
 
    signInWithGoogle() {

@@ -110,13 +110,11 @@ exports.googleAuth = async (req, res) => {
 
          return res.status(200).json({ msg: 'user found', result });
       }
-      const hashedPassword = await bcrypt.hash(req.body.profile.id, 10);
 
       const sentUser = {
          email: req.body.profile.email,
          googleId: req.body.profile.id,
-         username: req.body.profile.name,
-         password: hashedPassword
+         username: req.body.profile.name
       };
 
       const newUser = new User(sentUser);
@@ -130,6 +128,6 @@ exports.googleAuth = async (req, res) => {
 
       res.status(201).json({ msg: 'user successfully created', result });
    } catch (err) {
-      res.status(401).json({ msg: 'Auth failed' });
+      res.status(401).json({ msg: 'Auth failed', error: err.errors.email });
    }
 };
