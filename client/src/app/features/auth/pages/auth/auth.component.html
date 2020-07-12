@@ -7,6 +7,16 @@
       <app-signup *ngIf="form === 'signup'"></app-signup>
       <app-login *ngIf="form === 'login'"></app-login>
 
+      <div class="social-medias">
+         <button
+         mat-raised-button
+         color="warn"
+         (click)="signInWithGoogle()"
+         >
+            Sign in with google
+         </button>
+      </div>
+
       <mat-card-actions>
          <p (click)="onNavigate()">
             {{

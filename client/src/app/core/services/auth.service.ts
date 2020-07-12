@@ -20,15 +20,21 @@ export class AuthService {
    constructor(private http: HttpClient, private router: Router) {}
 
    signup(userModel: User) {
-      this.http.post('/api/auth/signup', { user: userModel }).subscribe(() => {
-         this.router.navigate(['/auth/login']);
-      });
+      return this.http.post('/api/auth/signup', { user: userModel });
    }
 
    login(userModel: User) {
       return this.http
          .post<{ msg: string; result: AuthData }>('/api/auth/login', {
             user: userModel
+         })
+         .pipe(pluck('result'));
+   }
+
+   googleAuth(googleProfile) {
+      return this.http
+         .post<{ msg: string; result: AuthData }>('/api/auth/google', {
+            profile: googleProfile
          })
          .pipe(pluck('result'));
    }
