@@ -13,12 +13,13 @@ import { AuthService } from '@core/services/auth.service';
 })
 export class WordCreateComponent implements OnInit {
    @Input() setId: string;
+   showSpinner = false;
    inputValue = '';
    wordText$ = new Subject<string>();
    translations$: Observable<Translation[]>;
-   private translation: Translation;
    word: Word;
    isMyTranslation = false;
+   private translation: Translation;
 
    @ViewChild('myTranslation', { static: false }) set customTranslation(
       el: ElementRef
@@ -59,7 +60,8 @@ export class WordCreateComponent implements OnInit {
                      presentTranslations[translation.value];
                   return translation;
                });
-            })
+            }),
+            tap(() => (this.showSpinner = false))
          );
    }
 
@@ -76,6 +78,7 @@ export class WordCreateComponent implements OnInit {
       if (!this.inputValue) {
          return;
       }
+      this.showSpinner = true;
       this.wordText$.next(this.inputValue);
    }
 

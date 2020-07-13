@@ -1,5 +1,6 @@
 .create__group {
    width: 100%;
+   position: relative;
 }
 
 .creation {
@@ -19,4 +20,10 @@
    &__button {
       align-self: center;
    }
+}
+
+.spinner {
+   position: absolute;
+   left: -30px;
+   top: 0;
 }
