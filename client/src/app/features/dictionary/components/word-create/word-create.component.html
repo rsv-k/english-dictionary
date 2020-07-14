@@ -1,4 +1,5 @@
 <mat-form-field class="create__group">
+   <mat-spinner class="spinner" diameter="25" *ngIf="showSpinner"></mat-spinner>
    <mat-label>Word</mat-label>
    <div class="creation">
       <input
@@ -35,9 +36,7 @@
          >
             {{ translation.value }}
          </mat-option>
-         <mat-option *ngIf="(translations$ | async)?.length"
-            >my translation</mat-option
-         >
+         <mat-option *ngIf="!showSpinner">my translation</mat-option>
       </ng-container>
    </mat-autocomplete>
 </mat-form-field>

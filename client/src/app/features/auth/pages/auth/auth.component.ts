@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { SocialAuthService } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
-import { switchMap, filter } from 'rxjs/operators';
+import { switchMap, filter, catchError } from 'rxjs/operators';
 import { AuthService } from '@core/services/auth.service';
+import { of } from 'rxjs';
 
 @Component({
    selector: 'app-auth',
@@ -12,6 +13,7 @@ import { AuthService } from '@core/services/auth.service';
    styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+   error: string;
    form: string;
    constructor(
       private route: ActivatedRoute,
@@ -28,12 +30,25 @@ export class AuthComponent implements OnInit {
       this.socialAuthService.authState
          .pipe(
             filter(profile => !!profile),
-            switchMap(profile => this.authService.googleAuth(profile))
+            switchMap(profile =>
+               this.authService.googleAuth(profile).pipe(
+                  catchError(err => {
+                     this.error =
+                        err.error.error.path === 'email'
+                           ? 'User with such email already registered'
+                           : 'Random error occured';
+                     this.socialAuthService.signOut();
+                     return of(null);
+                  })
+               )
+            )
          )
          .subscribe(data => {
-            this.authService.initializeAuthState(data);
-            this.router.navigate(['/dictionary']);
-            this.socialAuthService.signOut();
+            if (data) {
+               this.authService.initializeAuthState(data);
+               this.router.navigate(['/dictionary']);
+               this.socialAuthService.signOut();
+            }
          });
    }
 

@@ -1,6 +1,14 @@
 const jwt = require('jsonwebtoken');
 
-exports.generateAccessToken = user => {
+exports.getTokensAndIn = user => {
+   return {
+      ...generateAccessToken(user),
+      ...generateRefreshToken(user),
+      userId: user._id
+   };
+};
+
+function generateAccessToken(user) {
    const payload = {
       email: user.email,
       username: user.username,
@@ -16,9 +24,9 @@ exports.generateAccessToken = user => {
       accessToken,
       accessTokenExpiration
    };
-};
+}
 
-exports.generateRefreshToken = user => {
+function generateRefreshToken(user) {
    const payload = {
       email: user.email,
       id: user._id
@@ -33,4 +41,4 @@ exports.generateRefreshToken = user => {
       refreshToken,
       refreshTokenExpiration
    };
-};
+}

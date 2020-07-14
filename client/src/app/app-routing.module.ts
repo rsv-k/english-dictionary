@@ -38,6 +38,10 @@ const routes: Routes = [
       canActivate: [NoAuthGuard],
       loadChildren: () =>
          import('@features/auth/auth.module').then(m => m.AuthModule)
+   },
+   {
+      path: '**',
+      redirectTo: 'dictionary'
    }
 ];
 

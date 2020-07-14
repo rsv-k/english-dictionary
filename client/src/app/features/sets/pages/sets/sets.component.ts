@@ -4,6 +4,7 @@ import { SetService } from '@core/services/set.service';
 import { AuthService } from '@core/services/auth.service';
 import { ActivatedRoute, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { UtilsService } from '@core/services/utils.service';
 
 @Component({
    selector: 'app-sets',
@@ -17,7 +18,8 @@ export class SetsComponent implements OnInit, OnDestroy {
    constructor(
       private setService: SetService,
       private authService: AuthService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+      private utilsService: UtilsService
    ) {}
 
    ngOnInit(): void {
@@ -37,6 +39,11 @@ export class SetsComponent implements OnInit, OnDestroy {
          title: title[0].toUpperCase() + title.slice(1).toLowerCase(),
          ownerId: this.authService.userId
       };
+
+      if (!!this.sets.find(presentSet => presentSet.title === set.title)) {
+         this.utilsService.showSnackBar('Set with such name already exists');
+         return;
+      }
 
       this.setService.addSet(set);
    }

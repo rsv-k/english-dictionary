@@ -41,11 +41,7 @@ exports.login = async (req, res) => {
          return res.status(404).json({ msg: 'invalid password' });
       }
 
-      const result = {
-         ...authHelper.generateAccessToken(user),
-         ...authHelper.generateRefreshToken(user),
-         userId: user._id
-      };
+      const result = authHelper.getTokensAndIn(user);
 
       res.status(200).json({ msg: 'user found', result });
    } catch (err) {
@@ -82,11 +78,7 @@ exports.refreshTokens = async (req, res) => {
       );
       const user = await User.findOne({ _id: decodedToken.id });
 
-      const result = {
-         ...authHelper.generateAccessToken(user),
-         ...authHelper.generateRefreshToken(user),
-         userId: user._id
-      };
+      const result = authHelper.getTokensAndIn(user);
 
       res.status(200).json({ msg: 'user found', result });
    } catch (err) {
@@ -102,34 +94,24 @@ exports.googleAuth = async (req, res) => {
    try {
       const user = await User.findOne({ googleId: req.body.profile.id });
       if (user) {
-         const result = {
-            ...authHelper.generateAccessToken(user),
-            ...authHelper.generateRefreshToken(user),
-            userId: user._id
-         };
+         const result = authHelper.getTokensAndIn(user);
 
          return res.status(200).json({ msg: 'user found', result });
       }
-      const hashedPassword = await bcrypt.hash(req.body.profile.id, 10);
 
       const sentUser = {
          email: req.body.profile.email,
          googleId: req.body.profile.id,
-         username: req.body.profile.name,
-         password: hashedPassword
+         username: req.body.profile.name
       };
 
       const newUser = new User(sentUser);
       await newUser.save();
 
-      const result = {
-         ...authHelper.generateAccessToken(newUser),
-         ...authHelper.generateRefreshToken(newUser),
-         userId: newUser._id
-      };
+      const result = authHelper.getTokensAndIn(newUser);
 
       res.status(201).json({ msg: 'user successfully created', result });
    } catch (err) {
-      res.status(401).json({ msg: 'Auth failed' });
+      res.status(401).json({ msg: 'Auth failed', error: err.errors.email });
    }
 };
