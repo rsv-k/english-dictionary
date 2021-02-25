@@ -28,7 +28,7 @@ const limiter = rateLimit({
    windowMs: 10 * 60 * 1000, // 10 min
    max: 100
 });
-app.use(limiter());
+app.use(limiter);
 
 // Prevent http param pollution
 app.use(hpp());
