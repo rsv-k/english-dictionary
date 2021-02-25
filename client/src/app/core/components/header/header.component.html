@@ -1,0 +1,25 @@
+<mat-toolbar color="primary" class="header">
+   <h1 class="header__title"><a routerLink="/dictionary">Dictionary</a></h1>
+
+   <nav class="header__nav">
+      <ng-container *ngIf="authStatus$ | async; else notAuth">
+         <a routerLink="/learn" mat-button routerLinkActive="mat-accent"
+            >Learn</a
+         >
+         <a routerLink="/sets" mat-button routerLinkActive="mat-accent">Sets</a>
+         <a routerLink="/dictionary" mat-button routerLinkActive="mat-accent"
+            >Dictionary</a
+         >
+         <a mat-button (click)="logout()">Log out</a>
+      </ng-container>
+
+      <ng-template #notAuth>
+         <a routerLink="/auth/login" mat-button routerLinkActive="mat-accent"
+            >Log in</a
+         >
+         <a routerLink="/auth/signup" mat-button routerLinkActive="mat-accent"
+            >Sign up</a
+         >
+      </ng-template>
+   </nav>
+</mat-toolbar>

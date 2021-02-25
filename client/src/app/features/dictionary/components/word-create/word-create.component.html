@@ -1,0 +1,56 @@
+<mat-form-field class="create__group">
+   <mat-spinner class="spinner" diameter="25" *ngIf="showSpinner"></mat-spinner>
+   <mat-label>Word</mat-label>
+   <div class="creation">
+      <input
+         matInput
+         #wordInput
+         (input)="onInput(wordInput.value)"
+         [matAutocomplete]="auto"
+      />
+      <button
+         (click)="clearInput(); wordInput.value = ''"
+         *ngIf="wordInput.value.length > 1"
+         class="clear--button"
+         mat-icon-button
+      >
+         <mat-icon>clear</mat-icon>
+      </button>
+   </div>
+
+   <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="
+         chooseTranslation($event.option.value); wordInput.value = inputValue
+      "
+   >
+      <ng-container *ngIf="wordInput.value.length > 0">
+         <mat-option
+            [matTooltip]="
+               translation.value.length > 50 ? translation.value : null
+            "
+            class="create__option"
+            *ngFor="let translation of translations$ | async"
+            [disabled]="translation.isPresent"
+            [value]="translation"
+         >
+            {{ translation.value }}
+         </mat-option>
+         <mat-option *ngIf="!showSpinner">my translation</mat-option>
+      </ng-container>
+   </mat-autocomplete>
+</mat-form-field>
+<div class="custom" *ngIf="isMyTranslation">
+   <mat-form-field>
+      <mat-label>my translation</mat-label>
+      <input matInput #myTranslation (blur)="onBlur(); wordInput.value = ''" />
+   </mat-form-field>
+   <button
+      (click)="onMyTranslationAdd(myTranslation.value)"
+      class="custom__button"
+      mat-raised-button
+      *ngIf="myTranslation.value.length > 0"
+   >
+      add
+   </button>
+</div>

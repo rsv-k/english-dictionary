@@ -1,0 +1,39 @@
+mat-card {
+   width: 400px;
+   min-height: 400px;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}
+
+mat-card-actions {
+   display: flex;
+   justify-content: space-between;
+}
+
+.word-info {
+   text-align: center;
+}
+
+.word-english {
+   font-size: 18px;
+}
+
+.word-russian {
+   color: green;
+}
+
+.word-transcription {
+   color: grey;
+   font-size: 14px;
+}
+
+img {
+   max-width: 100%;
+}
+
+.pic-holder {
+   width: 200px;
+   height: 200px;
+   margin: 0 auto;
+}

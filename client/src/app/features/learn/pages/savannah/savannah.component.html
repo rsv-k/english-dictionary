@@ -1,0 +1,18 @@
+<section class="game">
+   <div class="game__gameplay">
+      <p [@moveDown]="state">{{ currentWord?.english }}</p>
+
+      <div class="options">
+         <button
+            class="option"
+            [attr.data-before]="i + 1"
+            (click)="onAnswer(option, option.isCorrect)"
+            mat-raised-button
+            [color]="option?.color"
+            *ngFor="let option of options; let i = index"
+         >
+            {{ option.value }}
+         </button>
+      </div>
+   </div>
+</section>

@@ -1,0 +1,29 @@
+<app-centered-projection>
+   <mat-card>
+      <mat-card-header>
+         <mat-card-title>{{ form | uppercase }}</mat-card-title>
+         <mat-card-subtitle *ngIf="error" class="error">{{
+            error
+         }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <app-signup *ngIf="form === 'signup'"></app-signup>
+      <app-login *ngIf="form === 'login'"></app-login>
+
+      <div class="social-medias">
+         <button mat-raised-button color="warn" (click)="signInWithGoogle()">
+            Sign in with google
+         </button>
+      </div>
+
+      <mat-card-actions>
+         <p (click)="onNavigate()">
+            {{
+               form === 'signup'
+                  ? 'Have an account? Log in'
+                  : "Don't have an account? Sign up"
+            }}
+         </p>
+      </mat-card-actions>
+   </mat-card>
+</app-centered-projection>

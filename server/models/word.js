@@ -22,7 +22,8 @@ module.exports = mongoose.model(
             savannah: Boolean,
             wordConstructor: Boolean,
             listening: Boolean,
-            wordCards: Boolean
+            wordCards: Boolean,
+            brainstorm: Boolean
          },
          ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
       },

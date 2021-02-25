@@ -1,0 +1,31 @@
+mat-card {
+   width: 400px;
+}
+
+mat-card-header {
+   display: flex;
+   justify-content: center;
+}
+
+mat-card-actions {
+   text-align: center;
+
+   p {
+      cursor: pointer;
+   }
+}
+
+mat-card-title {
+   display: flex;
+   justify-content: center;
+}
+
+.social-medias {
+   margin-top: 15px;
+   display: flex;
+   justify-content: center;
+}
+
+.error {
+   color: red;
+}

@@ -41,11 +41,7 @@ exports.login = async (req, res) => {
          return res.status(404).json({ msg: 'invalid password' });
       }
 
-      const result = {
-         ...authHelper.generateAccessToken(user),
-         ...authHelper.generateRefreshToken(user),
-         userId: user._id
-      };
+      const result = authHelper.getTokensAndIn(user);
 
       res.status(200).json({ msg: 'user found', result });
    } catch (err) {
@@ -54,7 +50,7 @@ exports.login = async (req, res) => {
 };
 
 exports.checkIfTaken = async (req, res) => {
-   if (!req.body.username && !req.body.email) {
+   if (!req.body.username && !req.body.email && !req.body.googleId) {
       return res.status(400).json({ msg: 'no data provided' });
    }
 
@@ -82,14 +78,40 @@ exports.refreshTokens = async (req, res) => {
       );
       const user = await User.findOne({ _id: decodedToken.id });
 
-      const result = {
-         ...authHelper.generateAccessToken(user),
-         ...authHelper.generateRefreshToken(user),
-         userId: user._id
-      };
+      const result = authHelper.getTokensAndIn(user);
 
       res.status(200).json({ msg: 'user found', result });
    } catch (err) {
       res.status(401).json({ msg: 'Auth failed' });
+   }
+};
+
+exports.googleAuth = async (req, res) => {
+   if (!req.body.profile) {
+      return res.status(401).json({ msg: 'Auth failed' });
+   }
+
+   try {
+      const user = await User.findOne({ googleId: req.body.profile.id });
+      if (user) {
+         const result = authHelper.getTokensAndIn(user);
+
+         return res.status(200).json({ msg: 'user found', result });
+      }
+
+      const sentUser = {
+         email: req.body.profile.email,
+         googleId: req.body.profile.id,
+         username: req.body.profile.name
+      };
+
+      const newUser = new User(sentUser);
+      await newUser.save();
+
+      const result = authHelper.getTokensAndIn(newUser);
+
+      res.status(201).json({ msg: 'user successfully created', result });
+   } catch (err) {
+      res.status(401).json({ msg: 'Auth failed', error: err.errors.email });
    }
 };

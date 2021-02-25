@@ -1,0 +1,29 @@
+.create__group {
+   width: 100%;
+   position: relative;
+}
+
+.creation {
+   position: relative;
+}
+
+.clear--button {
+   position: absolute;
+   right: 0;
+   top: -8px;
+   z-index: 9999;
+}
+
+.custom {
+   display: flex;
+
+   &__button {
+      align-self: center;
+   }
+}
+
+.spinner {
+   position: absolute;
+   left: -30px;
+   top: 0;
+}

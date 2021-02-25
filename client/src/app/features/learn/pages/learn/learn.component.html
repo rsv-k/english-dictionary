@@ -1,0 +1,26 @@
+<section class="learn">
+   <header>
+      <h1>Training</h1>
+
+      <mat-form-field>
+         <mat-label *ngIf="!selection.value">All words</mat-label>
+         <mat-select
+            #selection
+            (selectionChange)="onSelectionChange(selection.value)"
+         >
+            <mat-option *ngFor="let set of sets" [value]="set.title">
+               {{ set.title }}
+            </mat-option>
+         </mat-select>
+      </mat-form-field>
+   </header>
+
+   <main class="games">
+      <app-learn-game-card
+         *ngFor="let game of games"
+         (click)="onNavigate(game)"
+         [title]="game.title"
+         [wordsAmount]="game.wordsQuantity"
+      ></app-learn-game-card>
+   </main>
+</section>
