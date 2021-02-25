@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
+const path = require('path');
 
 if (process.env.NODE_ENV !== 'production') {
    require('dotenv').config();
@@ -34,6 +35,14 @@ app.use(limiter);
 app.use(hpp());
 
 app.use(entryPoint);
+
+if (process.env.NODE_ENV === 'production') {
+   app.use('/', express.static(path.join(__dirname, 'client')));
+
+   app.use((req, res, next) => {
+      res.sendFile(path.join(__dirname, 'client', 'index.html'));
+   });
+}
 
 app.listen(PORT, () => {
    console.log('server is running');
