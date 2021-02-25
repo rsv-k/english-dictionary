@@ -8,7 +8,7 @@ import {
    switchMap,
    tap
 } from 'rxjs/operators';
-import { of, Subject, iif, forkJoin } from 'rxjs';
+import { of, Subject, forkJoin } from 'rxjs';
 import { Observable } from 'rxjs';
 import { UtilsService } from './utils.service';
 import { Translation } from '@core/models/translation.model';
@@ -117,11 +117,11 @@ export class WordService {
          .subscribe(() => {
             const deletedWords = {};
 
-            ids.forEach(id => {
+            ids.forEach((id) => {
                deletedWords[id] = true;
             });
 
-            this.words = this.words.filter(word => {
+            this.words = this.words.filter((word) => {
                if (reverse) {
                   return deletedWords[word.id];
                }
@@ -139,7 +139,7 @@ export class WordService {
       return word.pipe(
          debounceTime(1000),
          distinctUntilChanged(),
-         switchMap(w =>
+         switchMap((w) =>
             forkJoin({
                translations:
                   w.trim().length === 0 ? of([]) : this.getTranslations(w),
@@ -153,7 +153,7 @@ export class WordService {
       return this.http
          .get<{ msg: string; result: any }>(BACKEND_URL + '/' + word)
          .pipe(
-            map(data => {
+            map((data) => {
                if (data.result[0] === null) {
                   data.result = [];
                }
@@ -167,8 +167,8 @@ export class WordService {
    private getTranslations(word: string) {
       const url = BACKEND_URL + '/translations/' + word;
       return this.http.get<{ msg: string; result: any }>(url).pipe(
-         map(data => {
-            return data.result.translate.map(translation => {
+         map((data) => {
+            return data.result.translate.map((translation) => {
                return {
                   pic_url: translation.pic_url || null,
                   value: translation.value,
@@ -189,10 +189,10 @@ export class WordService {
             this.words = words;
             break;
          case 'DELETE':
-            this.words = this.words.filter(word => word.id !== words[0].id);
+            this.words = this.words.filter((word) => word.id !== words[0].id);
             break;
          case 'EDIT':
-            this.words = this.words.map(word =>
+            this.words = this.words.map((word) =>
                word.id === words[0].id ? words[0] : word
             );
             break;

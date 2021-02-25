@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-   Resolve,
-   ActivatedRouteSnapshot,
-   RouterStateSnapshot
-} from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { WordService } from '@core/services/word.service';
@@ -20,8 +16,7 @@ export class WordsResolver implements Resolve<Word[] | { title: Date }[]> {
    ) {}
 
    resolve(
-      route: ActivatedRouteSnapshot,
-      state: RouterStateSnapshot
+      route: ActivatedRouteSnapshot
    ): Observable<Word[] | { title: Date }[]> {
       const setId = route.paramMap.get('id');
 

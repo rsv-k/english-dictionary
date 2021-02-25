@@ -16,7 +16,7 @@ export class UtilsService {
    }
 
    changeIdField(data) {
-      return data.result.map(obj => {
+      return data.result.map((obj) => {
          obj.id = obj._id;
          delete obj._id;
          return obj;
@@ -24,7 +24,7 @@ export class UtilsService {
    }
 
    setDefaultPic(words: Word[]) {
-      return words.map(word => {
+      return words.map((word) => {
          word.pic_url = word.pic_url ? word.pic_url : DEFAULT_PIC;
          return word;
       });
